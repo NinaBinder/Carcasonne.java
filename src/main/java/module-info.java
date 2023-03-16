@@ -1,8 +1,7 @@
-module com.example.demo_carcassonne {
+module com.example {
     requires javafx.controls;
     requires javafx.fxml;
 
-
-    opens com.example.demo_carcassonne to javafx.fxml;
-    exports com.example.demo_carcassonne;
+    opens com.example to javafx.fxml;
+    exports com.example;
 }

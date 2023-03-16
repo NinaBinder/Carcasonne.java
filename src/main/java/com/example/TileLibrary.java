@@ -1,4 +1,4 @@
-package com.example.demo_carcassonne;
+package com.example;
 
 public class TileLibrary {
     //Die TileLibrary dient als Klasse als Nachschlagewerk aller möglichen Kacheln.
