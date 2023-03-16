@@ -14,10 +14,6 @@ public class TileLibrary {
 
 
     /** creating entries for all possible tiles */
-    // for tile of image k
-    LibraryEntry k = new LibraryEntry("file:src/field/K.png",new LibraryEntry.Feature("field",0,11),
-                     new LibraryEntry.Feature("road",1,10), new LibraryEntry.Feature("field",2,6,7,8,9),
-                     new LibraryEntry.Feature("city",3,4,5) ){};
 
     // for tile of image d
     LibraryEntry d= new LibraryEntry("file:src/field/D.png",
@@ -28,12 +24,26 @@ public class TileLibrary {
     ){};
 
 
+
     // for tile of image h
     LibraryEntry h= new LibraryEntry("file:src/field/D.png",
             new LibraryEntry.Feature("field",0,1,2,6,7,8),
             new LibraryEntry.Feature("city",3,4,5),
             new LibraryEntry.Feature("city",9,10,11)
     ){};
+
+    // for tile of image j
+    LibraryEntry j = new LibraryEntry("file:src/field/J.png",
+            new LibraryEntry.Feature("field",3,8,9,10,11),
+            new LibraryEntry.Feature("city",0,1,2),
+            new LibraryEntry.Feature("road",4,7),
+            new LibraryEntry.Feature("field",5,6) ){};
+
+
+    // for tile of image k
+    LibraryEntry k = new LibraryEntry("file:src/field/K.png",new LibraryEntry.Feature("field",0,11),
+            new LibraryEntry.Feature("road",1,10), new LibraryEntry.Feature("field",2,6,7,8,9),
+            new LibraryEntry.Feature("city",3,4,5) ){};
 
 
     // for tile of image v
@@ -50,12 +60,6 @@ public class TileLibrary {
                     new LibraryEntry.Feature("field",8,9)){};
 
 
-    // for tile of image j
-    LibraryEntry j = new LibraryEntry("file:src/field/J.png",
-            new LibraryEntry.Feature("field",3,8,9,10,11),
-            new LibraryEntry.Feature("city",0,1,2),
-            new LibraryEntry.Feature("road",4,7),
-            new LibraryEntry.Feature("field",5,6) ){};
 
 
 
@@ -63,12 +67,12 @@ public class TileLibrary {
 
     //put  all the tile entries into the map
     public TileLibrary(HashMap <String, LibraryEntry> map){
-        map.put("K",k);
         map.put("D",d);
-        map.put("V",v);
-        map.put("W",w);
         map.put("H",h);
         map.put("J",j);
+        map.put("K",k);
+        map.put("V",v);
+        map.put("W",w);
 
     }
 
