@@ -61,7 +61,7 @@ public class TileLibrary {
 
 
 
-    //
+    //put  all the tile entries into the map
     public TileLibrary(HashMap <String, LibraryEntry> map){
         map.put("K",k);
         map.put("D",d);
