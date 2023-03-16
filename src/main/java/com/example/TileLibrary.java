@@ -4,18 +4,19 @@ import javafx.scene.image.Image;
 import java.util.HashMap;
 import java.util.Map;
 
+/**The TileLibrary serves as a reference work for all possible tiles.
+ * This Class has one attribute HashMap, where all objects of LibraryEntry are stored. */
 public class TileLibrary {
     //Die TileLibrary dient als Klasse als Nachschlagewerk aller möglichen Kacheln.
     //Sie enthält eine Hashmap, die die Buchstaben Benennung der Felder in der Anleitung
     //(siehe Seite B1) auf einen LibraryEntry mapt. Sie enthält Methoden um auf die
     //Einträge über die Buchstaben Benennung oder zufällig zuzugreifen.
 
-    /** map containg all possible type of tiles */
+    /**The */
     HashMap <String, LibraryEntry> map = new HashMap<String, LibraryEntry>();
 
 
-
-    /** creating entries for all possible tiles */
+    /** creating all possible tile objects. */
 
     // for tile of image d
     LibraryEntry d= new LibraryEntry("file:src/field/D.png",
