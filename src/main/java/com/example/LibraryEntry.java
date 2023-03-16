@@ -31,9 +31,9 @@ public class LibraryEntry {
      Number Argument, das die Features eines Feldes beschreibt, daraus werden im
      Konstruktor die Sockets erzeugt..*/
 
-    public LibraryEntry( String path, Image img, Feature ... features){
+    public LibraryEntry( String path, Feature ... features){
         this.imagePath = path;
-        this.img = img;
+        this.img = new Image(path);
     }
 
 
