@@ -2,19 +2,21 @@ package  com.example;
 
 import javafx.scene.image.Image;
 
-/** the class LibraryEntry describes tile objects */
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+
 public class LibraryEntry {
 
-    /** declaration of attributes of the class LibraryEntry.
+    /** declaration of arrtributes for one Libraryentry
      */
 
     //(a)attribute imagePath describes the path of each stored image of each tile.
     String imagePath;
 
 
-    //(b)a description of the sockets of the tile objects in the Feature class e.g. new Feature("city", 3,4,5)
-    // new Feature("Fields",1.7).
-    class Feature {
+    //(b) a description of the sockets in the Feature class e.g. new Feature("city", 3,4,5)
+    // new Feature("Fields",1.7)
+    static class Feature {
         String type;
         int[] sockets;
 
@@ -36,6 +38,7 @@ public class LibraryEntry {
     public LibraryEntry( String path, Feature ... features){
         this.imagePath = path;
         this.img = new Image(path);
+
     }
 
     }
