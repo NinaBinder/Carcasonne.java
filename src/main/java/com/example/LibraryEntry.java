@@ -2,9 +2,10 @@ package  com.example;
 
 import javafx.scene.image.Image;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+
 public class LibraryEntry {
-
-
 
     /** declaration of arrtributes for one Libraryentry
      */
@@ -14,7 +15,7 @@ public class LibraryEntry {
 
     //(b) a description of the sockets in the Feature class e.g. new Feature("city", 3,4,5)
     // new Feature("Fields",1.7)
-    class Feature {
+    static class Feature {
         String type;
         int[] sockets;
 
@@ -34,6 +35,7 @@ public class LibraryEntry {
     public LibraryEntry( String path, Feature ... features){
         this.imagePath = path;
         this.img = new Image(path);
+
     }
 
 
