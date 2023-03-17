@@ -12,7 +12,7 @@ public class LibraryEntry {
     String imagePath;
 
 
-    //(b)a description of the sockets in the Feature class e.g. new Feature("city", 3,4,5)
+    //(b)a description of the sockets of the tile objects in the Feature class e.g. new Feature("city", 3,4,5)
     // new Feature("Fields",1.7).
     class Feature {
         String type;
