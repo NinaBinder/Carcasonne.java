@@ -29,6 +29,18 @@ public class TileLibrary {
     }
 
     /** creating entries for all possible tiles */
+    LibraryEntry a= new LibraryEntry("file:src/fields/A.png",
+            new LibraryEntry.Feature("field", 0, 1, 2, 3, 4, 5, 6, 8, 9, 10, 11),
+            new LibraryEntry.Feature("road", 7)
+    ){};
+
+    LibraryEntry b= new LibraryEntry("file:src/fields/B.png",
+            new LibraryEntry.Feature("field", 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11)
+    ){};
+
+    LibraryEntry c= new LibraryEntry("file:src/fields/C.png",
+            new LibraryEntry.Feature("city", 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11)
+    ){};
 
     // for tile of image d
     LibraryEntry d= new LibraryEntry("file:src/fields/D.png",
@@ -38,19 +50,34 @@ public class TileLibrary {
             new LibraryEntry.Feature("city", 3, 4, 5)
     ){};
 
-    public String getImagePath(LibraryEntry entry){
-        return entry.imagePath;
-    }
-    public Image getImage(LibraryEntry entry){
-        return entry.img;
-    }
+    LibraryEntry e= new LibraryEntry("file:src/fields/E.png",
+            new LibraryEntry.Feature("city", 0, 1, 2),
+            new LibraryEntry.Feature("field", 3, 4, 5, 6, 7, 8, 9, 10, 11)
+    ){};
 
+    LibraryEntry f= new LibraryEntry("file:src/fields/F.png",
+            new LibraryEntry.Feature("field", 0, 1, 2),
+            new LibraryEntry.Feature("city", 3, 4, 5, 9, 10, 11),
+            new LibraryEntry.Feature("field", 6, 7, 8)
+    ){};
+
+    LibraryEntry g= new LibraryEntry("file:src/fields/G.png",
+            new LibraryEntry.Feature("city", 0, 1, 2, 6, 7, 8),
+            new LibraryEntry.Feature("field", 3, 4, 5),
+            new LibraryEntry.Feature("field", 9, 10, 11)
+    ){};
 
     // for tile of image h
     LibraryEntry h= new LibraryEntry("file:src/fields/H.png",
             new LibraryEntry.Feature("field", 0, 1, 2, 6, 7, 8),
             new LibraryEntry.Feature("city", 3, 4, 5),
             new LibraryEntry.Feature("city", 9, 10, 11)
+    ){};
+
+    LibraryEntry i= new LibraryEntry("file:src/fields/I.png",
+            new LibraryEntry.Feature("field", 0, 1, 2, 9, 10, 11),
+            new LibraryEntry.Feature("city", 3, 4, 5),
+            new LibraryEntry.Feature("city", 6, 7, 8)
     ){};
 
     // for tile of image j
@@ -60,7 +87,6 @@ public class TileLibrary {
             new LibraryEntry.Feature("road", 4, 7),
             new LibraryEntry.Feature("field", 5, 6)){};
 
-
     // for tile of image k
     LibraryEntry k = new LibraryEntry("file:src/fields/K.png",
             new LibraryEntry.Feature("field", 0, 11),
@@ -68,6 +94,12 @@ public class TileLibrary {
             new LibraryEntry.Feature("field", 2, 6, 7, 8, 9),
             new LibraryEntry.Feature("city", 3, 4, 5)){};
 
+    LibraryEntry l = new LibraryEntry("file:src/fields/L.png",
+            new LibraryEntry.Feature("road", 1, 7, 10),
+            new LibraryEntry.Feature("field", 0, 11),
+            new LibraryEntry.Feature("field", 2, 6),
+            new LibraryEntry.Feature("city", 3, 4, 5)
+    ){};
 
     // for tile of image v
     LibraryEntry v = new LibraryEntry("file:src/fields/V.png",
@@ -81,5 +113,14 @@ public class TileLibrary {
             new LibraryEntry.Feature("field", 0, 1, 2, 3, 4, 5, 6),
             new LibraryEntry.Feature("road", 7, 10),
             new LibraryEntry.Feature("field", 8, 9)){};
+
+
+
+    public String getImagePath(LibraryEntry entry){
+        return entry.imagePath;
+    }
+    public Image getImage(LibraryEntry entry){
+        return entry.img;
+    }
 
 }
