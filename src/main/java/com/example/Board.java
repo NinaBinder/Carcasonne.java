@@ -1,5 +1,6 @@
-package com.example.demo_carcassonne;
+package com.example;
 
+import com.example.Tile;
 import javafx.scene.shape.Rectangle;
 
 public class Board {
@@ -35,7 +36,15 @@ public class Board {
         }
     }
 
-    //berechnet die absoluten Koordinaten der Kachel durch
+    public void setTile(int x, int y) {
+        int relX = x - originalTileX;
+        int relY = y - originalTileY;
+        if (!isWithinBoard(relX, relY)) {
+            addNewTile(relX, relY);
+        }
+    }
+
+        //berechnet die absoluten Koordinaten der Kachel durch
     //Addieren der relativen Koordinaten zu den Koordinaten der Ursprungskachel (originTileX bzw. originTileY)
     public Tile getRelativeTile(int relX, int relY) {
         int absX = originalTileX + relX;
@@ -43,6 +52,11 @@ public class Board {
         return getTile(absX, absY);
     }
 
+    public void setRelativeTile(int relX, int relY) {
+        int absX = originalTileX + relX;
+        int absY = originalTileY + relY;
+       setTile(absX, absY);
+    }
     public int getOriginalTileX() {
         return originalTileX;
     }
@@ -65,7 +79,39 @@ public class Board {
         return new int[] { relX + originalTileX, relY + originalTileY };
     }
 
-}
+    public void addNewTileNorth() {
+        int ySize = board.length;
+        int xSize = board[0].length;
+        addNewTile(xSize, ySize+1);
+    }
+
+    public void addNewTileSouth() {
+        int ySize = board.length;
+        int xSize = board[0].length;
+        addNewTile(xSize, ySize-1);
+    }
+
+    public void addNewTileWest() {
+        int ySize = board.length;
+        int xSize = board[0].length;
+        addNewTile(xSize-1, ySize);
+    }
+
+    public void addNewTileEast() {
+        int ySize = board.length;
+        int xSize = board[0].length;
+        addNewTile(xSize+1, ySize);
+    }
+    private void addNewTile(int x, int y) {
+        int boardSize = board.length;
+
+        Tile[][] newBoard = new Tile[boardSize+1][boardSize+1];
+        for(int i = 0; i < boardSize; i++) {
+            newBoard[i][i] = board[i][i];
+        }
+        newBoard[x][y] = new Tile();
+        board = newBoard;
+    }
 
     //Die Klasse enthält Methoden: (a) zum Setzen und Lesen von Feldern über absolute
     //und relative Verweise; (b) Zum Überprüfen, ob ein relativer Verweis innerhalb des
