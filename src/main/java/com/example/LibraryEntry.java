@@ -12,7 +12,7 @@ public class LibraryEntry {
     String imagePath;
 
     //(b)array sockets store sockets of the tile object
-    Socket[] sockets = new Socket[12];
+    Socket[] sockets;
 
 
     //feature class describes the features of the tile object.
@@ -39,24 +39,50 @@ public class LibraryEntry {
     public LibraryEntry( String path, Feature ... features){
         this.imagePath = path;
         this.img = new Image(path);
+        this.sockets = new Socket[12];
+        int counterROAD = 0;
+        int counterFIELD = 0;
+        int counterCITY = 0;
+
 
         // initialise Socket Array
         for (int i=0; i<12; i++){
             for (Feature feature: features){
-                for(int socket :feature.sockets){
-                    if(i == socket){
-                        switch (feature.type){
-                            case ROAD -> this.sockets[i] = ;
-                            case FIELD -> this.sockets[i] =  ;
-                            case CITY -> this.sockets[i] =;
+                switch (feature.type){
+                    case ROAD ->{for(int socket :feature.sockets){
+                        if(i == socket){
+                            this.sockets[i] = new Socket(Component.ROAD,counterROAD);
+                            counterROAD++;
+                            break;
                         }
                     }
-                }
+                        ;}
+
+                    case CITY ->{for(int socket :feature.sockets){
+                        if(i == socket){
+                            this.sockets[i] = new Socket(Component.CITY,counterCITY);
+                            counterCITY++;
+                            break;
+                        }
+                    }
+                        ;}
+
+                    case FIELD ->{for(int socket :feature.sockets){
+                        if(i == socket){
+                            this.sockets[i] = new Socket(Component.FIELD,counterFIELD);
+                            counterFIELD++;
+                            break;
+                        }
+                    }
+                        ;}
+
+
 
                 }
             }
         }
 
+    }
     }
 
 
