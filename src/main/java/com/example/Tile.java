@@ -1,4 +1,4 @@
-package com.example.demo_carcassonne;
+package com.example;
 
 //Die Klasse Tile beschreibt die einzelnen Spielkarten, welche in Summe das Spielfeld
 //ergeben.
