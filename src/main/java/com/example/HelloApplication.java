@@ -17,31 +17,16 @@ import java.io.IOException;
 public class HelloApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        View view = new View();
-        TileLibrary library= new TileLibrary();
 
-        TilePane root = new TilePane();
-        root.setPrefColumns(3);
+        View view= new View();
 
-        Image[] imageName = {library.getImage(library.map.get("K")),
-                library.getImage(library.map.get("D")),
-                library.getImage(library.map.get("V")),
-                library.getImage(library.map.get("W")),
-                library.getImage(library.map.get("H")),
-                library.getImage(library.map.get("V")),
-                library.getImage(library.map.get("J")),
-                library.getImage(library.map.get("D")),
-                library.getImage(library.map.get("K"))};
-
-        for(int i=0; i< 9 ;i++){
-            ImageView imageview = new ImageView(imageName[i]);
-            root.getChildren().addAll(imageview);
-        }
-
-    Scene scene = new Scene(root, 900, 900);
-        stage.setTitle("Hello!");
+        Scene scene = new Scene(view.root, 900, 900);
         stage.setScene(scene);
         stage.show();
+
+
+
+
     }
 
     public static void main(String[] args) {

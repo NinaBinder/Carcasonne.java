@@ -13,31 +13,64 @@ public class TileLibrary {
     //(siehe Seite B1) auf einen LibraryEntry mapt. Sie enthält Methoden um auf die
     //Einträge über die Buchstaben Benennung oder zufällig zuzugreifen.
 
-    /**The */
+    /** map containg all possible type of tiles */
     HashMap <String, LibraryEntry> map = new HashMap<String, LibraryEntry>();
+    String path;
 
+    /** creating entries for all possible tiles */
+    LibraryEntry a= new LibraryEntry("file:src/fields/A.png",
+            new LibraryEntry.Feature(Component.FIELD, 0, 1, 2, 3, 4, 5, 6, 8, 9, 10, 11),
+            new LibraryEntry.Feature(Component.ROAD, 7)
+    ){};
 
-    /** creating all possible tile objects. */
+    LibraryEntry b= new LibraryEntry("file:src/fields/B.png",
+            new LibraryEntry.Feature(Component.FIELD, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11)
+    ){};
+
+    LibraryEntry c= new LibraryEntry("file:src/fields/C.png",
+            new LibraryEntry.Feature(Component.CITY, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11)
+    ){};
 
     // for tile of image d
-    LibraryEntry d= new LibraryEntry("file:src/field/D.png",
+    LibraryEntry d= new LibraryEntry("file:src/fields/D.png",
             new LibraryEntry.Feature(Component.FIELD, 0, 8, 9, 10, 11),
             new LibraryEntry.Feature(Component.ROAD, 1, 7),
             new LibraryEntry.Feature(Component.FIELD, 2, 6),
             new LibraryEntry.Feature(Component.CITY, 3, 4, 5)
     ){};
 
+    LibraryEntry e= new LibraryEntry("file:src/fields/E.png",
+            new LibraryEntry.Feature(Component.CITY, 0, 1, 2),
+            new LibraryEntry.Feature(Component.FIELD, 3, 4, 5, 6, 7, 8, 9, 10, 11)
+    ){};
 
+    LibraryEntry f= new LibraryEntry("file:src/fields/F.png",
+            new LibraryEntry.Feature(Component.FIELD, 0, 1, 2),
+            new LibraryEntry.Feature(Component.CITY, 3, 4, 5, 9, 10, 11),
+            new LibraryEntry.Feature(Component.FIELD, 6, 7, 8)
+    ){};
+
+    LibraryEntry g= new LibraryEntry("file:src/fields/G.png",
+            new LibraryEntry.Feature(Component.CITY, 0, 1, 2, 6, 7, 8),
+            new LibraryEntry.Feature(Component.FIELD, 3, 4, 5),
+            new LibraryEntry.Feature(Component.FIELD, 9, 10, 11)
+    ){};
 
     // for tile of image h
-    LibraryEntry h= new LibraryEntry("file:src/field/H.png",
+    LibraryEntry h= new LibraryEntry("file:src/fields/H.png",
+            new LibraryEntry.Feature(Component.FIELD, 0, 1, 2, 6, 7, 8),
+            new LibraryEntry.Feature(Component.CITY, 3, 4, 5),
+            new LibraryEntry.Feature(Component.CITY, 9, 10, 11)
+    ){};
+
+    LibraryEntry i= new LibraryEntry("file:src/fields/I.png",
             new LibraryEntry.Feature(Component.FIELD, 0, 1, 2, 6, 7, 8),
             new LibraryEntry.Feature(Component.CITY, 3, 4, 5),
             new LibraryEntry.Feature(Component.CITY, 9, 10, 11)
     ){};
 
     // for tile of image j
-    LibraryEntry j = new LibraryEntry("file:src/field/J.png",
+    LibraryEntry j = new LibraryEntry("file:src/fields/J.png",
             new LibraryEntry.Feature(Component.FIELD, 3, 8, 9, 10, 11),
             new LibraryEntry.Feature(Component.CITY, 0, 1, 2),
             new LibraryEntry.Feature(Component.ROAD, 4, 7),
@@ -45,22 +78,29 @@ public class TileLibrary {
 
 
     // for tile of image k
-    LibraryEntry k = new LibraryEntry("file:src/field/K.png",
+    LibraryEntry k = new LibraryEntry("file:src/fields/K.png",
             new LibraryEntry.Feature(Component.FIELD, 0, 11),
             new LibraryEntry.Feature(Component.ROAD, 1, 10),
             new LibraryEntry.Feature(Component.FIELD, 2, 6, 7, 8, 9),
             new LibraryEntry.Feature(Component.CITY, 3, 4, 5)){};
 
+    LibraryEntry l = new LibraryEntry("file:src/fields/L.png",
+            new LibraryEntry.Feature(Component.ROAD, 1, 7, 10),
+            new LibraryEntry.Feature(Component.FIELD, 0, 11),
+            new LibraryEntry.Feature(Component.FIELD, 2, 6),
+            new LibraryEntry.Feature(Component.CITY, 3, 4, 5)
+    ){};
 
     // for tile of image v
-    LibraryEntry v = new LibraryEntry("file:src/field/V.png",
-            new LibraryEntry.Feature(Component.FIELD, 0, 9,
-                    10, 11), new LibraryEntry.Feature(Component.ROAD, 1, 7),
-            new LibraryEntry.Feature(Component.FIELD, 2, 3, 4, 5, 6)){};
+    LibraryEntry v = new LibraryEntry("file:src/fields/V.png",
+            new LibraryEntry.Feature(Component.FIELD, 0, 9, 10, 11),
+            new LibraryEntry.Feature(Component.ROAD, 1, 7),
+            new LibraryEntry.Feature(Component.FIELD, 2, 3, 4, 5, 6)
+    ){};
 
 
     // for tile of image w
-    LibraryEntry w =new LibraryEntry("file:src/field/W.png",
+    LibraryEntry w =new LibraryEntry("file:src/fields/W.png",
             new LibraryEntry.Feature(Component.FIELD, 0, 1, 2, 3, 4, 5, 6),
             new LibraryEntry.Feature(Component.ROAD, 7, 10),
             new LibraryEntry.Feature(Component.FIELD, 8, 9)){};
@@ -78,6 +118,7 @@ public class TileLibrary {
 
 
     }
-
-
+    public Image getImage(LibraryEntry entry){
+        return entry.img;
+    }
 }
