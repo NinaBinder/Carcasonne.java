@@ -21,7 +21,8 @@ public class View extends BorderPane {
     TilePane root = new TilePane();
     ScrollPane scrollPane= new ScrollPane();
     VBox vBox= new VBox();
-    Button karteZiehen = new Button("neue Karte ziehen");
+    Button drawCard = new Button("draw new card");
+    Button rotateRight= new Button("rotate right");
 
     public View() {
         scrollPane.setContent(root);
@@ -37,7 +38,7 @@ public class View extends BorderPane {
         //vBox.setAlignment(Pos.TOP_RIGHT);
         vBox.setPadding(new Insets(15, 12, 15, 12));
         vBox.setSpacing(10);
-        vBox.getChildren().add(karteZiehen);
+        vBox.getChildren().add(drawCard);
         //setAlignment (karteZiehen, Pos.BOTTOM_RIGHT);
 
         //initView(3,3);
@@ -60,6 +61,8 @@ public class View extends BorderPane {
 
         for (int i = 0; i < 9; i++) {
             ImageView imageview = new ImageView(imageName[i]);
+            imageview.setFitWidth(150);
+            imageview.setFitHeight(150);
             root.getChildren().addAll(imageview);
         }
     }

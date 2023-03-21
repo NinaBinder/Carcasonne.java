@@ -105,6 +105,12 @@ public class TileLibrary {
             new LibraryEntry.Feature(Component.ROAD, 7, 10),
             new LibraryEntry.Feature(Component.FIELD, 8, 9)){};
 
+    LibraryEntry empty= new LibraryEntry("file:src/fields/Empty.png",
+            new LibraryEntry.Feature(Component.FIELD, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11),
+            new LibraryEntry.Feature(Component.CITY, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11),
+            new LibraryEntry.Feature(Component.ROAD, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11)
+    ){};
+
 
 
     //put  all the tile entries into the map
@@ -115,6 +121,7 @@ public class TileLibrary {
         map.put("K",k);
         map.put("V",v);
         map.put("W",w);
+        map.put("EMPTY",empty);
 
 
     }
