@@ -6,27 +6,31 @@ package com.example;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 //import javafx.scene.layout.GridPane.com.example.demo_carcassonne
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
-import javafx.stage.Stage;
+
 
 public class View extends BorderPane {
 
     TileLibrary library= new TileLibrary();
     BorderPane border = new BorderPane();
     TilePane root = new TilePane();
+    ScrollPane scrollPane= new ScrollPane();
     VBox vBox= new VBox();
     Button karteZiehen = new Button("neue Karte ziehen");
 
     public View() {
-
+        scrollPane.setContent(root);
+        border.setCenter(scrollPane);
+        scrollPane.setPrefSize(400, 400);
+        /*AnchorPane.setTopAnchor(scrollPane, 0.);
+        AnchorPane.setRightAnchor(scrollPane, 0.);
+        AnchorPane.setBottomAnchor(scrollPane, 0.);
+        */AnchorPane.setLeftAnchor(scrollPane, 0.);
         //border.setMargin (root, new Insets (12,12,12,12));
         border.setLeft(vBox);
         //root.setAlignment(Pos.CENTER);
@@ -38,8 +42,8 @@ public class View extends BorderPane {
 
         //initView(3,3);
         root.setPrefColumns(3);
-        border.setCenter(root);
-        setAlignment (root, Pos.CENTER);
+        //border.setCenter(root);
+        //setAlignment (root, Pos.CENTER);
         initView();
     }
 
