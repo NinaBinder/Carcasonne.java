@@ -7,6 +7,7 @@ package com.example;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -23,6 +24,7 @@ public class View extends BorderPane {
     VBox vBox= new VBox();
     Button drawCard = new Button("draw new card");
     Button rotateRight= new Button("rotate right");
+    Label points = new Label("POINTS");
 
     public View() {
         scrollPane.setContent(root);
@@ -39,6 +41,7 @@ public class View extends BorderPane {
         vBox.setPadding(new Insets(15, 12, 15, 12));
         vBox.setSpacing(10);
         vBox.getChildren().add(drawCard);
+        vBox.getChildren().add(points);
         //setAlignment (karteZiehen, Pos.BOTTOM_RIGHT);
 
         //initView(3,3);
@@ -46,27 +49,35 @@ public class View extends BorderPane {
         //border.setCenter(root);
         //setAlignment (root, Pos.CENTER);
         initView();
+        countPoints();
     }
 
     public void initView() {
-        Image[] imageName = {library.getImage(library.map.get("K")),
-                library.getImage(library.map.get("D")),
-                library.getImage(library.map.get("V")),
-                library.getImage(library.map.get("W")),
+        Image[] imageName = {library.getImage(library.map.get("EMPTY")),
+                library.getImage(library.map.get("EMPTY")),
+                library.getImage(library.map.get("EMPTY")),
+                library.getImage(library.map.get("EMPTY")),
                 library.getImage(library.map.get("H")),
-                library.getImage(library.map.get("V")),
-                library.getImage(library.map.get("J")),
-                library.getImage(library.map.get("D")),
-                library.getImage(library.map.get("K"))};
+                library.getImage(library.map.get("EMPTY")),
+                library.getImage(library.map.get("EMPTY")),
+                library.getImage(library.map.get("EMPTY")),
+                library.getImage(library.map.get("EMPTY"))};
 
         for (int i = 0; i < 9; i++) {
             ImageView imageview = new ImageView(imageName[i]);
             imageview.setFitWidth(150);
             imageview.setFitHeight(150);
             root.getChildren().addAll(imageview);
-        }
-    }
+        }}
+        public void countPoints() {
 
+                int score = 0;
+                points.setText("Score: " + score);
+                //if ...
+                score++;
+            }
+
+    }
 
         /*public void initView(int width, int height) {
 
@@ -91,4 +102,4 @@ public class View extends BorderPane {
     public void addPicture (){
 
     }*/
-}
+
