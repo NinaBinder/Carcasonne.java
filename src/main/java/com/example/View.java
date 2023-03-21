@@ -5,13 +5,15 @@ package com.example;
 
 
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+
+import java.util.Random;
 //import javafx.scene.layout.GridPane.com.example.demo_carcassonne
 
 
@@ -22,34 +24,54 @@ public class View extends BorderPane {
     TilePane root = new TilePane();
     ScrollPane scrollPane= new ScrollPane();
     VBox vBox= new VBox();
+    ImageView buttonImageView = new ImageView();
     Button drawCard = new Button("draw new card");
     Button rotateRight= new Button("rotate right");
     Label points = new Label("POINTS");
+    int rotate=0;
+
 
     public View() {
+
+        Image[] buttonimage = {library.getImage(library.map.get("D")),
+                library.getImage(library.map.get("H")),
+                library.getImage(library.map.get("V")),
+                library.getImage(library.map.get("J")),
+                };
+
+        Random rand = new Random();
+        int[] numbers={0,1,2,3};
+
+        drawCard.setOnAction(event->{
+            buttonImageView.setFitWidth(100);
+            buttonImageView.setFitHeight(100);
+            int rnd = rand.nextInt(numbers.length);
+            buttonImageView.setImage(buttonimage[rnd]);
+
+            //Pei I think this is the source of the drag and drop :)
+            drawCard.setGraphic(buttonImageView);
+
+            drawCard.setContentDisplay(ContentDisplay.BOTTOM);
+
+        });
+
         scrollPane.setContent(root);
         border.setCenter(scrollPane);
         scrollPane.setPrefSize(400, 400);
-        /*AnchorPane.setTopAnchor(scrollPane, 0.);
-        AnchorPane.setRightAnchor(scrollPane, 0.);
-        AnchorPane.setBottomAnchor(scrollPane, 0.);
-        */AnchorPane.setLeftAnchor(scrollPane, 0.);
-        //border.setMargin (root, new Insets (12,12,12,12));
+
         border.setLeft(vBox);
-        //root.setAlignment(Pos.CENTER);
-        //vBox.setAlignment(Pos.TOP_RIGHT);
         vBox.setPadding(new Insets(15, 12, 15, 12));
         vBox.setSpacing(10);
         vBox.getChildren().add(drawCard);
+        vBox.getChildren().add(rotateRight);
         vBox.getChildren().add(points);
-        //setAlignment (karteZiehen, Pos.BOTTOM_RIGHT);
 
-        //initView(3,3);
+
         root.setPrefColumns(3);
-        //border.setCenter(root);
-        //setAlignment (root, Pos.CENTER);
         initView();
         countPoints();
+
+
     }
 
     public void initView() {
@@ -57,7 +79,7 @@ public class View extends BorderPane {
                 library.getImage(library.map.get("EMPTY")),
                 library.getImage(library.map.get("EMPTY")),
                 library.getImage(library.map.get("EMPTY")),
-                library.getImage(library.map.get("H")),
+                library.getImage(library.map.get("OG")),
                 library.getImage(library.map.get("EMPTY")),
                 library.getImage(library.map.get("EMPTY")),
                 library.getImage(library.map.get("EMPTY")),
@@ -67,8 +89,23 @@ public class View extends BorderPane {
             ImageView imageview = new ImageView(imageName[i]);
             imageview.setFitWidth(150);
             imageview.setFitHeight(150);
+
+            rotateRight.setOnAction(event -> {
+                rotate= rotate + 90;
+
+                if (rotate == 360) {
+                    rotate = 0;
+                }
+                System.out.println(rotate);
+
+            });
             root.getChildren().addAll(imageview);
-        }}
+            imageview.setRotate(rotate);
+        }
+
+    }
+
+
         public void countPoints() {
 
                 int score = 0;
@@ -78,28 +115,4 @@ public class View extends BorderPane {
             }
 
     }
-
-        /*public void initView(int width, int height) {
-
-            for (int x = 0; x < width; x++) {
-                for (int y = 0; y < height; y++) {
-                    Tile tile = new Tile ();
-                    tile.setTranslateX(x * 200);
-                    tile.setTranslateY(y * 200);
-                    gridPane.getChildren().add(tile);
-                }
-            }
-        }
-    private class Tile extends GridPane {
-        public Tile(){
-            Rectangle border = new Rectangle(200,200);
-            border.setFill(null);
-            border.setStroke(Color.BLACK);
-            setAlignment(Pos.CENTER);
-            getChildren().addAll(border);
-        }
-    }
-    public void addPicture (){
-
-    }*/
 
