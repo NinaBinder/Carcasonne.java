@@ -70,10 +70,10 @@ public class Tile {
     //check whether the field fits on the side of another
     public Boolean fit(Tile another){
         //  [C0, C0, C0] fit [C1, C1, C1] -> tiles showing a city
-    }
+        return true;}
 
 }
 
 
 
-}
+

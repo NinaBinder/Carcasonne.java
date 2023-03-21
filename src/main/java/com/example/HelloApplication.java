@@ -20,7 +20,7 @@ public class HelloApplication extends Application {
 
         View view= new View();
 
-        Scene scene = new Scene(view.root, 900, 900);
+        Scene scene = new Scene(view.border, 900, 900);
         stage.setScene(scene);
         stage.show();
 

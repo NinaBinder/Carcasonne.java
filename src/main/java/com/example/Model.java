@@ -30,5 +30,8 @@ public class Model {
     public void setNextTile(Tile next){
         this.next = next;
     }
+    public void neueKarte (){
+    //gib random Karte aus
+    }
 
 }
