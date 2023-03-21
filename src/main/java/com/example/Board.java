@@ -18,8 +18,8 @@ public class Board {
     //Konstruktor, der ein Tile-Objekt als Argument verwendet,
     //um es als Ursprungskachel des Spielbretts festzulegen
     public Board(Tile originalTile) {
-        board = new Tile[1][1];
-        board[0][0] = originalTile;
+        board = new Tile[3][3];
+        board[1][1] = originalTile;
         originalTileX = 0;
         originalTileY = 0;
     }
@@ -35,82 +35,109 @@ public class Board {
             return null;
         }
     }
-
+    //????
     public void setTile(int x, int y) {
         int relX = x - originalTileX;
         int relY = y - originalTileY;
-        if (!isWithinBoard(relX, relY)) {
-            addNewTile(relX, relY);
+        if (isWithinBoard(relX, relY)) {
+            this.board[x][y] = new Tile();
+        }
+        else {
+            if(relX>board.length){
+                extendsBoardEast();
+            }
+            if(relX<0){
+                extendsBoardWest();
+            }
+            if(relY>board[0].length){
+                extendsBoardSouth();
+            }
+            if(relY<0){
+                extendsBoardNorth();
+            }
+
         }
     }
 
-        //berechnet die absoluten Koordinaten der Kachel durch
+    //berechnet die absoluten Koordinaten der Kachel durch
     //Addieren der relativen Koordinaten zu den Koordinaten der Ursprungskachel (originTileX bzw. originTileY)
-    public Tile getRelativeTile(int relX, int relY) {
+    public Tile get_withRelativeReference(int relX, int relY) {
         int absX = originalTileX + relX;
         int absY = originalTileY + relY;
         return getTile(absX, absY);
     }
 
-    public void setRelativeTile(int relX, int relY) {
+    public void set_withRelativeReference(int relX, int relY) {
         int absX = originalTileX + relX;
         int absY = originalTileY + relY;
-       setTile(absX, absY);
+        //setTile(absX, absY);
     }
+
     public int getOriginalTileX() {
         return originalTileX;
     }
 
-    public int getOriginialTileY() {
+    public int getOriginalTileY() {
         return originalTileY;
     }
     //prüfe, ob eine gegebene Zelle mit den relativen Koordinaten relX und relY
     //innerhalb der Grenzen des Arrays liegt
     public boolean isWithinBoard(int relX, int relY) {
-        return relX >= 0 && relX < board[0].length && relY >= 0 && relY < board.length;
+        return relX >= 0 && relX < board.length && relY >= 0 && relY < board[0].length;
     }
+
     //Konvertieren von absoluten zu relativen Positionen
     public int[] convertToRelative(int absX, int absY) {
-        return new int[] { absX - originalTileX, absY - originalTileY };
+        int[] relative_coordinates = { absX - originalTileX, absY - originalTileY };
+        return relative_coordinates;
     }
 
-    //Konvertieren von relativen zu absoluten Positionen
-    public int[] convertToAbsolute(int relX, int relY) {
-        return new int[] { relX + originalTileX, relY + originalTileY };
+    public void extendsBoardNorth() {
+        int xSize = board.length;
+        int ySize = board[0].length;
+        extendsBoard(xSize, ySize+1,"north");
     }
 
-    public void addNewTileNorth() {
-        int ySize = board.length;
-        int xSize = board[0].length;
-        addNewTile(xSize, ySize+1);
+    public void extendsBoardSouth() {
+        int xSize = board.length;
+        int ySize = board[0].length;
+        extendsBoard(xSize, ySize+1,"south");
     }
 
-    public void addNewTileSouth() {
-        int ySize = board.length;
-        int xSize = board[0].length;
-        addNewTile(xSize, ySize-1);
+    public void extendsBoardWest() {
+        int xSize = board.length;
+        int ySize = board[0].length;
+        extendsBoard(xSize+1, ySize,"west");
     }
 
-    public void addNewTileWest() {
-        int ySize = board.length;
-        int xSize = board[0].length;
-        addNewTile(xSize-1, ySize);
+    public void extendsBoardEast() {
+        int xSize = board.length;
+        int ySize = board[0].length;
+        extendsBoard(xSize+1, ySize,"east");
     }
+    private void extendsBoard(int width, int height, String extend_direction) {
 
-    public void addNewTileEast() {
-        int ySize = board.length;
-        int xSize = board[0].length;
-        addNewTile(xSize+1, ySize);
-    }
-    private void addNewTile(int x, int y) {
-        int boardSize = board.length;
+        Tile[][] newBoard = new Tile[width][height];
+        for(int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++){
+                switch (extend_direction) {
+                    case "north":
+                        newBoard[x][y+1] = board[x][y];
+                        break;
+                    case "south":
+                        newBoard[x][y] = board[x][y];
+                        break;
+                    case "west":
+                        newBoard[x+1][y] = board[x][y];
+                        break;
+                    case "east":
+                        newBoard[x][y] = board[x][y];
+                        break;
+                }
+            }
 
-        Tile[][] newBoard = new Tile[boardSize+1][boardSize+1];
-        for(int i = 0; i < boardSize; i++) {
-            newBoard[i][i] = board[i][i];
         }
-        newBoard[x][y] = new Tile();
-        board = newBoard;
+        this.board = newBoard;
     }
 
     //Die Klasse enthält Methoden: (a) zum Setzen und Lesen von Feldern über absolute
