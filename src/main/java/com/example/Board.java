@@ -1,14 +1,12 @@
 package com.example;
 
-import com.example.Tile;
-import javafx.scene.shape.Rectangle;
 
 /**Class representing the game field.
  This grows with the creation of new fields.*/
 public class Board {
 
     //The attribute board stores the map in a two-dimensional array.
-    private Tile[][] board;
+    Tile[][] matrix;
     // The relative coordinate of the starting Tile in the map.
     private int originalTileX;
     // The relative coordinate of the starting Tile in the map.
@@ -18,9 +16,9 @@ public class Board {
     /**constructor*/
     public Board(Tile originalTile) {
         // initialize the board of size 3x3 (each row 3 fields, each column 3 fields)
-        board = new Tile[3][3];
+        matrix = new Tile[3][3];
         // the original tile is always set in the middle of the board
-        board[1][1] = originalTile;
+        matrix[1][1] = originalTile;
         // relative position of the starting Tile is always 0/0 at the beginning
         originalTileX = 0;
         originalTileY = 0;
@@ -32,9 +30,8 @@ public class Board {
         // to the coordinates of the origin tile to get the absolute position of the tile
         int absX = convertToAbsolute(relX,relY)[0];
         int absY = convertToAbsolute(relX,relY)[1];
-        return absX>= 0 && absX< board.length && absY>= 0 && absY< board[0].length;
+        return absX>= 0 && absX< matrix.length && absY>= 0 && absY< matrix[0].length;
     }
-
 
     /** getter */
     public int getOriginalTileX() {
@@ -45,12 +42,13 @@ public class Board {
         return originalTileY;
     }
 
+
     // get the tile via absolute references
     public Tile getTile(int x, int y) {
         int relX = convertToRelative(x,y)[0];
         int relY = convertToRelative(x,y)[1];
         if (isWithinBoard(relX, relY)) {
-            return board[x][y];
+            return matrix[x][y];
         } else {
             return null;
         }
@@ -61,7 +59,7 @@ public class Board {
         if (isWithinBoard(relX, relY)) {
             int absX = convertToAbsolute(relX,relY)[0];
             int absY = convertToAbsolute(relX,relY)[1];
-            return board[absX][absY];
+            return matrix[absX][absY];
         } else {
             return null;
         }
@@ -69,15 +67,15 @@ public class Board {
 
     /** setter */
     //set the tile with via absolute references
-    public void setTile(int x, int y) {
+    public void setTile(int x, int y, String entry) {
         // check if the coordinates of the selected position are inside the board.
         if (isWithinBoard(convertToRelative(x,y)[0], convertToRelative(x,y)[1])) {
-            this.board[x][y] = new Tile();
+            this.matrix[x][y] = new Tile(x,y,0,entry);
         }
         // if the selected position is outside the board, the board has to be extended
         else {
             // in case the selected position is east of (on the right of) current board
-            if(x>board.length){
+            if(x> matrix.length){
                 extendsBoardEast();
             }
             // in case the selected position is west of (on the left of) current board.
@@ -85,7 +83,7 @@ public class Board {
                 extendsBoardWest();
             }
             // in case the selected position is south of (below)  current board.
-            if(y>board[0].length){
+            if(y> matrix[0].length){
                 extendsBoardSouth();
             }
             // in case the selected position is north of (on top of) current board.
@@ -97,8 +95,8 @@ public class Board {
     }
 
     //set the tile with via relative references
-    public void set_withRelativeReference(int relX, int relY) {
-        setTile(convertToAbsolute(relX, relY)[0],convertToAbsolute(relX, relY)[1]);
+    public void set_withRelativeReference(int relX, int relY, String entry) {
+        setTile(convertToAbsolute(relX, relY )[0],convertToAbsolute(relX, relY)[1], entry);
     }
 
 
@@ -116,29 +114,29 @@ public class Board {
 
     /**method to expand the array in any of the four directions */
     public void extendsBoardNorth() {
-        int xSize = board.length;
-        int ySize = board[0].length;
+        int xSize = matrix.length;
+        int ySize = matrix[0].length;
         final String direction = "north";
         extendsBoard(xSize, ySize+1,direction);
     }
 
     public void extendsBoardSouth() {
-        int xSize = board.length;
-        int ySize = board[0].length;
+        int xSize = matrix.length;
+        int ySize = matrix[0].length;
         final String direction = "south";
         extendsBoard(xSize, ySize+1,direction);
     }
 
     public void extendsBoardWest() {
-        int xSize = board.length;
-        int ySize = board[0].length;
+        int xSize = matrix.length;
+        int ySize = matrix[0].length;
         final String direction = "west";
         extendsBoard(xSize+1, ySize,direction);
     }
 
     public void extendsBoardEast() {
-        int xSize = board.length;
-        int ySize = board[0].length;
+        int xSize = matrix.length;
+        int ySize = matrix[0].length;
         final String direction = "east";
         extendsBoard(xSize+1, ySize,direction);
     }
@@ -151,27 +149,27 @@ public class Board {
             for (int y = 0; y < height; y++){
                 switch (extend_direction) {
                     case "north":
-                        newBoard[x][y+1] = board[x][y];
+                        newBoard[x][y+1] = matrix[x][y];
                         // update the position of the originalTile
                         originalTileY ++;
                         break;
                     case "south":
-                        newBoard[x][y] = board[x][y];
+                        newBoard[x][y] = matrix[x][y];
                         break;
                     case "west":
-                        newBoard[x+1][y] = board[x][y];
+                        newBoard[x+1][y] = matrix[x][y];
                         // update the position of the originalTile
                         originalTileX ++;
                         break;
                     case "east":
-                        newBoard[x][y] = board[x][y];
+                        newBoard[x][y] = matrix[x][y];
                         break;
                 }
             }
 
         }
         // set the new board as the current board
-        this.board = newBoard;
+        this.matrix = newBoard;
     }
 
 }

@@ -2,6 +2,8 @@ package com.example;
 
 import javafx.scene.image.Image;
 
+import java.util.Map;
+
 
 //Die Klasse Tile beschreibt die einzelnen Spielkarten, welche in Summe das Spielfeld
 //ergeben.
@@ -12,6 +14,8 @@ import javafx.scene.image.Image;
 // (d) kann überprüft werden ob das Feld an die Seite eines anderen passt
 
 public class Tile {
+    TileLibrary library= new TileLibrary();
+
 
     int relX;
     int relY;
@@ -24,13 +28,14 @@ public class Tile {
     // (b) die eigene Rotation;
     // (c) das assoziierte Bild;
     // (d) und ein Array, das die Konfiguration der Seiten beschreibt (Socket Array),
-   /* public Tile(int relX,int relY, int rotation, Image image, Socket[] sockets){
+    public Tile(int relX,int relY, int rotation, String entry){
         this.relX= relX;
         this.relY= relY;
         this.rotation= rotation;
-        this.image=image;
-        this.sockets= sockets;
-    }*/
+        library.map.get(entry);
+
+    }
+    Tile originalTile = new Tile(0,0,0,"OG");
 
 
     //placement of a character on this tile
@@ -58,12 +63,6 @@ public class Tile {
     //kann ein
     //ImageView Node erzeugt werden mit spezifizieter Dimension und richtiger Rotation;
 
-
-    //check whether the field fits on the side of another
-    public Boolean fit(Tile another){
-        //  [C0, C0, C0] fit [C1, C1, C1] -> tiles showing a city
-        return true;
-    }
 
 }
 
