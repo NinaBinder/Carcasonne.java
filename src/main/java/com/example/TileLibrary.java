@@ -1,8 +1,7 @@
 package com.example;
 import javafx.scene.image.Image;
-
 import java.util.HashMap;
-import java.util.Map;
+
 
 /**The TileLibrary serves as a reference work for all possible tiles.
  * This Class has one attribute HashMap, where all objects of LibraryEntry are stored. */
@@ -33,6 +32,13 @@ public class TileLibrary {
 
     // for tile of image d
     LibraryEntry d= new LibraryEntry("file:src/fields/D.png",
+            new LibraryEntry.Feature(Component.FIELD, 0, 8, 9, 10, 11),
+            new LibraryEntry.Feature(Component.ROAD, 1, 7),
+            new LibraryEntry.Feature(Component.FIELD, 2, 6),
+            new LibraryEntry.Feature(Component.CITY, 3, 4, 5)
+    ){};
+
+    LibraryEntry originalTile= new LibraryEntry("file:src/fields/D.png",
             new LibraryEntry.Feature(Component.FIELD, 0, 8, 9, 10, 11),
             new LibraryEntry.Feature(Component.ROAD, 1, 7),
             new LibraryEntry.Feature(Component.FIELD, 2, 6),
@@ -122,6 +128,8 @@ public class TileLibrary {
         map.put("V",v);
         map.put("W",w);
         map.put("EMPTY",empty);
+        map.put("OG",originalTile);
+
 
 
     }

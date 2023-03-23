@@ -18,11 +18,11 @@ public class LibraryEntry {
     //feature class describes the features of the tile object.
     static class Feature {
         Component type;
-        int[] socketindices;
+        int[] sockets;
 
-        public Feature(Component type, int ... socketindices) {
+        public Feature(Component type, int ... sockets) {
             this.type = type;
-            this.socketindices = socketindices;
+            this.sockets = sockets;
         }
     }
 
@@ -34,7 +34,7 @@ public class LibraryEntry {
      * the TileLibrary class when these objects are created by calling this constructor.
      * Image instance of the class initialised directly within the constructor with passing the value of
      * parameter path to the attribute "path" of Class Image..
-     * array sockets initialised within the constructor by reading out data stored in features */
+     * array sockets initialised within the constructor by reading out features */
 
     public LibraryEntry( String path, Feature ... features){
         this.imagePath = path;
@@ -46,45 +46,41 @@ public class LibraryEntry {
 
 
         // initialise Socket Array
+        for (int i=0; i<12; i++){
             for (Feature feature: features){
                 switch (feature.type){
-                    case FIELD :
-                    {
-                        for (int socket: feature.socketindices){
-                            this.sockets[socket] = new Socket(Component.FIELD, counterFIELD);
+                    case ROAD ->{for(int socket :feature.sockets){
+                        if(i == socket){
+                            this.sockets[i] = new Socket(Component.ROAD,counterROAD);
+                            counterROAD++;
+                            break;
                         }
                     }
+                        ;}
 
-                    case ROAD  :
-                    {
-                        for (int socket: feature.socketindices){
-                            this.sockets[socket] = new Socket(Component.ROAD, counterROAD);
+                    case CITY ->{for(int socket :feature.sockets){
+                        if(i == socket){
+                            this.sockets[i] = new Socket(Component.CITY,counterCITY);
+                            counterCITY++;
+                            break;
                         }
                     }
+                        ;}
 
-                    case CITY  :
-                    {
-                        for (int socket: feature.socketindices){
-                            this.sockets[socket] = new Socket(Component.CITY, counterCITY);
+                    case FIELD ->{for(int socket :feature.sockets){
+                        if(i == socket){
+                            this.sockets[i] = new Socket(Component.FIELD,counterFIELD);
+                            counterFIELD++;
+                            break;
                         }
                     }
+                        ;}
 
-                if(feature.type == Component.FIELD){
-                    counterFIELD++;
-                }
-                else if(feature.type == Component.ROAD){
-                    counterROAD++;
-                }
-                else if(feature.type == Component.CITY){
-                    counterCITY++;
-                }
 
 
                 }
-
-
             }
-
+        }
 
     }
     }
