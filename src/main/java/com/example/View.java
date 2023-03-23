@@ -12,12 +12,10 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-
 import java.util.Random;
-//import javafx.scene.layout.GridPane.com.example.demo_carcassonne
 
 
-public class View extends BorderPane {
+public class View {
 
     TileLibrary library= new TileLibrary();
     BorderPane border = new BorderPane();
@@ -26,12 +24,23 @@ public class View extends BorderPane {
     VBox vBox= new VBox();
     ImageView buttonImageView = new ImageView();
     Button drawCard = new Button("draw new card");
+    ImageView cardBack= new ImageView("file:src/fields/back.png");
+
     Button rotateRight= new Button("rotate right");
     Label points = new Label("POINTS");
     int rotate=0;
 
+    public ImageView getButtonImageView(){
+        return buttonImageView;
+    }
+
+    public Button getDrawCard(){
+        return drawCard;
+    }
+
 
     public View() {
+        drawCard.setGraphic(buttonImageView);
 
         Image[] buttonimage = {library.getImage(library.map.get("D")),
                 library.getImage(library.map.get("H")),
@@ -50,7 +59,6 @@ public class View extends BorderPane {
 
             //Pei I think this is the source of the drag and drop :)
             drawCard.setGraphic(buttonImageView);
-
             drawCard.setContentDisplay(ContentDisplay.BOTTOM);
 
         });
