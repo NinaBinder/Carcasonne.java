@@ -21,7 +21,7 @@ public class View {
     BorderPane border = new BorderPane();
     TilePane root = new TilePane();
     ScrollPane scrollPane= new ScrollPane();
-    VBox vBox= new VBox();
+    HBox playerInterface= new HBox();
     ImageView buttonImageView = new ImageView();
     Button drawCard = new Button("draw new card");
     ImageView cardBack= new ImageView("file:src/fields/back.png");
@@ -40,48 +40,34 @@ public class View {
 
 
     public View() {
-        drawCard.setGraphic(buttonImageView);
-
-        Image[] buttonimage = {library.getImage(library.map.get("D")),
-                library.getImage(library.map.get("H")),
-                library.getImage(library.map.get("V")),
-                library.getImage(library.map.get("J")),
-                };
-
-        Random rand = new Random();
-        int[] numbers={0,1,2,3};
-
-        drawCard.setOnAction(event->{
-            buttonImageView.setFitWidth(100);
-            buttonImageView.setFitHeight(100);
-            int rnd = rand.nextInt(numbers.length);
-            buttonImageView.setImage(buttonimage[rnd]);
-
-            //Pei I think this is the source of the drag and drop :)
-            drawCard.setGraphic(buttonImageView);
-            drawCard.setContentDisplay(ContentDisplay.BOTTOM);
-
-        });
-
-        scrollPane.setContent(root);
         border.setCenter(scrollPane);
+        scrollPane.setContent(root);
         scrollPane.setPrefSize(400, 400);
 
-        border.setLeft(vBox);
-        vBox.setPadding(new Insets(15, 12, 15, 12));
-        vBox.setSpacing(10);
-        vBox.getChildren().add(drawCard);
-        vBox.getChildren().add(rotateRight);
-        vBox.getChildren().add(points);
+        border.setBottom(playerInterface);
+        playerInterface.setPadding(new Insets(15, 12, 15, 12));
+        playerInterface.setSpacing(10);
+        playerInterface.getChildren().add(rotateRight);
+        playerInterface.getChildren().add(points);
 
+        playerInterface.getChildren().add(drawCard);
+        drawCard.setGraphic(cardBack);
+        drawCard.setContentDisplay(ContentDisplay.BOTTOM);
+        cardBack.setFitWidth(100);
+        cardBack.setFitHeight(100);
 
         root.setPrefColumns(3);
         initView();
         countPoints();
 
+        drawCard.setOnAction(event->{
+
+            //Pei I think this is the source of the drag and drop :)
+            drawCard.setGraphic(buttonImageView);
+
+        });
 
     }
-
     public void initView() {
         Image[] imageName = {library.getImage(library.map.get("EMPTY")),
                 library.getImage(library.map.get("EMPTY")),
@@ -112,15 +98,27 @@ public class View {
         }
 
     }
+    public void newCard(){
+        Image[] buttonimage = {library.getImage(library.map.get("D")),
+                library.getImage(library.map.get("H")),
+                library.getImage(library.map.get("V")),
+                library.getImage(library.map.get("J")),
+        };
 
+        Random rand = new Random();
+        int[] numbers={0,1,2,3};
+        buttonImageView.setFitWidth(100);
+        buttonImageView.setFitHeight(100);
+        int rnd = rand.nextInt(numbers.length);
+        buttonImageView.setImage(buttonimage[rnd]);
+    }
 
-        public void countPoints() {
+    public void countPoints() {
 
-                int score = 0;
-                points.setText("Score: " + score);
-                //if ...
-                score++;
+        int score = 0;
+        points.setText("Score: " + score);
+        //if ...
+        score++;
             }
 
     }
-
