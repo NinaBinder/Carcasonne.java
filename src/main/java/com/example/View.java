@@ -12,6 +12,8 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+
+import java.util.ArrayList;
 import java.util.Random;
 
 
@@ -19,25 +21,22 @@ public class View {
 
     TileLibrary library= new TileLibrary();
     BorderPane border = new BorderPane();
+
     TilePane root = new TilePane();
     ScrollPane scrollPane= new ScrollPane();
     HBox playerInterface= new HBox();
     ImageView buttonImageView = new ImageView();
-    Button drawCard = new Button("draw new card");
+    Button drawCardButton = new Button("draw new card");
     ImageView cardBack= new ImageView("file:src/fields/back.png");
 
+    Image newButtonImage;
     Button rotateRight= new Button("rotate right");
     Label points = new Label("POINTS");
     int rotate=0;
 
-    public ImageView getButtonImageView(){
-        return buttonImageView;
+    public Image getButtonImageView(){
+        return newButtonImage;
     }
-
-    public Button getDrawCard(){
-        return drawCard;
-    }
-
 
     public View() {
         border.setCenter(scrollPane);
@@ -50,9 +49,9 @@ public class View {
         playerInterface.getChildren().add(rotateRight);
         playerInterface.getChildren().add(points);
 
-        playerInterface.getChildren().add(drawCard);
-        drawCard.setGraphic(cardBack);
-        drawCard.setContentDisplay(ContentDisplay.BOTTOM);
+        playerInterface.getChildren().add(drawCardButton);
+        drawCardButton.setGraphic(cardBack);
+        drawCardButton.setContentDisplay(ContentDisplay.BOTTOM);
         cardBack.setFitWidth(100);
         cardBack.setFitHeight(100);
 
@@ -60,29 +59,45 @@ public class View {
         initView();
         countPoints();
 
-        drawCard.setOnAction(event->{
+        Image[] buttonimage = {library.getImage(library.map.get("D")),
+                library.getImage(library.map.get("H")),
+                library.getImage(library.map.get("V")),
+                library.getImage(library.map.get("J")),
+                };
+
+        Random rand = new Random();
+        int[] numbers={0,1,2,3};
+
+        drawCardButton.setOnAction(event->{
+            buttonImageView.setFitWidth(100);
+            buttonImageView.setFitHeight(100);
+            int rnd = rand.nextInt(numbers.length);
+            newButtonImage=buttonimage[rnd];
+            buttonImageView.setImage(newButtonImage);
 
             //Pei I think this is the source of the drag and drop :)
-            drawCard.setGraphic(buttonImageView);
+            drawCardButton.setGraphic(buttonImageView);
 
         });
 
     }
-    public void initView() {
-        Image[] imageName = {library.getImage(library.map.get("EMPTY")),
-                library.getImage(library.map.get("EMPTY")),
-                library.getImage(library.map.get("EMPTY")),
-                library.getImage(library.map.get("EMPTY")),
-                library.getImage(library.map.get("OG")),
-                library.getImage(library.map.get("EMPTY")),
-                library.getImage(library.map.get("EMPTY")),
-                library.getImage(library.map.get("EMPTY")),
-                library.getImage(library.map.get("EMPTY"))};
 
-        for (int i = 0; i < 9; i++) {
-            ImageView imageview = new ImageView(imageName[i]);
+    public void initView() {
+        ArrayList<Tile> allTiles = new ArrayList<Tile>();
+        allTiles.add(new Tile(-1,-1,0,"EMPTY",false));
+        allTiles.add(new Tile(0,-1,0,"EMPTY",false));
+        allTiles.add(new Tile(1,1,0,"OG",false));
+        allTiles.add(new Tile(1,-1,0,"EMPTY",false));
+
+
+        for (Tile tile : allTiles) {
+            ImageView imageview = new ImageView(tile.getImage());
             imageview.setFitWidth(150);
             imageview.setFitHeight(150);
+
+
+
+
 
             rotateRight.setOnAction(event -> {
                 rotate= rotate + 90;
@@ -99,18 +114,7 @@ public class View {
 
     }
     public void newCard(){
-        Image[] buttonimage = {library.getImage(library.map.get("D")),
-                library.getImage(library.map.get("H")),
-                library.getImage(library.map.get("V")),
-                library.getImage(library.map.get("J")),
-        };
 
-        Random rand = new Random();
-        int[] numbers={0,1,2,3};
-        buttonImageView.setFitWidth(100);
-        buttonImageView.setFitHeight(100);
-        int rnd = rand.nextInt(numbers.length);
-        buttonImageView.setImage(buttonimage[rnd]);
     }
 
     public void countPoints() {
