@@ -15,11 +15,9 @@ public class Board {
 
 
     /**constructor*/
-    public Board(Tile originalTile) {
+    public Board( ) {
         // initialize the board of size 3x3 (each row 3 fields, each column 3 fields)
         matrix = new Tile[3][3];
-        // the original tile is always set in the middle of the board
-        matrix[1][1] = originalTile;
         // relative position of the starting Tile is always 0/0 at the beginning
         originalTileX = 0;
         originalTileY = 0;
@@ -95,6 +93,8 @@ public class Board {
         }
     }
 
+
+
     //set the tile with via relative references
     public void set_withRelativeReference(int relX, int relY, String entry) {
         setTile(convertToAbsolute(relX, relY )[0],convertToAbsolute(relX, relY)[1], entry);
@@ -146,8 +146,8 @@ public class Board {
         // create new board with new size
         Tile[][] newBoard = new Tile[width][height];
         // store tiles into the new board
-        for(int x = 0; x < width; x++) {
-            for (int y = 0; y < height; y++){
+        for(int x = 0; x < matrix.length; x++) {
+            for (int y = 0; y < matrix[0].length; y++){
                 switch (extend_direction) {
                     case "north":
                         newBoard[x][y+1] = matrix[x][y];
