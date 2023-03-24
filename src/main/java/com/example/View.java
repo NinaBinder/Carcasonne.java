@@ -34,7 +34,7 @@ public class View {
     Label points = new Label("POINTS");
     int rotate=0;
 
-    public Image getButtonImageView(){
+    public Image getButtonImage(){
         return newButtonImage;
     }
 
@@ -74,8 +74,6 @@ public class View {
             int rnd = rand.nextInt(numbers.length);
             newButtonImage=buttonimage[rnd];
             buttonImageView.setImage(newButtonImage);
-
-            //Pei I think this is the source of the drag and drop :)
             drawCardButton.setGraphic(buttonImageView);
 
         });
@@ -94,10 +92,6 @@ public class View {
             ImageView imageview = new ImageView(tile.getImage());
             imageview.setFitWidth(150);
             imageview.setFitHeight(150);
-
-
-
-
 
             rotateRight.setOnAction(event -> {
                 rotate= rotate + 90;
