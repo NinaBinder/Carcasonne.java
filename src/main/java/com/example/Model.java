@@ -1,5 +1,7 @@
 package com.example;
 import java.util.ArrayList;
+import java.util.List;
+
 import your.package.Player;
 
 
@@ -69,26 +71,32 @@ public class Model {
         return true;
     }
 
-    public boolean canPlaceFigure(int x, int y) {
-        // implementation
-    }
-
-    public void updateScore(int points) {
-        // implementation
-    }
-}
-
     public void evaluatePoints() {
         for (Player player : players) {
             player.setScore(board.evaluatePoints(player));
         }
     }
 
-
+    public void startNewGame(int numPlayers) {
+        board = new Board();
+        players = Player.createPlayers(numPlayers);
+        currentPlayerIndex = 0;
+        drawTile();
+    }
+}
 
 
 class Player {
     private int score;
+
+    public static List<Player> createPlayers(int numPlayers) {
+        List<Player> players = new ArrayList<>();
+        for (int i = 0; i < numPlayers; i++) {
+            players.add(new Player());
+        }
+        return players;
+    }
+
 
     public void setScore(int score) {
         this.score = score;
@@ -98,6 +106,14 @@ class Player {
         return this.score;
     }
 
+    public boolean canPlaceFigure(int x, int y) {
+        // implementation
+    }
+
+    public void updateScore(int points) {
+        // implementation
+    }
+}
 
 
     public void neueKarte (){
