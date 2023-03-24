@@ -45,7 +45,7 @@ public class Controller {
     public void init(){
         //set the tiles in the board
         for(Tile tile: allTiles){
-            board.set_withRelativeReference(tile.relX, tile.relY, tile.entry);
+            board.set_withRelativeReference(tile.getRelX(), tile.getRelY(), tile.getEntry());
             ImageView imageView= new ImageView(tile.getImage());
             System.out.println("x");
             view.root.getChildren().add(imageView);
@@ -68,7 +68,7 @@ public class Controller {
             event.consume();
         });
         // target of drag gesture = drop
-        final
+
 
         for(Tile tile: allTiles){
             Tile target = tile;

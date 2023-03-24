@@ -36,10 +36,21 @@ public class Tile {
         return rotation;
     }
 
+    public int getRelX() {
+        return relX;
+    }
+
+    public int getRelY() {
+        return relY;
+    }
+
+    public String getEntry() {
+        return entry;
+    }
 
 
 
-    public Tile(int relX,int relY, int rotation, String entry, boolean gamePiece){
+    public Tile(int relX, int relY, int rotation, String entry, boolean gamePiece){
         this.library = new TileLibrary();
         this.relX= relX;
         this.relY= relY;
