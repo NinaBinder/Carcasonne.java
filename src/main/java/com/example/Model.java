@@ -1,4 +1,5 @@
 package com.example;
+import java.util.List;
 
 
 public class Model {
@@ -10,26 +11,53 @@ public class Model {
 
 
     private Board board;
-   // private Tile next = new Tile();
+    private Tile next = new Tile();
+    private List<Player> players;
+    private int currentPlayerIndex;
 
     public Model (){
-        //Tile tile = new Tile();
-        //board = new Board(tile);
+        Tile tile = new Tile();
+        board = new Board(tile);
 
     }
-
 
     public Board getBoard(){
         return this.board;
     }
 
-    //public Tile getNextTile(){
-     //   return this.next;
-    //}
+    public Tile getNextTile(){
+        return this.next;
+    }
 
-    //public void setNextTile(Tile next){
-    //    this.next = next;
-    //}
+    public void setNextTile(Tile next){
+        this.next = next;
+    }
+
+
+    //Getter und Setter für die Spieler
+    public List<Player> getPlayers() {
+        return players;
+    }
+
+    public void setPlayers(List<Player> players) {
+        this.players = players;
+    }
+
+
+    //Aktuellen Spieler bekommen
+    public Player getCurrentPlayer() {
+        return players.get(currentPlayerIndex);
+    }
+
+    //Zum nächsten Spieler wechseln
+    public void nextPlayer() {
+        currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
+    }
+
+
+
+
+
     public void neueKarte (){
     //gib random Karte aus
     }
