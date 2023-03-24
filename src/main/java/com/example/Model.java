@@ -77,6 +77,11 @@ public class Model {
     }
 }
 
+    public void evaluatePoints() {
+        for (Player player : players) {
+            player.setScore(board.evaluatePoints(player));
+        }
+    }
 
     public void neueKarte (){
     //gib random Karte aus
