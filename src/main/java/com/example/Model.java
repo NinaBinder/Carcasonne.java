@@ -1,5 +1,6 @@
 package com.example;
-import java.util.List;
+import java.util.ArrayList;
+import your.package.Player;
 
 
 public class Model {
@@ -82,6 +83,15 @@ public class Model {
             player.setScore(board.evaluatePoints(player));
         }
     }
+
+
+
+
+class Player {
+    private int score;
+
+
+
 
     public void neueKarte (){
     //gib random Karte aus
