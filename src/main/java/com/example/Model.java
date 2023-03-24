@@ -1,4 +1,5 @@
 package com.example;
+import java.util.List;
 
 
 public class Model {
@@ -33,7 +34,7 @@ public class Model {
     }
 
 
-    // Getter und Setter für die Spieler
+    //Getter und Setter für die Spieler
     public List<Player> getPlayers() {
         return players;
     }
@@ -43,10 +44,17 @@ public class Model {
     }
 
 
-    // Methode, um den aktuellen Spieler zu bekommen
+    //Aktuellen Spieler bekommen
     public Player getCurrentPlayer() {
         return players.get(currentPlayerIndex);
     }
+
+    //Zum nächsten Spieler wechseln
+    public void nextPlayer() {
+        currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
+    }
+
+
 
 
 
