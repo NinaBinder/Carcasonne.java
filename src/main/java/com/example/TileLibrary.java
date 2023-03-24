@@ -7,6 +7,8 @@ import java.util.HashMap;
  * This Class has one attribute HashMap, where all objects of LibraryEntry are stored. */
 public class TileLibrary {
 
+//TODO: ADD ALL ENTRYYSS TO LIBRARYYYY!!!!
+
     //Die TileLibrary dient als Klasse als Nachschlagewerk aller möglichen Kacheln.
     //Sie enthält eine Hashmap, die die Buchstaben Benennung der Felder in der Anleitung
     //(siehe Seite B1) auf einen LibraryEntry mapt. Sie enthält Methoden um auf die
@@ -121,6 +123,8 @@ public class TileLibrary {
 
     //put  all the tile entries into the map
     public TileLibrary( ){
+        map.put("A",a);
+        map.put("B",b);
         map.put("D",d);
         map.put("H",h);
         map.put("J",j);
@@ -129,8 +133,6 @@ public class TileLibrary {
         map.put("W",w);
         map.put("EMPTY",empty);
         map.put("OG",originalTile);
-
-
 
     }
     public Image getImage(LibraryEntry entry){

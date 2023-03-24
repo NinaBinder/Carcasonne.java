@@ -11,6 +11,7 @@ public class HelloApplication extends Application {
     public void start(Stage stage) throws IOException {
 
         View view= new View();
+        Controller controller = new Controller(view);
 
         Scene scene = new Scene(view.border);
         stage.setScene(scene);
