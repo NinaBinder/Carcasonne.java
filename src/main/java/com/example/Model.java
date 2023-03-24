@@ -71,6 +71,10 @@ public class Model {
         return true;
     }
 
+    public void drawTile() {
+        next = Tile.getRandomTile();
+    }
+
     public void evaluatePoints() {
         for (Player player : players) {
             player.setScore(board.evaluatePoints(player));
