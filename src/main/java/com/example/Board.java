@@ -5,6 +5,7 @@ package com.example;
  This grows with the creation of new fields.*/
 public class Board {
 
+
     //The attribute board stores the map in a two-dimensional array.
     Tile[][] matrix;
     // The relative coordinate of the starting Tile in the map.
@@ -70,7 +71,7 @@ public class Board {
     public void setTile(int x, int y, String entry) {
         // check if the coordinates of the selected position are inside the board.
         if (isWithinBoard(convertToRelative(x,y)[0], convertToRelative(x,y)[1])) {
-            this.matrix[x][y] = new Tile(x,y,0,entry);
+            this.matrix[x][y] = new Tile(x,y,0,entry, false);
         }
         // if the selected position is outside the board, the board has to be extended
         else {

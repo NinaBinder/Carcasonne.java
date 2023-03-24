@@ -10,11 +10,11 @@ public class Model {
 
 
     private Board board;
-    private Tile next = new Tile();
+   // private Tile next = new Tile();
 
     public Model (){
-        Tile tile = new Tile();
-        board = new Board(tile);
+        //Tile tile = new Tile();
+        //board = new Board(tile);
 
     }
 
@@ -23,13 +23,13 @@ public class Model {
         return this.board;
     }
 
-    public Tile getNextTile(){
-        return this.next;
-    }
+    //public Tile getNextTile(){
+     //   return this.next;
+    //}
 
-    public void setNextTile(Tile next){
-        this.next = next;
-    }
+    //public void setNextTile(Tile next){
+    //    this.next = next;
+    //}
     public void neueKarte (){
     //gib random Karte aus
     }
