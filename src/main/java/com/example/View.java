@@ -92,7 +92,7 @@ public class View {
         root.getChildren().add(imageView);
     }
 
-    //rotate the image of the tile in the button
+    //rotate the image of the tile in the button according to the direction
     public void rotate(int direction){
         buttonImageView.setRotate(direction);
         }
