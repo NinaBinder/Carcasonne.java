@@ -12,6 +12,7 @@ public class Model {
     private Board board;
     private Tile next = new Tile();
     private List<Player> players;
+    private int currentPlayerIndex;
 
     public Model (){
         Tile tile = new Tile();
@@ -39,6 +40,12 @@ public class Model {
 
     public void setPlayers(List<Player> players) {
         this.players = players;
+    }
+
+
+    // Methode, um den aktuellen Spieler zu bekommen
+    public Player getCurrentPlayer() {
+        return players.get(currentPlayerIndex);
     }
 
 
