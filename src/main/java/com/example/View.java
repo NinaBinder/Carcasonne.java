@@ -21,10 +21,11 @@ public class View {
 
     TileLibrary library= new TileLibrary();
     BorderPane border = new BorderPane();
-
-    TilePane root = new TilePane();
+    Pane root = new Pane();
     ScrollPane scrollPane= new ScrollPane();
     HBox playerInterface= new HBox();
+    final double IMAGESIZE= 100;
+    final double SCROLLPANESIZE= 500;
     ImageView buttonImageView = new ImageView();
     Button drawCardButton = new Button("draw new card");
     ImageView cardBack= new ImageView("file:src/fields/back.png");
@@ -39,9 +40,13 @@ public class View {
     }
 
     public View() {
+        Tile originalTile= new Tile(0,0,0,"OG",false);
+
+        Board board= new Board(originalTile);
         border.setCenter(scrollPane);
-        scrollPane.setContent(root);
-        scrollPane.setPrefSize(400, 400);
+
+        scrollPane.setPrefSize(SCROLLPANESIZE, SCROLLPANESIZE);
+
 
         border.setBottom(playerInterface);
         playerInterface.setPadding(new Insets(15, 12, 15, 12));
@@ -55,20 +60,23 @@ public class View {
         cardBack.setFitWidth(100);
         cardBack.setFitHeight(100);
 
-        root.setPrefColumns(3);
-        initView();
+
+        initBoard(board);
         countPoints();
 
+        //TODO: create stack with all possible Tiles in another class --> Controller
         Image[] buttonimage = {library.getImage(library.map.get("D")),
                 library.getImage(library.map.get("H")),
                 library.getImage(library.map.get("V")),
                 library.getImage(library.map.get("J")),
                 };
 
+        //TODO: method for drawing a new card in controller
         Random rand = new Random();
         int[] numbers={0,1,2,3};
 
         drawCardButton.setOnAction(event->{
+
             buttonImageView.setFitWidth(100);
             buttonImageView.setFitHeight(100);
             int rnd = rand.nextInt(numbers.length);
@@ -78,14 +86,37 @@ public class View {
 
         });
 
+
+    }
+    public void initBoard(Board board){
+        Tile originalTile = new Tile(0,0,0,"OG",false);
+        board.matrix[0][0]= originalTile;
+
+        ImageView imageView= new ImageView(board.getTile_viaRelative(0,0).getImage());
+        imageView.setFitWidth(IMAGESIZE);
+        imageView.setFitHeight(IMAGESIZE);
+
+
+        imageView.setLayoutX(SCROLLPANESIZE/2-IMAGESIZE/2);
+        imageView.setLayoutY(SCROLLPANESIZE/2-IMAGESIZE/2);
+        root.getChildren().add(imageView);
+
+        scrollPane.setContent(root);
     }
 
-    public void initView() {
+    //when creating the first board which is only filled with the original Tile,
+    // a layer of empty tiles is created as well, where new possible tiles will be dragged onto
+    /*public void initView() {
         ArrayList<Tile> allTiles = new ArrayList<Tile>();
         allTiles.add(new Tile(-1,-1,0,"EMPTY",false));
-        allTiles.add(new Tile(0,-1,0,"EMPTY",false));
+        allTiles.add(new Tile(-1,-1,0,"EMPTY",false));
+        allTiles.add(new Tile(-1,-1,0,"EMPTY",false));
+        allTiles.add(new Tile(-1,-1,0,"EMPTY",false));
         allTiles.add(new Tile(1,1,0,"OG",false));
-        allTiles.add(new Tile(1,-1,0,"EMPTY",false));
+        allTiles.add(new Tile(-1,-1,0,"EMPTY",false));
+        allTiles.add(new Tile(-1,-1,0,"EMPTY",false));
+        allTiles.add(new Tile(-1,-1,0,"EMPTY",false));
+        allTiles.add(new Tile(-1,-1,0,"EMPTY",false));
 
 
         for (Tile tile : allTiles) {
@@ -102,14 +133,12 @@ public class View {
                 System.out.println(rotate);
 
             });
-            root.getChildren().addAll(imageview);
+            //root.getChildren().addAll(imageview);
             imageview.setRotate(rotate);
-        }
+        }*/
 
-    }
-    public void newCard(){
 
-    }
+
 
     public void countPoints() {
 
