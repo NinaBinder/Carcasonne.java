@@ -31,7 +31,8 @@ public class View {
     ImageView cardBack= new ImageView("file:src/fields/back.png");
 
     Image newButtonImage;
-    Button rotateRight= new Button("rotate right");
+    Button rotateRight= new Button("rotate to right");
+    Button rotateLeft= new Button("rotate to left");
     Label points = new Label("POINTS");
     int rotate=0;
 
@@ -44,7 +45,7 @@ public class View {
     public View() {
         Tile originalTile= new Tile(0,0,0,"OG",false);
 
-        Board board= new Board(originalTile);
+        Board board= new Board();
         border.setCenter(scrollPane);
 
         scrollPane.setPrefSize(SCROLLPANESIZE, SCROLLPANESIZE);
@@ -55,6 +56,7 @@ public class View {
         playerInterface.setPadding(new Insets(15, 12, 15, 12));
         playerInterface.setSpacing(10);
         playerInterface.getChildren().add(rotateRight);
+        playerInterface.getChildren().add(rotateLeft);
         playerInterface.getChildren().add(points);
         playerInterface.getChildren().add(drawCardButton);
 
@@ -66,11 +68,7 @@ public class View {
         countPoints();
 
         //TODO: create stack with all possible Tiles in another class --> Controller
-        Image[] buttonimage = {library.getImage(library.map.get("D")),
-                library.getImage(library.map.get("H")),
-                library.getImage(library.map.get("V")),
-                library.getImage(library.map.get("J")),
-                };
+
 
         //TODO: method for drawing a new card in controller
         Random rand = new Random();
@@ -94,19 +92,9 @@ public class View {
         root.getChildren().add(imageView);
     }
 
-    public void rotate(){
-
-            rotateRight.setOnAction(event -> {
-                rotate= rotate + 90;
-
-                if (rotate == 360) {
-                    rotate = 0;
-                }
-                System.out.println(rotate);
-
-            });
-            //root.getChildren().addAll(imageview);
-           // imageview.setRotate(rotate);
+    //rotate the image of the tile in the button
+    public void rotate(int direction){
+        buttonImageView.setRotate(direction);
         }
 
 
