@@ -3,46 +3,50 @@ package com.example;
 import javafx.scene.image.Image;
 
 
-//Die Klasse Tile beschreibt die einzelnen Spielkarten, welche in Summe das Spielfeld
-//ergeben.
-
-// (e) Platzierung einer Spielfigur.Mittels Methoden kann:
-// (a) das Feld nach links und rechts rotiert werden;
-// (b) kann ein ImageView Node erzeugt werden mit spezifizieter Dimension und richtiger Rotation;
-// (d) kann überprüft werden ob das Feld an die Seite eines anderen passt
-
+/**
+ The Tile class describes the individual playing cards, which together make up the playing field
+ result*/
 public class Tile {
-    TileLibrary library= new TileLibrary();
-    int relX;
-    int relY;
-    int rotation;
+    TileLibrary library;
+    private int relX;
+    private int relY;
+    private int rotation;
     boolean gamePiece;
-    Socket[] northEdge;
-    Socket[] eastEdge;
-    Socket[] southEdge;
-    Socket[] westEdge;
-    String  entry;
+    private Socket[] northEdge;
+    private Socket[] eastEdge;
+    private Socket[] southEdge;
+    private Socket[] westEdge;
+    private String  entry;
 
+
+    /** getter */
+    // get the associated image of the tile
     public Image getImage(){
         return library.getImage(entry);
     }
 
+
+    // get the socket array of the tile
     public Socket[] getSockets(){
         return library.map.get(entry).sockets;
     }
 
-    // Jede Tile speichert:
-    // (a) seine relative Position innerhalb des Spielfelds als x und y ab;
-    // (b) die eigene Rotation;
-    // (c) das assoziierte Bild;
-    // (d) und ein Array, das die Konfiguration der Seiten beschreibt (Socket Array),
+    //get the current rotation of the tile
+    public int getRotation() {
+        return rotation;
+    }
+
+
+
+
     public Tile(int relX,int relY, int rotation, String entry, boolean gamePiece){
+        this.library = new TileLibrary();
         this.relX= relX;
         this.relY= relY;
         this.rotation= rotation;
         this.entry= entry;
         this.gamePiece = gamePiece;
-        // initialise the edge arrays.
+        // initialise the edge arrays of the tile.
         for(int i = 0; i<3; i++){
             this.northEdge[i] = getSockets()[i];
         }
@@ -55,30 +59,35 @@ public class Tile {
         for(int i = 0; i<3; i++){
             this.westEdge[i] = getSockets()[i+9];
         }
-    }
-
-    //placement of a character on this tile
-
-
-    //Setter
-    /** Set the current rotation of the tile, e.g. "links" */
-    //TODO: rotate sockets as well!!!
-    public void setRotation(int rotation) {
-        this.rotation = rotation;
-    }
-
-    //Getter
-    /** Get the current rotation of the tile, e.g. "links" */
-    public int getRotation() {
-        return rotation;
-    }
-
-    // method to rotate the file
-    public void rotate(){
-        //setRotation((getRotation()=="links")?"rechts":"links");
+        //
     }
 
 
+
+    /** rotate the whole tile 90 degrees to the right. Each edge of socket array will be rotated
+     * For example the sockets in north will now be in east */
+    public void rotateRight( ) {
+        this.northEdge = this.westEdge;
+        this.eastEdge = this.northEdge;
+        this.southEdge = this.eastEdge;
+        this.westEdge = this.southEdge;
+        this.rotation+=90;
+
+    }
+
+    /** rotate the whole tile 90 degrees to the left. Each edge of socket array will be rotated
+     * For example the sockets in north will now be in west */
+    public void rotateLeft( ) {
+        this.northEdge = this.eastEdge;
+        this.eastEdge = this.southEdge;
+        this.southEdge = this.westEdge;
+        this.westEdge = this.northEdge;
+        this.rotation+=270;
+
+    }
+
+
+    /** check if the field fits on the side of another neighbours*/
     public boolean TileMatch (Tile northTile, Tile southTile, Tile eastTile, Tile westTile){
         // check if at least one of neighbouring tiles exists. Because tiles can not be set in empty space without
         //any neighbouring

@@ -36,10 +36,7 @@ public class Socket {
     }
 
 
-    //check if two edges match
-    public boolean matches(Socket other){
-        return this.component.equals(other.component);
-    }
+
 
 
 
