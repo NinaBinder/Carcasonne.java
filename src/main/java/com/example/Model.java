@@ -55,7 +55,27 @@ public class Model {
     }
 
 
+    //Spielfigur auf dem Brett platzieren
+    public boolean placeFigure(int x, int y) {
+        // Überprüfen, ob die Position für den aktuellen Spieler gültig ist
+        if (!getCurrentPlayer().canPlaceFigure(x, y)) {
+            return false;
+        }
+        // Stellt die Figur auf das Brett
+        board.placeFigure(x, y, getCurrentPlayer());
+        // Aktualisiere die Punktzahl des Spielers
+        getCurrentPlayer().updateScore(board.evaluatePoints(x, y));
+        return true;
+    }
 
+    public boolean canPlaceFigure(int x, int y) {
+        // implementation
+    }
+
+    public void updateScore(int points) {
+        // implementation
+    }
+}
 
 
     public void neueKarte (){
