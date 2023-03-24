@@ -17,14 +17,18 @@ public class Tile {
     int relY;
     int rotation;
     boolean gamePiece;
-    LibraryEntry entry;
+    Socket[] northEdge;
+    Socket[] eastEdge;
+    Socket[] southEdge;
+    Socket[] westEdge;
+    String  entry;
 
     public Image getImage(){
-        return entry.img;
+        return library.getImage(entry);
     }
 
     public Socket[] getSockets(){
-        return entry.sockets;
+        return library.map.get(entry).sockets;
     }
 
     // Jede Tile speichert:
@@ -36,8 +40,21 @@ public class Tile {
         this.relX= relX;
         this.relY= relY;
         this.rotation= rotation;
-        this.entry= library.map.get(entry);
+        this.entry= entry;
         this.gamePiece = gamePiece;
+        // initialise the edge arrays.
+        for(int i = 0; i<3; i++){
+            this.northEdge[i] = getSockets()[i];
+        }
+        for(int i = 0; i<3; i++){
+            this.eastEdge[i] = getSockets()[i+3];
+        }
+        for(int i = 0; i<3; i++){
+            this.southEdge[i] = getSockets()[i+6];
+        }
+        for(int i = 0; i<3; i++){
+            this.westEdge[i] = getSockets()[i+9];
+        }
     }
 
     //placement of a character on this tile
@@ -59,6 +76,37 @@ public class Tile {
     // method to rotate the file
     public void rotate(){
         //setRotation((getRotation()=="links")?"rechts":"links");
+    }
+
+
+    public boolean TileMatch (Tile northTile, Tile southTile, Tile eastTile, Tile westTile){
+        // check if at least one of neighbouring tiles exists. Because tiles can not be set in empty space without
+        //any neighbouring
+        if (northTile == null && southTile == null && eastTile == null && westTile == null){
+            return false;
+        }
+        // check if neighbouring tiles match the given tile in case they exist
+        if(northTile!=null){
+            if(this.northEdge != northTile.southEdge){
+                return false;
+            }
+        }
+        if(eastTile!=null){
+            if(this.eastEdge != eastTile.westEdge){
+                return false;
+            }
+        }
+        if(westTile!=null){
+            if(this.westEdge != westTile.eastEdge){
+                return false;
+            }
+        }
+        if(southTile!=null){
+            if(this.southEdge != southTile.northEdge){
+                return false;
+            }
+        }
+        return true;
     }
 
 }
