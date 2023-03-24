@@ -1,6 +1,8 @@
 package com.example;
 
 import javafx.event.EventTarget;
+import javafx.scene.control.Button;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
@@ -52,19 +54,52 @@ public class Controller {
 
     }
 
+    // drag the tile which is shown on the button to the board
+    public void DragandDrop(){
+        //Source of the drag gesture
+        Button source = view.drawCardButton;
+        //react of drag
+        source.setOnMouseClicked(event -> {
+            Dragboard db = source.startDragAndDrop(TransferMode.ANY);
+            ClipboardContent content = new ClipboardContent();
+            System.out.println(view.getButtonImage());
+            content.putImage(view.getButtonImage());
+            db.setContent(content);
+            event.consume();
+        });
+        // target of drag gesture = drop
+        final
+
+        for(Tile tile: allTiles){
+            Tile target = tile;
+            // accept possible drop
+
+
+        }
+
+
+    }
+
+
+
+    //set the event handler on the rotateRight button
     public void rotateRight(){
         view.rotateRight.setOnAction(event-> {
             //rotate the sockets of the ButtonTile
             ButtonTile.rotateRight();
-            // rotate the image
+            // the rotation of the ButtonTile will be updated
+            // rotate the image with the new rotation value
             view.rotate(ButtonTile.getRotation());
         });
     }
+
+    //set the event handler on the rotateLeft button
     public void rotateLeft(){
         view.rotateLeft.setOnAction(event-> {
             //rotate the sockets of the ButtonTile
             ButtonTile.rotateLeft();
-            // rotate the image
+            // the rotation of the ButtonTile will be updated
+            // rotate the image with the new rotation value
             view.rotate(ButtonTile.getRotation());
 
         });
