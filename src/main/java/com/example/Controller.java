@@ -19,8 +19,6 @@ public class Controller {
     ArrayList<Tile> allTiles;
     Board board= new Board();
 
-    int rotation;
-
 
 
     /** deck: An Array List filled with all possible Entries
@@ -101,13 +99,13 @@ public class Controller {
             int index = (int)(Math.random() * deck.size());
 
             System.out.println(deck.get(index).img);
-            Image newButtonImage = deck.get(index).img;
+            view.newButtonImage = deck.get(index).img;
 
-            view.getButtonImageView().setImage(newButtonImage);
+            view.getButtonImageView().setImage(view.newButtonImage);
             view.getDrawCardButton().setGraphic(view.getButtonImageView());
             view.getDrawCardButton().disarm();
 
-            rotation =0;
+
 
         });
     }
