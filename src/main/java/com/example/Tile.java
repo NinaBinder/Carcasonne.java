@@ -59,15 +59,19 @@ public class Tile {
         this.gamePiece = gamePiece;
         // initialise the edge arrays of the tile.
         for(int i = 0; i<3; i++){
+            northEdge = new Socket[3];
             this.northEdge[i] = getSockets()[i];
         }
         for(int i = 0; i<3; i++){
+            this.eastEdge = new Socket[3];
             this.eastEdge[i] = getSockets()[i+3];
         }
         for(int i = 0; i<3; i++){
+            this.southEdge = new Socket[3];
             this.southEdge[i] = getSockets()[i+6];
         }
         for(int i = 0; i<3; i++){
+            this.westEdge = new Socket[3];
             this.westEdge[i] = getSockets()[i+9];
         }
         //
