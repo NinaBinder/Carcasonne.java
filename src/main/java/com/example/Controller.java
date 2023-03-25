@@ -24,11 +24,13 @@ public class Controller {
     /** deck: An Array List filled with all possible Entries
      in order to get the images of that entry: deck(index).img
      */
-    ArrayList<LibraryEntry> deck= new ArrayList<LibraryEntry>();
+    ArrayList<LibraryEntry> deck;
 
     public Controller(View view){
         this.view = view;
         this.allTiles = new ArrayList<Tile>();
+        this.deck= new ArrayList<LibraryEntry>();
+
         // generate original tile and new empty tiles in the tile array
         allTiles.add(new Tile(-1,-1,0,"EMPTY",false));
         allTiles.add(new Tile(0,-1,0,"EMPTY",false));
@@ -40,16 +42,49 @@ public class Controller {
         allTiles.add(new Tile(0,1,0,"EMPTY",false));
         allTiles.add(new Tile(1,1,0,"EMPTY",false));
 
-        deck.add(library.map.get("A"));
-        deck.add(library.map.get("B"));
+        //Filling the deck with all possible cards (right amount of each card included)
+        deck.add(library.map.get("C"));
+        deck.add(library.map.get("G"));
+        deck.add(library.map.get("Q"));
+        deck.add(library.map.get("T"));
+        deck.add(library.map.get("X"));
 
+        for (int i = 0; i < 2; i++) {
+            deck.add(library.map.get("A"));
+            deck.add(library.map.get("F"));
+            deck.add(library.map.get("I"));
+            deck.add(library.map.get("M"));
+            deck.add(library.map.get("O"));
+            deck.add(library.map.get("S"));
+        }
+        for (int i = 0; i < 3; i++) {
+            deck.add(library.map.get("H"));
+            deck.add(library.map.get("J"));
+            deck.add(library.map.get("K"));
+            deck.add(library.map.get("L"));
+            deck.add(library.map.get("N"));
+            deck.add(library.map.get("P"));
+            deck.add(library.map.get("R"));
+            deck.add(library.map.get("D"));
+        }
+        for (int i = 0; i < 4; i++) {
+            deck.add(library.map.get("B"));
+            deck.add(library.map.get("W"));
+        }
+        for (int i = 0; i < 5; i++) {
+            deck.add(library.map.get("E"));
+        }
+        for (int i = 0; i < 8; i++) {
+            deck.add(library.map.get("U"));
+        }
+        for (int i = 0; i < 9; i++) {
+            deck.add(library.map.get("V"));
+        }
 
         changeDrawButtonImage();
-
+        rotateLeft();
+        rotateRight();
     }
-
-
-
 
     public void changeDrawButtonImage(){
 //TODO: nochmal ziehen, falls tile nicht passt
@@ -66,8 +101,8 @@ public class Controller {
             Image newButtonImage = deck.get(index).img;
 
             view.getButtonImageView().setImage(newButtonImage);
-
             view.getDrawCardButton().setGraphic(view.getButtonImageView());
+            view.getDrawCardButton().disarm();
 
         });
     }
@@ -148,4 +183,3 @@ public class Controller {
     }
 
 
-}
