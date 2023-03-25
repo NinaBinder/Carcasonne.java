@@ -85,7 +85,7 @@ public class Model {
     }
 
 
-    //Spielbrett initialisieren, Spieler erstellen
+    //Spielbrett initialisieren, Spieler erstellen.
     public void startNewGame(int numPlayers) {
         board = new Board();
         players = FXCollections.observableArrayList(Player.createPlayers(numPlayers));
