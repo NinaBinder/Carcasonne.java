@@ -136,8 +136,13 @@ public class Controller {
         target.setOnDragDropped( event -> {
             Dragboard db = event.getDragboard();
             boolean success = false;
-            for()
+            for(Tile tile: allTiles){
+                if(tile.getEntry() == "EMPTY"){
+                    continue;
+                }
 
+
+            }
             event.setDropCompleted(success);
             event.consume();
 
@@ -147,17 +152,9 @@ public class Controller {
 
 
 
-        for(Tile tile: allTiles){
-            Tile target = tile;
-            // accept possible drop
-
-
-        }
-    }
-
 
     //set the event handler on the rotateRight button
-    public void rotateRight(rotation){
+    public void rotateRight(){
         view.rotateRight.setOnAction(event-> {
             //rotate the sockets of the ButtonTile
             //ButtonTile.rotateRight();
@@ -167,7 +164,7 @@ public class Controller {
     }
 
     //set the event handler on the rotateLeft button
-    public void rotateLeft(rotation){
+    public void rotateLeft(){
         view.rotateLeft.setOnAction(event-> {
             //rotate the sockets of the ButtonTile
             //ButtonTile.rotateLeft();
