@@ -132,3 +132,76 @@ class Tile {
 class Board {
     // implementation
 }
+
+
+    public void setLocation(int x, int y) {
+        this.location = board.matrix[x][y];
+    }
+    public Integer getLocation() {return location;} //get the location of the tile where the meeple is placed
+
+    public Integer getOwner() {
+        return owner;
+    }
+    public boolean hasFreeMeeples() {
+        return freeMeeples > 0;
+    }
+    public boolean isPlaced() {
+        if (location != null){ return true;}}
+
+    private boolean isPatternClosed() {
+        boolean isClosed = true;
+        for (//every side, get direct neighbours)
+        {
+            if (//sockets match and are connected)) {
+            //get neighbour;
+            if (get.Neighbor() == null) { // if it has no neighbor
+                isClosed = false;
+            } else { // continue on neighbors
+                isClosed &= checkNeighbor(); //to do: check neighbour methode schreiben
+            }
+        }return isClosed;
+    }
+
+    public Component getType(Tile tile) {
+        if (tile.gamePiece=true) {return type);} //man braucht von dem Entry das Feature und davon die Componente type
+    }
+    /*public Image getMeeple() {
+            freeMeeples=10;
+        if (hasFreeMeeples()) {
+            freeMeeples--;
+            Image meeple = new Image();
+            placedMeeples.add(meeple);
+            assert placedMeeples.size() <= 10; //= max Meeples
+            return meeple;
+        }
+        throw new IllegalStateException("No unused meeples are left.");
+    }
+    */
+    public void addPoints () {
+        for (placedMeeples) {
+            score = 0;
+            //points.setText("Score: " + score); Label in View
+            if (isPatternClosed())
+                switch (feature.type){
+                    case FIELD -> score + 3
+                    case CITY -> score + 3
+                    case ROAD -> score + 3
+                }
+        }
+    }
+    public void removeMeeple () {
+        if (isPatternClosed=true && isPlaced()) { //
+            //return meeple,
+            freeMeeples++;
+            location = null; // mark as unplaced.
+        }
+    }
+
+    public String tellScore() {
+        return "Player[number: " + playerNumber[x] + ", score: " + score + ", free meeples: " + freeMeeples + "]";
+    }// Label text!
+
+    public int getPlayer() {
+        return playerNumber[x];
+    }
+}
