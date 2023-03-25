@@ -2,6 +2,7 @@ package com.example;
 import java.util.ArrayList;
 import java.util.List;
 
+import javafx.collections.FXCollections;
 import your.package.Player;
 
 
@@ -73,19 +74,21 @@ public class Model {
 
     //neue Kachel ziehen
     public void drawTile() {
-        next = Tile.getRandomTile();
+        setNextTile(Tile.getRandomTile());
     }
 
-    //berechnet die Anzahl der vom Spieler erzielten Punkte basierend auf dem aktuellen Zustand des Bretts
+    // Methode zur Bewertung der Punkte für alle Spieler basierend auf dem aktuellen Stand des Boards
     public void evaluatePoints() {
         for (Player player : players) {
             player.setScore(board.evaluatePoints(player));
         }
     }
+
+
     //Spielbrett initialisieren, Spieler erstellen
     public void startNewGame(int numPlayers) {
         board = new Board();
-        players = Player.createPlayers(numPlayers);
+        players = FXCollections.observableArrayList(Player.createPlayers(numPlayers));
         //aktuellen Spieler als ersten Spieler in der Reihe festlegen
         currentPlayerIndex = 0;
         drawTile();
