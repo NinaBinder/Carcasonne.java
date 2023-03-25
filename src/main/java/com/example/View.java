@@ -34,7 +34,7 @@ public class View {
     Button rotateRight= new Button("rotate to right");
     Button rotateLeft= new Button("rotate to left");
     Label points = new Label("POINTS");
-    int rotate=0;
+
 
     public Image getButtonImage(){
         return newButtonImage;
@@ -67,13 +67,6 @@ public class View {
         initBoard(board);
         countPoints();
 
-        //TODO: create stack with all possible Tiles in another class --> Controller
-
-
-        //TODO: method for drawing a new card in controller
-        Random rand = new Random();
-        int[] numbers={0,1,2,3};
-
 
 
 
@@ -93,12 +86,19 @@ public class View {
     }
 
     //rotate the image of the tile in the button according to the direction
-    public void rotate(int direction){
-        buttonImageView.setRotate(direction);
+    public void rotateRight(int rotation){
+        rotation+=90;
+        buttonImageView.setRotate(rotation);
         }
 
+    public void rotateLeft(int rotation){
+        rotation-=90;
+        buttonImageView.setRotate(rotation);
+    }
 
-
+    public BorderPane getBorder() {
+        return border;
+    }
 
     public void countPoints() {
 
