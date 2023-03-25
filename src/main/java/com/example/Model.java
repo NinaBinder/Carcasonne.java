@@ -17,6 +17,7 @@ public class Model {
     private Tile next = new Tile();
     private List<Player> players;
     private int currentPlayerIndex;
+    private int freemeeples;
 
     public Model (){
         Tile tile = new Tile();
@@ -95,6 +96,22 @@ public class Model {
 
 class Player {
     private int score;
+    private Meeple meeples;
+    private String userName;
+    Player(String userName) {
+        this.userName = userName;
+        meeples = new Meeple(this);
+    }
+    public Meeple getMeeples() {
+        return meeples;
+    }
+    public int meeplesLeft() {
+        return meeples.meeplesLeft();
+    }
+    void reward(int points) {
+        score += points;
+    }
+
 
     //Liste von Spielern erstellen
     public static List<Player> createPlayers(int numPlayers) {
@@ -116,7 +133,7 @@ class Player {
 
     //prüft, ob eine Figur an Koordinate x und y platziert werden kann
     public boolean canPlaceFigure(int x, int y) {
-        // implementation
+        return freemeeples > 0;
     }
 
     //Punktestand aktualisieren
@@ -132,18 +149,38 @@ class Tile {
 class Board {
     // implementation
 }
+class Meeple {
+    Tile tile = new Tile();
+    Board board = new Board();
+    Player player = new Player();
+    private static final int TOTAL_MEEPLES = 7;
+    private int inStock = TOTAL_MEEPLES;
+    private Player player;
+    private int location;
+    private int owner;
+    private int placedMeeples;
+    private int freeMeeples;
+    Meeple meeple = new Meeple(); //Image?
 
+    public Meeple(Player player) {
+        this.player = player;
+    }
 
+    void returnToPlayer(int n) { inStock = inStock + n; } //return meeple to player if scored
+    void place(LibraryEntry type, Board board) { //drag and drop? wie verbinden?
+        board.addMeeple(this);
+        inStock--;
+    }
+    int meeplesLeft() {
+        return inStock;
+    }
     public void setLocation(int x, int y) {
         this.location = board.matrix[x][y];
     }
     public Integer getLocation() {return location;} //get the location of the tile where the meeple is placed
 
-    public Integer getOwner() {
-        return owner;
-    }
-    public boolean hasFreeMeeples() {
-        return freeMeeples > 0;
+    public Integer getOwner(int owner) {
+        return owner; //TODO: find owner
     }
     public boolean isPlaced() {
         if (location != null){ return true;}}
@@ -157,32 +194,32 @@ class Board {
             if (get.Neighbor() == null) { // if it has no neighbor
                 isClosed = false;
             } else { // continue on neighbors
-                isClosed &= checkNeighbor(); //to do: check neighbour methode schreiben
+                isClosed &= checkNeighbor(); //TODO: check neighbour methode schreiben
             }
         }return isClosed;
     }
 
-    public Component getType(Tile tile) {
-        if (tile.gamePiece=true) {return type);} //man braucht von dem Entry das Feature und davon die Componente type
-    }
-    /*public Image getMeeple() {
+    public addMeeple() {
             freeMeeples=10;
-        if (hasFreeMeeples()) {
+        if (Player.canPlaceFigure()) {
             freeMeeples--;
-            Image meeple = new Image();
-            placedMeeples.add(meeple);
-            assert placedMeeples.size() <= 10; //= max Meeples
+            Meeple meeple = new Meeple();
+            board.add(meeple);
+            placedMeeples.add(meeple)
+            assert placedMeeples <= 10; //= max Meeples
             return meeple;
         }
         throw new IllegalStateException("No unused meeples are left.");
     }
-    */
-    public void addPoints () {
+    public Component getType(Tile tile) {
+        if (tile.gamePiece=true) {return type);} //TODO:man braucht von dem Entry das Feature und davon die Componente type
+    }
+ public void addPoints () {
         for (placedMeeples) {
             score = 0;
-            //points.setText("Score: " + score); Label in View
+            //points.setText("Score: " + score); TODO: im Label in View anzeigen
             if (isPatternClosed())
-                switch (feature.type){
+                switch (feature.type){ // TODO: ka wie ne foreach Schleife geht
                     case FIELD -> score + 3
                     case CITY -> score + 3
                     case ROAD -> score + 3
@@ -191,17 +228,9 @@ class Board {
     }
     public void removeMeeple () {
         if (isPatternClosed=true && isPlaced()) { //
-            //return meeple,
+            placedMeeples--;
             freeMeeples++;
             location = null; // mark as unplaced.
         }
     }
-
-    public String tellScore() {
-        return "Player[number: " + playerNumber[x] + ", score: " + score + ", free meeples: " + freeMeeples + "]";
-    }// Label text!
-
-    public int getPlayer() {
-        return playerNumber[x];
-    }
-}
+        }
