@@ -2,7 +2,7 @@ package com.example;
 import java.util.ArrayList;
 import java.util.List;
 
-import your.package.Player;
+/*
 
 
 public class Model {
@@ -14,8 +14,8 @@ public class Model {
 
 
     private Board board;
-    private Tile next = new Tile();
-    private List<Player> players;
+    //private Tile next = new Tile();
+    //private List<Player> players;
     private int currentPlayerIndex;
 
     public Model (){
@@ -117,11 +117,11 @@ class Player {
     public void updateScore(int points) {
         // implementation
     }
-}
+
 
 
     public void neueKarte (){
     //gib random Karte aus
     }
 
-}
+}*/

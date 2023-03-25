@@ -66,18 +66,8 @@ public class View {
         cardBack.setFitHeight(100);
         initBoard(board);
         countPoints();
-
-        //TODO: create stack with all possible Tiles in another class --> Controller
-
-
-        //TODO: method for drawing a new card in controller
-        Random rand = new Random();
-        int[] numbers={0,1,2,3};
-
-
-
-
     }
+
     public void initBoard(Board board){
         Tile originalTile = new Tile(0,0,0,"OG",false);
         board.matrix[0][0]= originalTile;
