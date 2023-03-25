@@ -71,19 +71,22 @@ public class Model {
         return true;
     }
 
+    //neue Kachel ziehen
     public void drawTile() {
         next = Tile.getRandomTile();
     }
 
+    //berechnet die Anzahl der vom Spieler erzielten Punkte basierend auf dem aktuellen Zustand des Bretts
     public void evaluatePoints() {
         for (Player player : players) {
             player.setScore(board.evaluatePoints(player));
         }
     }
-
+    //Spielbrett initialisieren, Spieler erstellen
     public void startNewGame(int numPlayers) {
         board = new Board();
         players = Player.createPlayers(numPlayers);
+        //aktuellen Spieler als ersten Spieler in der Reihe festlegen
         currentPlayerIndex = 0;
         drawTile();
     }
@@ -93,6 +96,7 @@ public class Model {
 class Player {
     private int score;
 
+    //Liste von Spielern erstellen
     public static List<Player> createPlayers(int numPlayers) {
         List<Player> players = new ArrayList<>();
         for (int i = 0; i < numPlayers; i++) {
@@ -101,7 +105,7 @@ class Player {
         return players;
     }
 
-
+    //Getter und Setter für den Punktestand
     public void setScore(int score) {
         this.score = score;
     }
@@ -110,18 +114,21 @@ class Player {
         return this.score;
     }
 
+    //prüft, ob eine Figur an Koordinate x und y platziert werden kann
     public boolean canPlaceFigure(int x, int y) {
         // implementation
     }
 
+    //Punktestand aktualisieren
     public void updateScore(int points) {
         // implementation
     }
 }
 
+class Tile {
+    // implementation
+}
 
-    public void neueKarte (){
-    //gib random Karte aus
-    }
-
+class Board {
+    // implementation
 }
