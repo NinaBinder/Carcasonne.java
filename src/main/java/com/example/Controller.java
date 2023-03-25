@@ -17,7 +17,8 @@ public class Controller {
     View view= new View();
     TileLibrary library = new TileLibrary();
     ArrayList<Tile> allTiles;
-    Board board= new Board( );
+    Board board= new Board();
+
     int rotation;
 
 
@@ -85,6 +86,7 @@ public class Controller {
         changeDrawButtonImage();
         rotateLeft();
         rotateRight();
+        DragandDrop();
     }
 
     public void changeDrawButtonImage(){
@@ -115,7 +117,7 @@ public class Controller {
         //Source of the drag gesture
         Button source = view.drawCardButton;
         //react of drag
-        source.setOnMouseClicked(event -> {
+        source.setOnDragDetected(event -> {
             Dragboard db = source.startDragAndDrop(TransferMode.ANY);
             ClipboardContent content = new ClipboardContent();
             System.out.println(view.getButtonImage());
@@ -137,15 +139,21 @@ public class Controller {
             Dragboard db = event.getDragboard();
             boolean success = false;
             for(Tile tile: allTiles){
-                if(tile.getEntry() == "EMPTY"){
-                    continue;
-                }
+                // get neighbours (north, east, south, west) of a tile
 
+               if(tile.getEntry() == "EMPTY" && tile.TileMatch(getNorthTile(tile.getRelX(),tile.getRelY()),
+                                                                getSouthTile(tile.getRelX(),tile.getRelY()),
+                                                                getEastTile(tile.getRelX(),tile.getRelY()),
+                                                                getWestTile(tile.getRelX(),tile.getRelY()))){
+                   EventTarget eventTarget = event.getTarget();
+                   tile = (Tile) eventTarget;
+                   board.set_withRelativeReference(tile.getRelX(),tile.getRelY(),tile.getEntry());
+                   //update the view
 
+               }
             }
             event.setDropCompleted(success);
             event.consume();
-
         });
 
     }
@@ -159,7 +167,7 @@ public class Controller {
             //rotate the sockets of the ButtonTile
             //ButtonTile.rotateRight();
             //rotate the image
-            view.rotateRight(0);
+            view.rotateRight();
         });
     }
 
@@ -169,27 +177,27 @@ public class Controller {
             //rotate the sockets of the ButtonTile
             //ButtonTile.rotateLeft();
             //rotate the image
-            view.rotateLeft(0);
+            view.rotateLeft();
 
         });
     }
 
 
     // get neighbours (north, east, south, west) of a tile
-    public Tile getNorthTile(int x, int y){
-        Tile north = board.matrix[x][y-1];
+    public Tile getNorthTile(int relX, int relY){
+        Tile north = board.getTile_viaRelative(relX,relY-1);
         return north;
     }
-    public Tile getEastTile(int x, int y){
-        Tile east = board.matrix[x+1][y];
+    public Tile getEastTile(int relX, int relY){
+        Tile east = board.getTile_viaRelative(relX+1,relY);
         return east;
     }
-    public Tile getSouthTile(int x, int y){
-        Tile south = board.matrix[x][y+1];
+    public Tile getSouthTile(int relX, int relY){
+        Tile south = board.getTile_viaRelative(relX,relY+1);
         return south;
     }
-    public Tile getWestTile(int x, int y){
-        Tile west = board.matrix[x-1][y];
+    public Tile getWestTile(int relX, int relY){
+        Tile west = board.getTile_viaRelative(relX-1,relY);
         return west;
     }
 

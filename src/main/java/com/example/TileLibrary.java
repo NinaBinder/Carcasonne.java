@@ -211,7 +211,7 @@ public class TileLibrary {
         map.put("OG",originalTile);
 
     }
-    public Image getImage(LibraryEntry entry){
-        return entry.img;
+    public Image getImage(String entry){
+         return map.get(entry).img;
     }
 }
