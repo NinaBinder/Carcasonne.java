@@ -1,9 +1,5 @@
 package com.example;
 
-
-//TODO: 3x3 Feld gefüllt mit Random Bildern aus unserem Ressource Ordner
-
-
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContentDisplay;
@@ -18,7 +14,6 @@ import java.util.Random;
 
 
 public class View {
-
     TileLibrary library= new TileLibrary();
     BorderPane border = new BorderPane();
     Pane root = new Pane();
@@ -29,6 +24,7 @@ public class View {
     ImageView buttonImageView = new ImageView();
     Button drawCardButton = new Button("draw new card");
     ImageView cardBack= new ImageView("file:src/fields/back.png");
+
 
     Image newButtonImage;
     Button rotateRight= new Button("rotate to right");
@@ -83,6 +79,22 @@ public class View {
         imageView.setLayoutX(SCROLLPANESIZE/2-IMAGESIZE/2);
         imageView.setLayoutY(SCROLLPANESIZE/2-IMAGESIZE/2);
         root.getChildren().add(imageView);
+    }
+
+    public void updateBoard(Board board){
+        //go through board matrix for every tile do this:
+        for(int x=0; x<board.matrix.length; x++){
+            for (int y= 0; y<board.matrix.length; y++){
+
+                //get every Tiles Entry and set it to possibly new entry
+                board.matrix[x][y].getEntry();
+
+                //check the neighbor tile if null set Empty tile, is this the right approach?
+                if (getNorthTile(x,y) == null){
+                    getNorthTile(x,y).setTile(x,y,0,"EMPTY",false);
+                }
+            }
+        }
     }
 
     //rotate the image of the tile in the button according to the direction

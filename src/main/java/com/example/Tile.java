@@ -16,7 +16,7 @@ public class Tile {
     private Socket[] eastEdge;
     private Socket[] southEdge;
     private Socket[] westEdge;
-    private String  entry;
+    private LibraryEntry entry;
 
 
     /** getter */
@@ -24,7 +24,6 @@ public class Tile {
     public Image getImage(){
         return library.getImage(entry);
     }
-
 
     // get the socket array of the tile
     public Socket[] getSockets(){
@@ -44,7 +43,8 @@ public class Tile {
         return relY;
     }
 
-    public String getEntry() {
+    public LibraryEntry getEntry(String string) {
+        entry = library.map.get(string);
         return entry;
     }
 
@@ -55,11 +55,13 @@ public class Tile {
         this.relX= relX;
         this.relY= relY;
         this.rotation= rotation;
-        this.entry= entry;
+        this.entry= getEntry(entry);
         this.gamePiece = gamePiece;
         // initialise the edge arrays of the tile.
+
         for(int i = 0; i<3; i++){
             northEdge = new Socket[3];
+            System.out.println(northEdge);
             this.northEdge[i] = getSockets()[i];
         }
         for(int i = 0; i<3; i++){
@@ -74,7 +76,6 @@ public class Tile {
             this.westEdge = new Socket[3];
             this.westEdge[i] = getSockets()[i+9];
         }
-        //
     }
 
 
