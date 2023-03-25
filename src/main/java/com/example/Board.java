@@ -5,7 +5,6 @@ package com.example;
  This grows with the creation of new fields.*/
 public class Board {
 
-
     //The attribute board stores the map in a two-dimensional array.
     Tile[][] matrix;
     // The relative coordinate of the starting Tile in the map.
@@ -172,5 +171,6 @@ public class Board {
         // set the new board as the current board
         this.matrix = newBoard;
     }
+
 
 }
