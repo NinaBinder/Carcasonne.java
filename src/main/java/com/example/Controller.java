@@ -7,8 +7,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.shape.Rectangle;
-
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.LinkedList;
@@ -18,7 +18,8 @@ public class Controller {
     TileLibrary library = new TileLibrary();
     ArrayList<Tile> allTiles;
     Board board= new Board( );
-    Tile ButtonTile;
+    int rotation;
+
 
 
     /** deck: An Array List filled with all possible Entries
@@ -104,6 +105,8 @@ public class Controller {
             view.getDrawCardButton().setGraphic(view.getButtonImageView());
             view.getDrawCardButton().disarm();
 
+            rotation =0;
+
         });
     }
 
@@ -121,25 +124,42 @@ public class Controller {
             event.consume();
         });
         // target of drag gesture = drop
+        final BorderPane target = view.getBorder();
 
-
-        for(Tile tile: allTiles){
-            Tile target = tile;
-            // accept possible drop
-
-
+        // accept possible drop
+        target.setOnDragOver(event -> {
+            event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
+            event.consume();
         }
+        );
+
+        target.setOnDragDropped( event -> {
+            Dragboard db = event.getDragboard();
+            boolean success = false;
+            for(Tile tile: allTiles){
+                if(tile.getEntry() == "EMPTY"){
+                    continue;
+                }
+
+
+            }
+            event.setDropCompleted(success);
+            event.consume();
+
+        });
+
     }
+
+
 
 
     //set the event handler on the rotateRight button
     public void rotateRight(){
         view.rotateRight.setOnAction(event-> {
             //rotate the sockets of the ButtonTile
-            ButtonTile.rotateRight();
-            // the rotation of the ButtonTile will be updated
-            // rotate the image with the new rotation value
-            view.rotate(ButtonTile.getRotation());
+            //ButtonTile.rotateRight();
+            //rotate the image
+            view.rotateRight(0);
         });
     }
 
@@ -147,17 +167,12 @@ public class Controller {
     public void rotateLeft(){
         view.rotateLeft.setOnAction(event-> {
             //rotate the sockets of the ButtonTile
-            ButtonTile.rotateLeft();
-            // the rotation of the ButtonTile will be updated
-            // rotate the image with the new rotation value
-            view.rotate(ButtonTile.getRotation());
+            //ButtonTile.rotateLeft();
+            //rotate the image
+            view.rotateLeft(0);
 
         });
     }
-
-
-
-
 
 
     // get neighbours (north, east, south, west) of a tile
@@ -181,5 +196,7 @@ public class Controller {
 
 
     }
+
+
 
 

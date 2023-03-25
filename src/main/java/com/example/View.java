@@ -34,7 +34,7 @@ public class View {
     Button rotateRight= new Button("rotate to right");
     Button rotateLeft= new Button("rotate to left");
     Label points = new Label("POINTS");
-    int rotate=0;
+
 
     public Image getButtonImage(){
         return newButtonImage;
@@ -66,8 +66,11 @@ public class View {
         cardBack.setFitHeight(100);
         initBoard(board);
         countPoints();
-    }
 
+
+
+
+    }
     public void initBoard(Board board){
         Tile originalTile = new Tile(0,0,0,"OG",false);
         board.matrix[0][0]= originalTile;
@@ -83,12 +86,19 @@ public class View {
     }
 
     //rotate the image of the tile in the button according to the direction
-    public void rotate(int direction){
-        buttonImageView.setRotate(direction);
+    public void rotateRight(int rotation){
+        rotation+=90;
+        buttonImageView.setRotate(rotation);
         }
 
+    public void rotateLeft(int rotation){
+        rotation-=90;
+        buttonImageView.setRotate(rotation);
+    }
 
-
+    public BorderPane getBorder() {
+        return border;
+    }
 
     public void countPoints() {
 
