@@ -18,9 +18,18 @@ public class Board {
     public Board( ) {
         // initialize the board of size 3x3 (each row 3 fields, each column 3 fields)
         matrix = new Tile[3][3];
+        matrix[1][1] = new Tile(0,0,0,"OG",false);
+
+        for(int x= -1; x< 2; x++){
+            for(int y= -1; y< 2; y++){
+                if(!(x== 0 && y==0)) {
+                    matrix[x + 1][y + 1] = new Tile(x, y, 0, "EMPTY", false);
+                }
+            }
+        }
         // relative position of the starting Tile is always 0/0 at the beginning
-        originalTileX = 0;
-        originalTileY = 0;
+        originalTileX = 1;
+        originalTileY = 1;
     }
 
     public void placeFigure(int x, int y, Player player){

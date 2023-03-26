@@ -82,11 +82,32 @@ public class Controller {
         }
 
         changeDrawButtonImage();
+        updateBoard(board);
         rotateLeft();
         rotateRight();
         DragandDrop();
     }
+    public void updateBoard(Board board) {
+        //go through board matrix for every tile do this:
+        for (int x = 0; x < board.matrix.length; x++) {
+            for (int y = 0; y < board.matrix.length; y++) {
 
+                //get every Tiles Entry and set it to possibly new entry
+                //image view für tile x,y
+                Image tileImage = board.getTile(x, y).getImage();
+                ImageView updateImageView = new ImageView(tileImage);
+                updateImageView.setFitWidth(view.getIMAGESIZE());
+                updateImageView.setFitHeight(view.getIMAGESIZE());
+
+                // wo soll es hinzugefügt werden?
+                updateImageView.setX((x * view.getIMAGESIZE()));
+                updateImageView.setY(y * view.getIMAGESIZE());
+
+                view.getRoot().getChildren().add(updateImageView);
+
+            }
+        }
+    }
     public void changeDrawButtonImage(){
 //TODO: nochmal ziehen, falls tile nicht passt
         //gerade noch random, nicht gelöscht/rotiert
@@ -103,6 +124,7 @@ public class Controller {
 
             view.getButtonImageView().setImage(view.newButtonImage);
             view.getDrawCardButton().setGraphic(view.getButtonImageView());
+            //TODO: disable button after use (enable again wenn es passt nicht)
             view.getDrawCardButton().disarm();
 
 
@@ -118,8 +140,8 @@ public class Controller {
         source.setOnDragDetected(event -> {
             Dragboard db = source.startDragAndDrop(TransferMode.ANY);
             ClipboardContent content = new ClipboardContent();
-            System.out.println(view.getButtonImage());
-            content.putImage(view.getButtonImage());
+            System.out.println(view.getNewButtonImage());
+            content.putImage(view.getNewButtonImage());
             db.setContent(content);
             event.consume();
         });
