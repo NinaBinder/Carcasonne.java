@@ -60,10 +60,12 @@ public class Model {
         currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
     }
 
+
     //nextile im board setzen, true muss zurückgegeben werden wenn es geklappt hat
     public boolean tryPlaceTile(int relx,int rely){
         return false;
     }
+
 
     //Spielfigur auf dem Brett platzieren
     public boolean placeFigure(int x, int y) {
@@ -124,6 +126,10 @@ class Player {
     //Punktestand aktualisieren
     public void updateScore(int points) {
         // implementation
+    }
+
+    public Tile setCurrentFigure() {
+        return null;
     }
 }
 
