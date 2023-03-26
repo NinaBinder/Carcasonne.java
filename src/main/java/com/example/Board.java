@@ -150,22 +150,26 @@ public class Board {
                 switch (extend_direction) {
                     case "north":
                         newBoard[x][y+1] = matrix[x][y];
-                        // update the position of the originalTile
-                        originalTileY ++;
                         break;
                     case "south":
                         newBoard[x][y] = matrix[x][y];
                         break;
                     case "west":
                         newBoard[x+1][y] = matrix[x][y];
-                        // update the position of the originalTile
-                        originalTileX ++;
                         break;
                     case "east":
                         newBoard[x][y] = matrix[x][y];
                         break;
                 }
             }
+
+            // update the position of the originalTile
+            switch (extend_direction){
+                case "north" -> originalTileY ++;
+                case "west" ->   originalTileX ++;
+                // case "south" or "east" the position remains the same
+            }
+
 
         }
         // set the new board as the current board

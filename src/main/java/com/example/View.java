@@ -80,7 +80,7 @@ public class View {
         imageView.setLayoutY(SCROLLPANESIZE/2-IMAGESIZE/2);
         root.getChildren().add(imageView);
     }
-
+/**
     public void updateBoard(Board board){
         //go through board matrix for every tile do this:
         for(int x=0; x<board.matrix.length; x++){
@@ -96,16 +96,14 @@ public class View {
             }
         }
     }
-
+*/
     //rotate the image of the tile in the button according to the direction
-    public void rotateRight(int rotation){
-        rotation+=90;
-        buttonImageView.setRotate(rotation);
+    public void rotateRight(){
+        buttonImageView.setRotate(buttonImageView.getRotate()+90);
         }
 
-    public void rotateLeft(int rotation){
-        rotation-=90;
-        buttonImageView.setRotate(rotation);
+    public void rotateLeft(){
+        buttonImageView.setRotate(buttonImageView.getRotate()-90);
     }
 
     public BorderPane getBorder() {

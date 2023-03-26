@@ -16,7 +16,7 @@ public class Tile {
     private Socket[] eastEdge;
     private Socket[] southEdge;
     private Socket[] westEdge;
-    private LibraryEntry entry;
+    private String  entry;
 
 
     /** getter */
@@ -24,6 +24,7 @@ public class Tile {
     public Image getImage(){
         return library.getImage(entry);
     }
+
 
     // get the socket array of the tile
     public Socket[] getSockets(){
@@ -43,8 +44,7 @@ public class Tile {
         return relY;
     }
 
-    public LibraryEntry getEntry(String string) {
-        entry = library.map.get(string);
+    public String getEntry() {
         return entry;
     }
 
@@ -55,13 +55,11 @@ public class Tile {
         this.relX= relX;
         this.relY= relY;
         this.rotation= rotation;
-        this.entry= getEntry(entry);
+        this.entry= entry;
         this.gamePiece = gamePiece;
         // initialise the edge arrays of the tile.
-
         for(int i = 0; i<3; i++){
             northEdge = new Socket[3];
-            System.out.println(northEdge);
             this.northEdge[i] = getSockets()[i];
         }
         for(int i = 0; i<3; i++){
@@ -83,22 +81,24 @@ public class Tile {
     /** rotate the whole tile 90 degrees to the right. Each edge of socket array will be rotated
      * For example the sockets in north will now be in east */
     public void rotateRight( ) {
+        Socket[] north = this.northEdge;
         this.northEdge = this.westEdge;
-        this.eastEdge = this.northEdge;
-        this.southEdge = this.eastEdge;
         this.westEdge = this.southEdge;
-        this.rotation+=90;
+        this.southEdge = this.eastEdge;
+        this.eastEdge = north;
+
 
     }
 
     /** rotate the whole tile 90 degrees to the left. Each edge of socket array will be rotated
      * For example the sockets in north will now be in west */
     public void rotateLeft( ) {
+        Socket[] north = this.northEdge;
         this.northEdge = this.eastEdge;
         this.eastEdge = this.southEdge;
         this.southEdge = this.westEdge;
-        this.westEdge = this.northEdge;
-        this.rotation+=270;
+        this.westEdge = north;
+
 
     }
 
@@ -112,22 +112,30 @@ public class Tile {
         }
         // check if neighbouring tiles match the given tile in case they exist
         if(northTile!=null){
-            if(this.northEdge != northTile.southEdge){
+            if(    ! this.northEdge[0].equals(this.southEdge[2])||
+                   ! this.northEdge[1].equals(this.southEdge[1])||
+                   ! this.northEdge[2].equals(this.southEdge[0]) ){
                 return false;
             }
         }
         if(eastTile!=null){
-            if(this.eastEdge != eastTile.westEdge){
+            if(    ! this.eastEdge[0].equals(this.westEdge[2])||
+                   ! this.eastEdge[1].equals(this.westEdge[1])||
+                   ! this.eastEdge[2].equals(this.westEdge[0])){
                 return false;
             }
         }
         if(westTile!=null){
-            if(this.westEdge != westTile.eastEdge){
+            if(     ! this.westEdge[0].equals(this.eastEdge[2])||
+                    ! this.westEdge[1].equals(this.eastEdge[1])||
+                    ! this.westEdge[2].equals(this.eastEdge[0])){
                 return false;
             }
         }
         if(southTile!=null){
-            if(this.southEdge != southTile.northEdge){
+            if(     ! this.southEdge[0].equals(this.westEdge[2])||
+                    ! this.southEdge[1].equals(this.westEdge[1])||
+                    ! this.southEdge[2].equals(this.westEdge[0])){
                 return false;
             }
         }
