@@ -17,9 +17,13 @@ public class Model {
     private Tile next;
     private List<Player> players;
     private int currentPlayerIndex;
+    private Controller controller;
 
     public Model (){
         board = new Board();
+    }
+    public void setController(Controller controller){
+        this.controller = controller;
     }
 
     public Board getBoard(){

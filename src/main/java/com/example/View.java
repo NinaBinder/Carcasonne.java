@@ -57,6 +57,7 @@ public class View {
         return newButtonImage;
     }
 
+    /** getter and setter **/
     public BorderPane getBorder() {
         return border;
     }
@@ -98,4 +99,4 @@ public class View {
         score++;
     }
 
-    }
+}

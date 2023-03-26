@@ -14,33 +14,22 @@ import java.util.Deque;
 import java.util.LinkedList;
 
 public class Controller {
-    View view= new View();
+    View view;
+    Model model;
     TileLibrary library = new TileLibrary();
     ArrayList<Tile> allTiles;
     Board board= new Board();
-
-
 
     /** deck: An Array List filled with all possible Entries
      in order to get the images of that entry: deck(index).img
      */
     ArrayList<LibraryEntry> deck;
 
-    public Controller(View view){
+    public Controller(View view, Model model){
         this.view = view;
-        this.allTiles = new ArrayList<Tile>();
+        this.model= model;
+        //this.allTiles = new ArrayList<Tile>();
         this.deck= new ArrayList<LibraryEntry>();
-
-        // generate original tile and new empty tiles in the tile array
-        allTiles.add(new Tile(-1,-1,0,"EMPTY",false));
-        allTiles.add(new Tile(0,-1,0,"EMPTY",false));
-        allTiles.add(new Tile(1,-1,0,"EMPTY",false));
-        allTiles.add(new Tile(-1,0,0,"EMPTY",false));
-        allTiles.add(new Tile(0,0,0,"OG",false));
-        allTiles.add(new Tile(1,0,0,"EMPTY",false));
-        allTiles.add(new Tile(-1,1,0,"EMPTY",false));
-        allTiles.add(new Tile(0,1,0,"EMPTY",false));
-        allTiles.add(new Tile(1,1,0,"EMPTY",false));
 
         //Filling the deck with all possible cards (right amount of each card included)
         deck.add(library.map.get("C"));
@@ -81,8 +70,8 @@ public class Controller {
             deck.add(library.map.get("V"));
         }
 
-        changeDrawButtonImage();
         updateBoard(board);
+        changeDrawButtonImage();
         rotateLeft();
         rotateRight();
         DragandDrop();
@@ -109,8 +98,8 @@ public class Controller {
         }
     }
     public void changeDrawButtonImage(){
-//TODO: nochmal ziehen, falls tile nicht passt
-        //gerade noch random, nicht gelöscht/rotiert
+        //TODO: nochmal ziehen, falls tile nicht passt
+        // TODO: nach dem ziehen, soll tile aus deck gelöscht werden
         //put image on label nicht auf button / disbale button after on drück es sei denn es passt nicht dann mach noch mal
         view.getDrawCardButton().setOnAction(event->{
 
