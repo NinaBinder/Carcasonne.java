@@ -7,6 +7,7 @@ public class Board {
 
     //The attribute board stores the map in a two-dimensional array.
     Tile[][] matrix;
+
     // The relative coordinate of the starting Tile in the map.
     private int originalTileX;
     // The relative coordinate of the starting Tile in the map.
@@ -20,6 +21,17 @@ public class Board {
         // relative position of the starting Tile is always 0/0 at the beginning
         originalTileX = 0;
         originalTileY = 0;
+    }
+
+    public void placeFigure(int x, int y, Player player){
+    }
+
+
+    // Methode zur Bewertung der Punkte für alle Spieler basierend auf dem aktuellen Stand des Boards
+    public void evaluatePoints() {
+        //for (Player player : players) {
+            //player.setScore(board.evaluatePoints(player));
+        //}
     }
 
     //check if a given cell is within the bounds of the board array via it's relative position

@@ -1,9 +1,8 @@
 package com.example;
 import java.util.ArrayList;
 import java.util.List;
-
 import javafx.collections.FXCollections;
-import your.package.Player;
+
 
 
 public class Model {
@@ -15,15 +14,12 @@ public class Model {
 
 
     private Board board;
-    private Tile next = new Tile();
+    private Tile next;
     private List<Player> players;
     private int currentPlayerIndex;
-    private int freemeeples;
 
     public Model (){
-        Tile tile = new Tile();
-        board = new Board(tile);
-
+        board = new Board();
     }
 
     public Board getBoard(){
@@ -69,24 +65,15 @@ public class Model {
         // Stellt die Figur auf das Brett
         board.placeFigure(x, y, getCurrentPlayer());
         // Aktualisiere die Punktzahl des Spielers
-        getCurrentPlayer().updateScore(board.evaluatePoints(x, y));
+        board.evaluatePoints();
         return true;
     }
 
-    //neue Kachel ziehen
-    public void drawTile() {
-        setNextTile(Tile.getRandomTile());
+    public void drawTile(){
+
     }
 
-    // Methode zur Bewertung der Punkte für alle Spieler basierend auf dem aktuellen Stand des Boards
-    public void evaluatePoints() {
-        for (Player player : players) {
-            player.setScore(board.evaluatePoints(player));
-        }
-    }
-
-
-    //Spielbrett initialisieren, Spieler erstellen.
+    //Spielbrett initialisieren, Spieler erstellen
     public void startNewGame(int numPlayers) {
         board = new Board();
         players = FXCollections.observableArrayList(Player.createPlayers(numPlayers));
@@ -97,24 +84,9 @@ public class Model {
 }
 
 
+
 class Player {
     private int score;
-    private Meeple meeples;
-    private String userName;
-    Player(String userName) {
-        this.userName = userName;
-        meeples = new Meeple(this);
-    }
-    public Meeple getMeeples() {
-        return meeples;
-    }
-    public int meeplesLeft() {
-        return meeples.meeplesLeft();
-    }
-    void reward(int points) {
-        score += points;
-    }
-
 
     //Liste von Spielern erstellen
     public static List<Player> createPlayers(int numPlayers) {
@@ -136,7 +108,8 @@ class Player {
 
     //prüft, ob eine Figur an Koordinate x und y platziert werden kann
     public boolean canPlaceFigure(int x, int y) {
-        return freemeeples > 0;
+        //implementation
+        return false;
     }
 
     //Punktestand aktualisieren
@@ -145,95 +118,3 @@ class Player {
     }
 }
 
-class Tile {
-    // implementation
-}
-
-class Board {
-    // implementation
-}
-class Meeple {
-    Tile tile = new Tile();
-    Board board = new Board();
-    Player player = new Player();
-    private static final int TOTAL_MEEPLES = 7;
-    private int inStock = TOTAL_MEEPLES;
-    private Player player;
-    private int location;
-    private int owner;
-    private int placedMeeples;
-    private int freeMeeples;
-    Meeple meeple = new Meeple(); //Image?
-
-    public Meeple(Player player) {
-        this.player = player;
-    }
-
-    void returnToPlayer(int n) { inStock = inStock + n; } //return meeple to player if scored
-    void place(LibraryEntry type, Board board) { //drag and drop? wie verbinden?
-        board.addMeeple(this);
-        inStock--;
-    }
-    int meeplesLeft() {
-        return inStock;
-    }
-    public void setLocation(int x, int y) {
-        this.location = board.matrix[x][y];
-    }
-    public Integer getLocation() {return location;} //get the location of the tile where the meeple is placed
-
-    public Integer getOwner(int owner) {
-        return owner; //TODO: find owner
-    }
-    public boolean isPlaced() {
-        if (location != null){ return true;}}
-
-    private boolean isPatternClosed() {
-        boolean isClosed = true;
-        for (//every side, get direct neighbours)
-        {
-            if (//sockets match and are connected)) {
-            //get neighbour;
-            if (get.Neighbor() == null) { // if it has no neighbor
-                isClosed = false;
-            } else { // continue on neighbors
-                isClosed &= checkNeighbor(); //TODO: check neighbour methode schreiben
-            }
-        }return isClosed;
-    }
-
-    public addMeeple() {
-            freeMeeples=10;
-        if (Player.canPlaceFigure()) {
-            freeMeeples--;
-            Meeple meeple = new Meeple();
-            board.add(meeple);
-            placedMeeples.add(meeple)
-            assert placedMeeples <= 10; //= max Meeples
-            return meeple;
-        }
-        throw new IllegalStateException("No unused meeples are left.");
-    }
-    public Component getType(Tile tile) {
-        if (tile.gamePiece=true) {return type);} //TODO:man braucht von dem Entry das Feature und davon die Componente type
-    }
- public void addPoints () {
-        for (placedMeeples) {
-            score = 0;
-            //points.setText("Score: " + score); TODO: im Label in View anzeigen
-            if (isPatternClosed())
-                switch (feature.type){ // TODO: ka wie ne foreach Schleife geht
-                    case FIELD -> score + 3
-                    case CITY -> score + 3
-                    case ROAD -> score + 3
-                }
-        }
-    }
-    public void removeMeeple () {
-        if (isPatternClosed=true && isPlaced()) { //
-            placedMeeples--;
-            freeMeeples++;
-            location = null; // mark as unplaced.
-        }
-    }
-        }
