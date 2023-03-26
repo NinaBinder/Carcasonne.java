@@ -114,14 +114,12 @@ public class Controller {
             view.getButtonImageView().setImage(view.newButtonImage);
             view.getDrawCardButton().setGraphic(view.getButtonImageView());
             //TODO: disable button after use (enable again wenn es passt nicht)
-            view.getDrawCardButton().disarm();
-
-
-
+            //view.getDrawCardButton().disarm();
         });
     }
 
     // drag the tile which is shown on the button to the board
+    //TODO: finish drop
     public void DragandDrop(){
         //Source of the drag gesture
         Button source = view.drawCardButton;
@@ -157,7 +155,7 @@ public class Controller {
                    EventTarget eventTarget = event.getTarget();
                    tile = (Tile) eventTarget;
                    board.set_withRelativeReference(tile.getRelX(),tile.getRelY(),tile.getEntry());
-                   //update the view
+                   updateBoard(board);
 
                }
             }
