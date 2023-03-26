@@ -35,6 +35,7 @@ public class Model {
     }
 
 
+
     //Getter und Setter für die Spieler
     public List<Player> getPlayers() {
         return players;
@@ -55,6 +56,10 @@ public class Model {
         currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
     }
 
+    //nextile im board setzen, true muss zurückgegeben werden wenn es geklappt hat
+    public boolean tryPlaceTile(int relx,int rely){
+        return false;
+    }
 
     //Spielfigur auf dem Brett platzieren
     public boolean placeFigure(int x, int y) {
