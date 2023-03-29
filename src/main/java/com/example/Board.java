@@ -13,7 +13,6 @@ public class Board {
     // The relative coordinate of the starting Tile in the map.
     private int originalTileY;
 
-
     /**constructor*/
     public Board( ) {
         // initialize the board of size 3x3 (each row 3 fields, each column 3 fields)
@@ -30,29 +29,6 @@ public class Board {
         // relative position of the starting Tile is always 0/0 at the beginning
         originalTileX = 1;
         originalTileY = 1;
-    }
-
-    public boolean placeFigure(int x, int y, Player player){
-        //prüfe ob x und y innerhalb der Grenzen des Matrix liegt
-        if (x < 0 || x >= matrix.length || y < 0 || y >= matrix[0].length) {
-            return false;
-        }
-        //prüfe ob angegebene Position bereits von einer anderen Figur besetzt ist
-        if (matrix[x][y] != null) {
-            return false;
-        }
-        //Platziere die Figur des Spielers an der angegebenen Pos.
-        matrix[x][y] = player.setCurrentFigure();
-        return true;
-    }
-
-
-
-    // Methode zur Bewertung der Punkte für alle Spieler basierend auf dem aktuellen Stand des Boards
-    public void evaluatePoints() {
-        //for (Player player : players) {
-            //player.setScore(board.evaluatePoints(player));
-        //}
     }
 
 
@@ -209,6 +185,5 @@ public class Board {
         // set the new board as the current board
         this.matrix = newBoard;
     }
-
-
 }
+
