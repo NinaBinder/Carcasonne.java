@@ -79,6 +79,10 @@ public class View {
         return root;
     }
 
+    public ScrollPane getScrollPane() {
+        return scrollPane;
+    }
+
     public double getIMAGESIZE() {
         return IMAGESIZE;
     }

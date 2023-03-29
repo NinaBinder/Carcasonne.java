@@ -2,7 +2,7 @@ package com.example;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.collections.FXCollections;
-
+import javafx.scene.image.Image;
 
 
 public class Model {
@@ -12,19 +12,28 @@ public class Model {
     // (c) Informationen zu den Spielern;
     // (d) Methoden zum Lesen und Setzen der Daten und zum Ausführen (bzw. Prüfen) von Spielaktionen
 
-
     private Board board;
     private Tile next;
     private List<Player> players;
     private int currentPlayerIndex;
     private Controller controller;
 
+
     public Model (){
-        board = new Board();
+
+        board = new Board(this);
+    }
+
+    public void initView(Image tileimage, int x, int y){
+        controller.updateView(tileimage,x,y);
+    }
+    public void initBoard(){
+        board.initBoard();
     }
     public void setController(Controller controller){
         this.controller = controller;
     }
+
 
     public Board getBoard(){
         return this.board;
@@ -61,8 +70,9 @@ public class Model {
     }
 
     //nextile im board setzen, true muss zurückgegeben werden wenn es geklappt hat
-    public boolean tryPlaceTile(int relx,int rely){
-        return false;
+    public void tryPlaceTile(Position position){
+
+
     }
 
     //Spielfigur auf dem Brett platzieren
@@ -84,7 +94,7 @@ public class Model {
 
     //Spielbrett initialisieren, Spieler erstellen
     public void startNewGame(int numPlayers) {
-        board = new Board();
+        board = new Board(this);
         players = FXCollections.observableArrayList(Player.createPlayers(numPlayers));
         //aktuellen Spieler als ersten Spieler in der Reihe festlegen
         currentPlayerIndex = 0;

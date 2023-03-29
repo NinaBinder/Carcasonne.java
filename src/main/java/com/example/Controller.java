@@ -8,17 +8,18 @@ import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
-import java.util.ArrayList;
-import java.util.Deque;
-import java.util.LinkedList;
+
+import java.util.*;
 
 public class Controller {
     View view;
     Model model;
+    Tile tile;
     TileLibrary library = new TileLibrary();
     ArrayList<Tile> allTiles;
-    Board board= new Board();
+    HashMap<Position, ImageView> everyTile = new HashMap<Position, ImageView>();
 
     /** deck: An Array List filled with all possible Entries
      in order to get the images of that entry: deck(index).img
@@ -28,8 +29,9 @@ public class Controller {
     public Controller(View view, Model model){
         this.view = view;
         this.model= model;
-        //this.allTiles = new ArrayList<Tile>();
+        this.allTiles = new ArrayList<Tile>();
         this.deck= new ArrayList<LibraryEntry>();
+        //updateBoard(board);
 
         //Filling the deck with all possible cards (right amount of each card included)
         deck.add(library.map.get("C"));
@@ -70,30 +72,48 @@ public class Controller {
             deck.add(library.map.get("V"));
         }
 
-        updateBoard(board);
         changeDrawButtonImage();
         rotateLeft();
         rotateRight();
         DragandDrop();
     }
+    public void updateView(Image tileImage, int x, int y){
+
+        // new Hashmap which safes image view of all tiles added to board with key: relx rely
+        Position tilePosition= new Position(x,y);
+
+        if(everyTile.containsKey(tilePosition)){
+            everyTile.get(tilePosition).setImage(tileImage);
+
+        }else {
+
+            ImageView startimageView = new ImageView(tileImage);
+
+            everyTile.put(tilePosition, startimageView);
+
+            startimageView.setFitWidth(view.getIMAGESIZE());
+            startimageView.setFitHeight(view.getIMAGESIZE());
+        }
+        everyTile.get(tilePosition).setX((x * view.getIMAGESIZE()));
+        everyTile.get(tilePosition).setY(y * view.getIMAGESIZE());
+        //System.out.println(startimageView);
+        view.getRoot().getChildren().add(everyTile.get(tilePosition));
+        //view.getScrollPane().setContent(startimageView);
+    }
     public void updateBoard(Board board) {
+
+        view.getRoot().getChildren().clear();
         //go through board matrix for every tile do this:
-        for (int x = 0; x < board.matrix.length; x++) {
-            for (int y = 0; y < board.matrix.length; y++) {
+        for (int relX = 0; relX < board.matrix.length; relX++) {
+            for (int relY = 0; relY < board.matrix.length; relY++) {
 
                 //get every Tiles Entry and set it to possibly new entry
                 //image view für tile x,y
-                Image tileImage = board.getTile(x, y).getImage();
-                ImageView updateImageView = new ImageView(tileImage);
-                updateImageView.setFitWidth(view.getIMAGESIZE());
-                updateImageView.setFitHeight(view.getIMAGESIZE());
+                Image tileImage = board.getTile(relX, relY).getImage();
 
-                // wo soll es hinzugefügt werden?
-                updateImageView.setX((x * view.getIMAGESIZE()));
-                updateImageView.setY(y * view.getIMAGESIZE());
+                everyTile.put(new Position(relX,relY),new ImageView(tileImage));
 
-                view.getRoot().getChildren().add(updateImageView);
-
+                updateView(tileImage, relX, relY);
             }
         }
     }
@@ -108,7 +128,7 @@ public class Controller {
 
             int index = (int)(Math.random() * deck.size());
 
-            System.out.println(deck.get(index).img);
+            //System.out.println(deck.get(index).img);
             view.newButtonImage = deck.get(index).img;
 
             view.getButtonImageView().setImage(view.newButtonImage);
@@ -121,7 +141,7 @@ public class Controller {
     // drag the tile which is shown on the button to the board
     //TODO: finish drop
     public void DragandDrop(){
-        //Source of the drag gesture
+        //Source of the drag gesture is the Button
         Button source = view.drawCardButton;
         //react of drag
         source.setOnDragDetected(event -> {
@@ -138,6 +158,9 @@ public class Controller {
         // accept possible drop
         target.setOnDragOver(event -> {
             event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
+                    if(event.getGestureSource() != target && event.getDragboard().hasImage()){
+                        event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
+                    }
             event.consume();
         }
         );
@@ -145,23 +168,63 @@ public class Controller {
         target.setOnDragDropped( event -> {
             Dragboard db = event.getDragboard();
             boolean success = false;
-            for(Tile tile: allTiles){
+
+            //System.out.println(event.getTarget());
+            //target is a specific image view
+
+            Position targetPos;
+            if(event.getTarget() instanceof ImageView){
+
+                for(Position pos : everyTile.keySet()){
+                    //targetPos= new Position((int)event.getX(), (int)event.getY());
+
+                    if(everyTile.get(pos).equals(event.getTarget())){
+                        targetPos = pos;
+                        everyTile.put(targetPos,new ImageView(db.getImage()));
+
+                        //TODO: tiles match?
+                        if(tile.tileMatch( getNorthTile(targetPos.getX(),targetPos.getY()),
+                                getSouthTile(targetPos.getX(), targetPos.getY()),
+                                getEastTile(targetPos.getX(), targetPos.getY()),
+                                getWestTile(targetPos.getX(), targetPos.getY())) ) {
+
+                            updateView(db.getImage(), targetPos.getX(), targetPos.getY());
+
+                        }
+                        else{
+                            System.out.println("not matching");
+                        }
+
+                    }
+                }
+
+                success= true;
+            }
+            event.setDropCompleted(success);
+            event.consume();
+        });
+
+
+            //TODO: where to add the new tile to / maybe use hashmasp
+            //everyTile.keySet() all position zu denen es eintrag gibt
+            // everyTile.values() alle imageviews in hashmap
+            /*for(Tile tile: ){
+                //add the Tiles to the hashmap if it is not already added
+
+
                 // get neighbours (north, east, south, west) of a tile
 
-               if(tile.getEntry() == "EMPTY" && tile.TileMatch(getNorthTile(tile.getRelX(),tile.getRelY()),
+                //move maybe to model like this
+                //if(model.trysetTile(position)== true
+               if(Objects.equals(tile.getEntry(), "EMPTY") && tile.TileMatch(getNorthTile(tile.getRelX(),tile.getRelY()),
                                                                 getSouthTile(tile.getRelX(),tile.getRelY()),
                                                                 getEastTile(tile.getRelX(),tile.getRelY()),
                                                                 getWestTile(tile.getRelX(),tile.getRelY()))){
                    EventTarget eventTarget = event.getTarget();
                    tile = (Tile) eventTarget;
-                   board.set_withRelativeReference(tile.getRelX(),tile.getRelY(),tile.getEntry());
-                   updateBoard(board);
-
-               }
-            }
-            event.setDropCompleted(success);
-            event.consume();
-        });
+                   model.getBoard().set_withRelativeReference(tile.getRelX(),tile.getRelY(),tile.getEntry());
+                   updateBoard(model.getBoard());
+                   System.out.println("board gets updated");*/
 
     }
 
@@ -190,28 +253,23 @@ public class Controller {
     }
 
 
+    //TODO: ins model
     // get neighbours (north, east, south, west) of a tile
     public Tile getNorthTile(int relX, int relY){
-        Tile north = board.getTile_viaRelative(relX,relY-1);
+        Tile north = model.getBoard().getTile_viaRelative(relX,relY-1);
         return north;
     }
     public Tile getEastTile(int relX, int relY){
-        Tile east = board.getTile_viaRelative(relX+1,relY);
+        Tile east = model.getBoard().getTile_viaRelative(relX+1,relY);
         return east;
     }
     public Tile getSouthTile(int relX, int relY){
-        Tile south = board.getTile_viaRelative(relX,relY+1);
+        Tile south = model.getBoard().getTile_viaRelative(relX,relY+1);
         return south;
     }
     public Tile getWestTile(int relX, int relY){
-        Tile west = board.getTile_viaRelative(relX-1,relY);
+        Tile west = model.getBoard().getTile_viaRelative(relX-1,relY);
         return west;
     }
 
-
-
-    }
-
-
-
-
+}
