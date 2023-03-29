@@ -10,7 +10,7 @@ public class Model {
     private Tile next;
     private Controller controller;
 
-
     public void setController(Controller controller){
         this.controller = controller;
     }
+

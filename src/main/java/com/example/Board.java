@@ -13,7 +13,6 @@ public class Board {
     // The relative coordinate of the starting Tile in the map.
     private int originalTileY;
 
-
     /**constructor*/
     public Board( ) {
         // initialize the board of size 3x3 (each row 3 fields, each column 3 fields)
