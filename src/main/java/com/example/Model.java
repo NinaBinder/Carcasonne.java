@@ -26,6 +26,7 @@ public class Model {
 
     public void initView(Image tileimage, int x, int y){
         controller.updateView(tileimage,x,y);
+
     }
     public void initBoard(){
         board.initBoard();
@@ -34,6 +35,24 @@ public class Model {
         this.controller = controller;
     }
 
+    public boolean isPatternClosed(Tile lastPlacedTile) {
+
+        boolean isClosed = false;
+        int x;
+        int y;
+        for (int i=0; i<12; i++){
+            Component c = lastPlacedTile.getSockets()[i].getComponent();
+
+            //gibt es an dem Tile überhaupt ein Socket mit Component Road?
+            if (lastPlacedTile.getSockets()[i].getComponent()==Component.ROAD){
+                //wenn ja an welchem genauen Socket ist Road?
+
+                //bei dem Socket get Neighbor
+                //wiederhole den prozess bis an Ending Tile angekommen
+            }
+        }
+       return isClosed;
+    }
 
     public Board getBoard(){
         return this.board;
