@@ -1,6 +1,7 @@
 package com.example;
 
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 
 /**
@@ -24,7 +25,9 @@ public class Tile {
     public Image getImage(){
         return library.getImage(entry);
     }
-
+    public ImageView getImageView(){
+        return library.getImageView(entry);
+    }
 
     // get the socket array of the tile
     public Socket[] getSockets(){
@@ -47,8 +50,6 @@ public class Tile {
     public String getEntry() {
         return entry;
     }
-
-
 
     public Tile(int relX, int relY, int rotation, String entry, boolean gamePiece){
         this.library = new TileLibrary();
@@ -104,7 +105,7 @@ public class Tile {
 
 
     /** check if the field fits on the side of another neighbours*/
-    public boolean TileMatch (Tile northTile, Tile southTile, Tile eastTile, Tile westTile){
+    public boolean tileMatch (Tile northTile, Tile southTile, Tile eastTile, Tile westTile){
         // check if at least one of neighbouring tiles exists. Because tiles can not be set in empty space without
         //any neighbouring
         if (northTile == null && southTile == null && eastTile == null && westTile == null){

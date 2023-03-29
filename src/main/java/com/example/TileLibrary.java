@@ -1,5 +1,7 @@
 package com.example;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+
 import java.util.HashMap;
 
 
@@ -214,4 +216,9 @@ public class TileLibrary {
     public Image getImage(String entry){
          return map.get(entry).img;
     }
+    public ImageView getImageView(String entry){
+        ImageView imageView = new ImageView(map.get(entry).img);
+        return imageView;
+    }
+
 }

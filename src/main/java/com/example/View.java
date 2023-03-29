@@ -9,6 +9,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 
+//TODO: meeple display
 public class View {
     BorderPane border = new BorderPane();
     ScrollPane scrollPane = new ScrollPane();
@@ -76,6 +77,10 @@ public class View {
 
     public Pane getRoot() {
         return root;
+    }
+
+    public ScrollPane getScrollPane() {
+        return scrollPane;
     }
 
     public double getIMAGESIZE() {

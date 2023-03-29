@@ -1,9 +1,12 @@
 package com.example;
 
 
+import javafx.scene.image.Image;
+
 /**Class representing the game field.
  This grows with the creation of new fields.*/
 public class Board {
+    Model model;
 
     //The attribute board stores the map in a two-dimensional array.
     Tile[][] matrix;
@@ -12,25 +15,51 @@ public class Board {
     private int originalTileX;
     // The relative coordinate of the starting Tile in the map.
     private int originalTileY;
+    Tile originalTile = new Tile(0,0,0,"OG",false);
+
 
     /**constructor*/
-    public Board( ) {
-        // initialize the board of size 3x3 (each row 3 fields, each column 3 fields)
-        matrix = new Tile[3][3];
-        matrix[1][1] = new Tile(0,0,0,"OG",false);
-
-        for(int x= -1; x< 2; x++){
-            for(int y= -1; y< 2; y++){
-                if(!(x== 0 && y==0)) {
-                    matrix[x + 1][y + 1] = new Tile(x, y, 0, "EMPTY", false);
-                }
-            }
-        }
+    public Board(Model model) {
+        this.model= model;
         // relative position of the starting Tile is always 0/0 at the beginning
         originalTileX = 1;
         originalTileY = 1;
     }
+    public void initBoard(){
+        // initialize the board of size 3x3 (each row 3 fields, each column 3 fields)
+        matrix = new Tile[3][3];
+        matrix[originalTileX][originalTileY] = originalTile;
 
+        for(int x= 0; x< matrix.length; x++){
+            for(int y= 0; y< matrix.length; y++){
+
+            //first set where which tile should go
+            //use setTile function?
+
+                if(!(x== 1 && y==1)) {
+                    matrix[x][y] = new Tile(x, y, 0, "EMPTY", false);
+                }
+
+                Image tileImage = getTile(x,y).getImage();
+                //System.out.println(getTile(x,y));
+            //similiar like in update Board function get the images of added tiles and add them to the view
+                model.initView(tileImage, x,y);
+            }
+        }
+    }
+
+
+
+    public void placeFigure(int x, int y, Player player){
+    }
+
+
+    // Methode zur Bewertung der Punkte für alle Spieler basierend auf dem aktuellen Stand des Boards
+    public void evaluatePoints() {
+        //for (Player player : players) {
+            //player.setScore(board.evaluatePoints(player));
+        //}
+    }
 
     //check if a given cell is within the bounds of the board array via it's relative position
     public boolean isWithinBoard(int relX, int relY) {
@@ -185,5 +214,6 @@ public class Board {
         // set the new board as the current board
         this.matrix = newBoard;
     }
-}
 
+
+}
