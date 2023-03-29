@@ -38,6 +38,7 @@ public class Board {
 
                 if(!(x== 1 && y==1)) {
                     matrix[x][y] = new Tile(x, y, 0, "EMPTY", false);
+
                 }
 
                 Image tileImage = getTile(x,y).getImage();

@@ -31,6 +31,7 @@ public class Controller {
         this.model= model;
         this.allTiles = new ArrayList<Tile>();
         this.deck= new ArrayList<LibraryEntry>();
+
         //updateBoard(board);
 
         //Filling the deck with all possible cards (right amount of each card included)
@@ -107,6 +108,7 @@ public class Controller {
         for (int relX = 0; relX < board.matrix.length; relX++) {
             for (int relY = 0; relY < board.matrix.length; relY++) {
 
+
                 //get every Tiles Entry and set it to possibly new entry
                 //image view für tile x,y
                 Image tileImage = board.getTile(relX, relY).getImage();
@@ -114,6 +116,7 @@ public class Controller {
                 everyTile.put(new Position(relX,relY),new ImageView(tileImage));
 
                 updateView(tileImage, relX, relY);
+                //model.isPatternClosed(model.getBoard().getTile(1,1));
             }
         }
     }
@@ -181,14 +184,13 @@ public class Controller {
                     if(everyTile.get(pos).equals(event.getTarget())){
                         targetPos = pos;
                         everyTile.put(targetPos,new ImageView(db.getImage()));
+                        updateView(db.getImage(), targetPos.getX(), targetPos.getY());
 
                         //TODO: tiles match?
                         if(tile.tileMatch( getNorthTile(targetPos.getX(),targetPos.getY()),
                                 getSouthTile(targetPos.getX(), targetPos.getY()),
                                 getEastTile(targetPos.getX(), targetPos.getY()),
                                 getWestTile(targetPos.getX(), targetPos.getY())) ) {
-
-                            updateView(db.getImage(), targetPos.getX(), targetPos.getY());
 
                         }
                         else{
