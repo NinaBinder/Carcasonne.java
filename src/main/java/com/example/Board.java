@@ -32,29 +32,6 @@ public class Board {
         originalTileY = 1;
     }
 
-    public boolean placeFigure(int x, int y, Player player){
-        //prüfe ob x und y innerhalb der Grenzen des Matrix liegt
-        if (x < 0 || x >= matrix.length || y < 0 || y >= matrix[0].length) {
-            return false;
-        }
-        //prüfe ob angegebene Position bereits von einer anderen Figur besetzt ist
-        if (matrix[x][y] != null) {
-            return false;
-        }
-        //Platziere die Figur des Spielers an der angegebenen Pos.
-        matrix[x][y] = player.setCurrentFigure();
-        return true;
-    }
-
-
-
-    // Methode zur Bewertung der Punkte für alle Spieler basierend auf dem aktuellen Stand des Boards
-    public void evaluatePoints() {
-        //for (Player player : players) {
-            //player.setScore(board.evaluatePoints(player));
-        //}
-    }
-
 
     //check if a given cell is within the bounds of the board array via it's relative position
     public boolean isWithinBoard(int relX, int relY) {
@@ -209,6 +186,5 @@ public class Board {
         // set the new board as the current board
         this.matrix = newBoard;
     }
-
-
 }
+
