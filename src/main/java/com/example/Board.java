@@ -49,6 +49,33 @@ public class Board {
         }
     }
 
+    public boolean tryPlaceTile(Tile tile, int x, int y) {
+        // Prüfen, ob das aktuelle Tile an der gegebenen Position platziert werden kann
+        if (x < 0 || x >= matrix.length || y < 0 || y >= matrix[0].length || matrix[y][x] != null) {
+            return false; // Kachel kann nicht platziert werden
+        }
+
+        // Prüfen, ob das aktuelle Tile an eine benachbarte Kachel angrenzt
+        boolean isAdjacent = false;
+        if (x > 0 && matrix[y][x - 1] != null) { // Überprüfen, ob es eine benachbarte Kachel links gibt
+            isAdjacent = true;
+        }
+        if (x < matrix.length - 1 && matrix[y][x + 1] != null) { // Überprüfen, ob es eine benachbarte Kachel rechts gibt
+            isAdjacent = true;
+        }
+        if (y > 0 && matrix[y - 1][x] != null) { // Überprüfen, ob es eine benachbarte Kachel oben gibt
+            isAdjacent = true;
+        }
+        if (y < matrix[0].length - 1 && matrix[y + 1][x] != null) { // Überprüfen, ob es eine benachbarte Kachel unten gibt
+            isAdjacent = true;
+        }
+        if (!isAdjacent) {
+            return false; // Kachel kann nicht platziert werden
+        }
+        // Platzieren des aktuellen Tiles an der gegebenen Position auf dem Board
+        matrix[y][x] = tile;
+        return true; // Kachel wurde erfolgreich platziert
+    }
 
 
     public void placeFigure(int x, int y, Player player){

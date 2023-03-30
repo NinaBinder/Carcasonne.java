@@ -91,7 +91,6 @@ public class Model {
     //nextile im board setzen, true muss zurückgegeben werden wenn es geklappt hat
     public void tryPlaceTile(Position position){
 
-
     }
 
     //Spielfigur auf dem Brett platzieren
