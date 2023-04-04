@@ -13,10 +13,9 @@ import javafx.scene.layout.*;
 public class View {
     BorderPane border = new BorderPane();
     ScrollPane scrollPane = new ScrollPane();
+    AnchorPane anchor = new AnchorPane();
     Pane root = new Pane();
     HBox hBox = new HBox();
-    VBox vBox= new VBox();
-    Label drawStack= new Label();
     final double IMAGESIZE = 100;
     final double SCROLLPANESIZE = 500;
     ImageView buttonImageView = new ImageView();
@@ -29,11 +28,14 @@ public class View {
 
 
     public View() {
+        anchor.getChildren().add(root);
         //Tile originalTile= new Tile(0,0,0,"OG",false);
         border.setCenter(scrollPane);
 
         scrollPane.setPrefSize(SCROLLPANESIZE, SCROLLPANESIZE);
-        scrollPane.setContent(root);
+        scrollPane.setContent(anchor);
+        root.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+
 
         border.setBottom(hBox);
         hBox.setPadding(new Insets(15, 12, 15, 12));
@@ -49,9 +51,6 @@ public class View {
         cardBack.setFitHeight(100);
         countPoints();
 
-
-
-
     }
 
     public Image getNewButtonImage() {
@@ -59,14 +58,6 @@ public class View {
     }
 
     /** getter and setter **/
-    public BorderPane getBorder() {
-        return border;
-    }
-
-    public double getSCROLLPANESIZE() {
-        return SCROLLPANESIZE;
-    }
-
     public Button getDrawCardButton() {
         return drawCardButton;
     }
@@ -78,15 +69,9 @@ public class View {
     public Pane getRoot() {
         return root;
     }
-
-    public ScrollPane getScrollPane() {
-        return scrollPane;
-    }
-
     public double getIMAGESIZE() {
         return IMAGESIZE;
     }
-
     //rotate the image of the tile in the button according to the direction
     public void rotateRight(){
         buttonImageView.setRotate(buttonImageView.getRotate()+90);

@@ -1,7 +1,6 @@
 package com.example;
 
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 
 
 /**
@@ -9,15 +8,16 @@ import javafx.scene.image.ImageView;
  result*/
 public class Tile {
     TileLibrary library;
+    View view;
     private int relX;
     private int relY;
     private int rotation;
     boolean gamePiece;
-    private Socket[] northEdge;
-    private Socket[] eastEdge;
-    private Socket[] southEdge;
-    private Socket[] westEdge;
-    private String  entry;
+    private LibraryEntry.Component northEdge;
+    private LibraryEntry.Component eastEdge;
+    private LibraryEntry.Component southEdge;
+    private LibraryEntry.Component westEdge;
+    private String entry;
 
 
     /** getter */
@@ -25,14 +25,11 @@ public class Tile {
     public Image getImage(){
         return library.getImage(entry);
     }
-    public ImageView getImageView(){
-        return library.getImageView(entry);
-    }
 
     // get the socket array of the tile
-    public Socket[] getSockets(){
-        return library.map.get(entry).sockets;
-    }
+    /*public Component getComponent(){
+        return library.map.get(entry);
+    }*/
 
     //get the current rotation of the tile
     public int getRotation() {
@@ -51,97 +48,67 @@ public class Tile {
         return entry;
     }
 
+
+
     public Tile(int relX, int relY, int rotation, String entry, boolean gamePiece){
+        this.view = new View();
         this.library = new TileLibrary();
         this.relX= relX;
         this.relY= relY;
         this.rotation= rotation;
         this.entry= entry;
         this.gamePiece = gamePiece;
-        // initialise the edge arrays of the tile.
-        for(int i = 0; i<3; i++){
-            northEdge = new Socket[3];
-            this.northEdge[i] = getSockets()[i];
-        }
-        for(int i = 0; i<3; i++){
-            this.eastEdge = new Socket[3];
-            this.eastEdge[i] = getSockets()[i+3];
-        }
-        for(int i = 0; i<3; i++){
-            this.southEdge = new Socket[3];
-            this.southEdge[i] = getSockets()[i+6];
-        }
-        for(int i = 0; i<3; i++){
-            this.westEdge = new Socket[3];
-            this.westEdge[i] = getSockets()[i+9];
-        }
+
+        this.northEdge = library.map.get(entry).getComponent()[0];
+        this.eastEdge = library.map.get(entry).getComponent()[1];
+        this.southEdge = library.map.get(entry).getComponent()[2];
+        this. westEdge = library.map.get(entry).getComponent()[3];
+
+       // rotateRight();
     }
 
 
 
     /** rotate the whole tile 90 degrees to the right. Each edge of socket array will be rotated
      * For example the sockets in north will now be in east */
-    public void rotateRight( ) {
-        Socket[] north = this.northEdge;
-        this.northEdge = this.westEdge;
-        this.westEdge = this.southEdge;
-        this.southEdge = this.eastEdge;
-        this.eastEdge = north;
+   /* public void rotateRight() {
+        view.rotateRight.setOnAction(event-> {
+                    LibraryEntry.Component tempEdge= this.northEdge;
+                    northEdge= this.westEdge;
+                    westEdge = this.southEdge;
+                    southEdge = this.eastEdge;
+                    eastEdge = tempEdge;
+                    this.rotation+=90;
+                    view.rotateRight();)}
+
+    }*/
 
 
-    }
 
     /** rotate the whole tile 90 degrees to the left. Each edge of socket array will be rotated
      * For example the sockets in north will now be in west */
     public void rotateLeft( ) {
-        Socket[] north = this.northEdge;
         this.northEdge = this.eastEdge;
         this.eastEdge = this.southEdge;
         this.southEdge = this.westEdge;
-        this.westEdge = north;
-
+        this.westEdge = this.northEdge;
+        this.rotation+=270;
 
     }
 
-
-    /** check if the field fits on the side of another neighbours*/
-    public boolean tileMatch (Tile northTile, Tile southTile, Tile eastTile, Tile westTile){
-        // check if at least one of neighbouring tiles exists. Because tiles can not be set in empty space without
-        //any neighbouring
-        if (northTile == null && southTile == null && eastTile == null && westTile == null){
-            return false;
-        }
-        // check if neighbouring tiles match the given tile in case they exist
-        if(northTile!=null){
-            if(    ! this.northEdge[0].equals(this.southEdge[2])||
-                   ! this.northEdge[1].equals(this.southEdge[1])||
-                   ! this.northEdge[2].equals(this.southEdge[0]) ){
-                return false;
-            }
-        }
-        if(eastTile!=null){
-            if(    ! this.eastEdge[0].equals(this.westEdge[2])||
-                   ! this.eastEdge[1].equals(this.westEdge[1])||
-                   ! this.eastEdge[2].equals(this.westEdge[0])){
-                return false;
-            }
-        }
-        if(westTile!=null){
-            if(     ! this.westEdge[0].equals(this.eastEdge[2])||
-                    ! this.westEdge[1].equals(this.eastEdge[1])||
-                    ! this.westEdge[2].equals(this.eastEdge[0])){
-                return false;
-            }
-        }
-        if(southTile!=null){
-            if(     ! this.southEdge[0].equals(this.westEdge[2])||
-                    ! this.southEdge[1].equals(this.westEdge[1])||
-                    ! this.southEdge[2].equals(this.westEdge[0])){
-                return false;
-            }
-        }
-        return true;
+    public LibraryEntry.Component getNorthEdge() {
+        return northEdge;
     }
 
+    public LibraryEntry.Component getEastEdge() {
+        return eastEdge;
+    }
+
+    public LibraryEntry.Component getSouthEdge() {
+        return southEdge;
+    }
+
+    public LibraryEntry.Component getWestEdge() {
+        return westEdge;
+    }
 }
-

@@ -1,6 +1,5 @@
 package com.example;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 
 import java.util.HashMap;
 
@@ -9,178 +8,10 @@ import java.util.HashMap;
  * This Class has one attribute HashMap, where all objects of LibraryEntry are stored. */
 public class TileLibrary {
 
-    //Die TileLibrary dient als Klasse als Nachschlagewerk aller möglichen Kacheln.
-    //Sie enthält eine Hashmap, die die Buchstaben Benennung der Felder in der Anleitung
-    //(siehe Seite B1) auf einen LibraryEntry mapt. Sie enthält Methoden um auf die
-    //Einträge über die Buchstaben Benennung oder zufällig zuzugreifen.
+    Socket[] Sockets;
 
     /** map containg all possible type of tiles */
     HashMap <String, LibraryEntry> map;
-    String path;
-
-    /** creating entries for all possible tiles */
-    LibraryEntry a= new LibraryEntry("file:src/fields/A.png",
-            new LibraryEntry.Feature(Component.FIELD, 0, 1, 2, 3, 4, 5, 6, 8, 9, 10, 11),
-            new LibraryEntry.Feature(Component.ROAD, 7)
-    ){};
-
-    LibraryEntry b= new LibraryEntry("file:src/fields/B.png",
-            new LibraryEntry.Feature(Component.FIELD, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11)
-    ){};
-
-    LibraryEntry c= new LibraryEntry("file:src/fields/C.png",
-            new LibraryEntry.Feature(Component.CITY, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11)
-    ){};
-
-    // for tile of image d
-    LibraryEntry d= new LibraryEntry("file:src/fields/D.png",
-            new LibraryEntry.Feature(Component.FIELD, 0, 8, 9, 10, 11),
-            new LibraryEntry.Feature(Component.ROAD, 1, 7),
-            new LibraryEntry.Feature(Component.FIELD, 2, 6),
-            new LibraryEntry.Feature(Component.CITY, 3, 4, 5)
-    ){};
-
-    LibraryEntry originalTile= new LibraryEntry("file:src/fields/D.png",
-            new LibraryEntry.Feature(Component.FIELD, 0, 8, 9, 10, 11),
-            new LibraryEntry.Feature(Component.ROAD, 1, 7),
-            new LibraryEntry.Feature(Component.FIELD, 2, 6),
-            new LibraryEntry.Feature(Component.CITY, 3, 4, 5)
-    ){};
-
-    LibraryEntry e= new LibraryEntry("file:src/fields/E.png",
-            new LibraryEntry.Feature(Component.CITY, 0, 1, 2),
-            new LibraryEntry.Feature(Component.FIELD, 3, 4, 5, 6, 7, 8, 9, 10, 11)
-    ){};
-
-    LibraryEntry f= new LibraryEntry("file:src/fields/F.png",
-            new LibraryEntry.Feature(Component.FIELD, 0, 1, 2),
-            new LibraryEntry.Feature(Component.CITY, 3, 4, 5, 9, 10, 11),
-            new LibraryEntry.Feature(Component.FIELD, 6, 7, 8)
-    ){};
-
-    LibraryEntry g= new LibraryEntry("file:src/fields/G.png",
-            new LibraryEntry.Feature(Component.CITY, 0, 1, 2, 6, 7, 8),
-            new LibraryEntry.Feature(Component.FIELD, 3, 4, 5),
-            new LibraryEntry.Feature(Component.FIELD, 9, 10, 11)
-    ){};
-
-    // for tile of image h
-    LibraryEntry h= new LibraryEntry("file:src/fields/H.png",
-            new LibraryEntry.Feature(Component.FIELD, 0, 1, 2, 6, 7, 8),
-            new LibraryEntry.Feature(Component.CITY, 3, 4, 5),
-            new LibraryEntry.Feature(Component.CITY, 9, 10, 11)
-    ){};
-
-    LibraryEntry i= new LibraryEntry("file:src/fields/I.png",
-            new LibraryEntry.Feature(Component.FIELD, 0, 1, 2, 6, 7, 8),
-            new LibraryEntry.Feature(Component.CITY, 3, 4, 5),
-            new LibraryEntry.Feature(Component.CITY, 9, 10, 11)
-    ){};
-
-    // for tile of image j
-    LibraryEntry j = new LibraryEntry("file:src/fields/J.png",
-            new LibraryEntry.Feature(Component.FIELD, 3, 8, 9, 10, 11),
-            new LibraryEntry.Feature(Component.CITY, 0, 1, 2),
-            new LibraryEntry.Feature(Component.ROAD, 4, 7),
-            new LibraryEntry.Feature(Component.FIELD, 5, 6)){};
-
-
-    // for tile of image k
-    LibraryEntry k = new LibraryEntry("file:src/fields/K.png",
-            new LibraryEntry.Feature(Component.FIELD, 0, 11),
-            new LibraryEntry.Feature(Component.ROAD, 1, 10),
-            new LibraryEntry.Feature(Component.FIELD, 2, 6, 7, 8, 9),
-            new LibraryEntry.Feature(Component.CITY, 3, 4, 5)){};
-
-    LibraryEntry l = new LibraryEntry("file:src/fields/L.png",
-            new LibraryEntry.Feature(Component.ROAD, 1, 7, 10),
-            new LibraryEntry.Feature(Component.FIELD, 0, 11),
-            new LibraryEntry.Feature(Component.FIELD, 2, 6),
-            new LibraryEntry.Feature(Component.CITY, 3, 4, 5)
-    ){};
-
-    LibraryEntry m = new LibraryEntry("file:src/fields/M.png",
-            new LibraryEntry.Feature(Component.CITY, 0, 1, 2, 9, 10, 11),
-            new LibraryEntry.Feature(Component.FIELD, 3, 4, 5, 6, 7, 8)
-    ){};
-
-    LibraryEntry n = new LibraryEntry("file:src/fields/N.png",
-            new LibraryEntry.Feature(Component.CITY, 0, 1, 2, 9, 10, 11),
-            new LibraryEntry.Feature(Component.FIELD, 3, 4, 5, 6, 7, 8)
-    ){};
-
-    LibraryEntry o = new LibraryEntry("file:src/fields/O.png",
-            new LibraryEntry.Feature(Component.CITY, 0, 1, 2, 9, 10, 11),
-            new LibraryEntry.Feature(Component.FIELD, 3, 8),
-            new LibraryEntry.Feature(Component.ROAD, 4, 7),
-            new LibraryEntry.Feature(Component.FIELD, 5, 6)
-    ){};
-
-    LibraryEntry p = new LibraryEntry("file:src/fields/P.png",
-            new LibraryEntry.Feature(Component.CITY, 0, 1, 2, 9, 10, 11),
-            new LibraryEntry.Feature(Component.FIELD, 3, 8),
-            new LibraryEntry.Feature(Component.ROAD, 4, 7),
-            new LibraryEntry.Feature(Component.FIELD, 5, 6)
-    ){};
-
-    LibraryEntry q = new LibraryEntry("file:src/fields/Q.png",
-            new LibraryEntry.Feature(Component.CITY, 0, 1, 2, 3,4,5 ,9, 10, 11),
-            new LibraryEntry.Feature(Component.FIELD, 6, 7, 8)
-    ){};
-
-    LibraryEntry r = new LibraryEntry("file:src/fields/R.png",
-            new LibraryEntry.Feature(Component.CITY, 0, 1, 2, 3,4,5 ,9, 10, 11),
-            new LibraryEntry.Feature(Component.FIELD, 6, 7, 8)
-    ){};
-
-    LibraryEntry s = new LibraryEntry("file:src/fields/S.png",
-            new LibraryEntry.Feature(Component.CITY, 0, 1, 2, 3,4,5 ,9, 10, 11),
-            new LibraryEntry.Feature(Component.FIELD, 8),
-            new LibraryEntry.Feature(Component.ROAD, 7),
-            new LibraryEntry.Feature(Component.FIELD, 6)
-
-    ){};
-
-    LibraryEntry t = new LibraryEntry("file:src/fields/T.png",
-            new LibraryEntry.Feature(Component.CITY, 0, 1, 2, 3,4,5 ,9, 10, 11),
-            new LibraryEntry.Feature(Component.FIELD, 8),
-            new LibraryEntry.Feature(Component.ROAD, 7),
-            new LibraryEntry.Feature(Component.FIELD, 6)
-
-    ){};
-
-    LibraryEntry u = new LibraryEntry("file:src/fields/U.png",
-            new LibraryEntry.Feature(Component.FIELD, 0, 8, 9, 10, 11),
-            new LibraryEntry.Feature(Component.ROAD, 1, 7),
-            new LibraryEntry.Feature(Component.FIELD, 2, 3, 4, 5, 6)
-
-    ){};
-
-    LibraryEntry v = new LibraryEntry("file:src/fields/V.png",
-            new LibraryEntry.Feature(Component.FIELD, 0, 9, 10, 11),
-            new LibraryEntry.Feature(Component.ROAD, 1, 7),
-            new LibraryEntry.Feature(Component.FIELD, 2, 3, 4, 5, 6)
-    ){};
-
-    LibraryEntry w =new LibraryEntry("file:src/fields/W.png",
-            new LibraryEntry.Feature(Component.FIELD, 0, 1, 2, 3, 4, 5, 6),
-            new LibraryEntry.Feature(Component.ROAD, 7, 10),
-            new LibraryEntry.Feature(Component.FIELD, 8, 9)
-    ){};
-
-    LibraryEntry x =new LibraryEntry("file:src/fields/X.png",
-            new LibraryEntry.Feature(Component.FIELD, 0, 10),
-            new LibraryEntry.Feature(Component.FIELD, 2, 3),
-            new LibraryEntry.Feature(Component.FIELD, 5, 6),
-            new LibraryEntry.Feature(Component.FIELD, 8, 9),
-            new LibraryEntry.Feature(Component.ROAD, 1, 4, 7, 10)
-    ){};
-
-    LibraryEntry empty= new LibraryEntry("file:src/fields/Empty.png",
-            new LibraryEntry.Feature(Component.FIELD, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11),
-            new LibraryEntry.Feature(Component.CITY, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11),
-            new LibraryEntry.Feature(Component.ROAD, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11)
-    ){};
 
     //put  all the tile entries into the map
     public TileLibrary( ){
@@ -211,14 +42,248 @@ public class TileLibrary {
         map.put("X",x);
         map.put("EMPTY",empty);
         map.put("OG",originalTile);
+    }
 
+    /** creating entries for all possible tiles */
+    LibraryEntry a = new LibraryEntry("file:src/fields/A.png",
+            new LibraryEntry.Component[]{LibraryEntry.Component.FIELD, LibraryEntry.Component.FIELD, LibraryEntry.Component.ROAD, LibraryEntry.Component.FIELD} ){
+    };
+
+    LibraryEntry b = new LibraryEntry("file:src/fields/B.png",
+            new LibraryEntry.Component[]{
+                    LibraryEntry.Component.FIELD,
+                    LibraryEntry.Component.FIELD,
+                    LibraryEntry.Component.FIELD,
+                    LibraryEntry.Component.FIELD}
+    ){};
+
+    LibraryEntry c= new LibraryEntry("file:src/fields/C.png",
+            new LibraryEntry.Component[]{
+                    LibraryEntry.Component.CITY,
+                    LibraryEntry.Component.CITY,
+                    LibraryEntry.Component.CITY,
+                    LibraryEntry.Component.CITY
+    }){};
+
+    // for tile of image d
+    LibraryEntry d= new LibraryEntry("file:src/fields/D.png",
+            new LibraryEntry.Component[]{
+                    LibraryEntry.Component.ROAD,
+                    LibraryEntry.Component.CITY,
+                    LibraryEntry.Component.ROAD,
+                    LibraryEntry.Component.FIELD
+    }){};
+
+
+    LibraryEntry originalTile= new LibraryEntry("file:src/fields/D.png",
+            new LibraryEntry.Component[]{
+                    LibraryEntry.Component.ROAD,
+                    LibraryEntry.Component.CITY,
+                    LibraryEntry.Component.ROAD,
+                    LibraryEntry.Component.FIELD
+            }){};
+
+
+    LibraryEntry e= new LibraryEntry("file:src/fields/E.png",
+            new LibraryEntry.Component[]{
+                    LibraryEntry.Component.CITY,
+                    LibraryEntry.Component.FIELD,
+                    LibraryEntry.Component.FIELD,
+                    LibraryEntry.Component.FIELD
+            }){};
+
+
+    LibraryEntry f= new LibraryEntry("file:src/fields/F.png",
+            new LibraryEntry.Component[]{
+                    LibraryEntry.Component.FIELD,
+                    LibraryEntry.Component.CITY,
+                    LibraryEntry.Component.FIELD,
+                    LibraryEntry.Component.CITY
+            }){};
+
+
+    LibraryEntry g= new LibraryEntry("file:src/fields/G.png",
+            new LibraryEntry.Component[]{
+                    LibraryEntry.Component.CITY,
+                    LibraryEntry.Component.FIELD,
+                    LibraryEntry.Component.CITY,
+                    LibraryEntry.Component.FIELD
+            }){};
+
+
+    // for tile of image h
+    LibraryEntry h= new LibraryEntry("file:src/fields/H.png",
+            new LibraryEntry.Component[]{
+                    LibraryEntry.Component.FIELD,
+                    LibraryEntry.Component.CITY,
+                    LibraryEntry.Component.FIELD,
+                    LibraryEntry.Component.CITY
+            }){};
+
+
+    LibraryEntry i= new LibraryEntry("file:src/fields/I.png",
+            new LibraryEntry.Component[]{
+                    LibraryEntry.Component.FIELD,
+                    LibraryEntry.Component.CITY,
+                    LibraryEntry.Component.FIELD,
+                    LibraryEntry.Component.CITY
+            }){};
+
+
+    // for tile of image j
+    LibraryEntry j = new LibraryEntry("file:src/fields/J.png",
+            new LibraryEntry.Component[]{
+                    LibraryEntry.Component.CITY,
+                    LibraryEntry.Component.ROAD,
+                    LibraryEntry.Component.ROAD,
+                    LibraryEntry.Component.FIELD
+            }){};
+
+
+    // for tile of image k
+    LibraryEntry k = new LibraryEntry("file:src/fields/K.png",
+            new LibraryEntry.Component[]{
+                    LibraryEntry.Component.ROAD,
+                    LibraryEntry.Component.CITY,
+                    LibraryEntry.Component.FIELD,
+                    LibraryEntry.Component.ROAD
+            }){};
+
+
+    LibraryEntry l = new LibraryEntry("file:src/fields/L.png",
+            new LibraryEntry.Component[]{
+                    LibraryEntry.Component.ROAD,
+                    LibraryEntry.Component.CITY,
+                    LibraryEntry.Component.ROAD,
+                    LibraryEntry.Component.ROAD
+            }){};
+
+    LibraryEntry m = new LibraryEntry("file:src/fields/M.png",
+            new LibraryEntry.Component[]{
+                    LibraryEntry.Component.CITY,
+                    LibraryEntry.Component.FIELD,
+                    LibraryEntry.Component.FIELD,
+                    LibraryEntry.Component.CITY
+            }){};
+
+
+    LibraryEntry n = new LibraryEntry("file:src/fields/N.png",
+            new LibraryEntry.Component[]{
+                    LibraryEntry.Component.CITY,
+                    LibraryEntry.Component.FIELD,
+                    LibraryEntry.Component.FIELD,
+                    LibraryEntry.Component.CITY
+            }){};
+
+
+    LibraryEntry o = new LibraryEntry("file:src/fields/O.png",
+            new LibraryEntry.Component[]{
+                    LibraryEntry.Component.CITY,
+                    LibraryEntry.Component.ROAD,
+                    LibraryEntry.Component.ROAD,
+                    LibraryEntry.Component.CITY
+            }){};
+
+    LibraryEntry p = new LibraryEntry("file:src/fields/P.png",
+            new LibraryEntry.Component[]{
+                    LibraryEntry.Component.CITY,
+                    LibraryEntry.Component.ROAD,
+                    LibraryEntry.Component.ROAD,
+                    LibraryEntry.Component.CITY
+            }){};
+
+    LibraryEntry q = new LibraryEntry("file:src/fields/Q.png",
+            new LibraryEntry.Component[]{
+                    LibraryEntry.Component.CITY,
+                    LibraryEntry.Component.CITY,
+                    LibraryEntry.Component.FIELD,
+                    LibraryEntry.Component.CITY
+            }){};
+
+
+    LibraryEntry r = new LibraryEntry("file:src/fields/R.png",
+            new LibraryEntry.Component[]{
+                    LibraryEntry.Component.CITY,
+                    LibraryEntry.Component.CITY,
+                    LibraryEntry.Component.FIELD,
+                    LibraryEntry.Component.CITY
+            }){};
+
+
+    LibraryEntry s = new LibraryEntry("file:src/fields/S.png",
+            new LibraryEntry.Component[]{
+                    LibraryEntry.Component.CITY,
+                    LibraryEntry.Component.CITY,
+                    LibraryEntry.Component.ROAD,
+                    LibraryEntry.Component.CITY
+            }){};
+
+
+    LibraryEntry t = new LibraryEntry("file:src/fields/T.png",
+            new LibraryEntry.Component[]{
+                    LibraryEntry.Component.CITY,
+                    LibraryEntry.Component.CITY,
+                    LibraryEntry.Component.ROAD,
+                    LibraryEntry.Component.CITY
+            }){};
+
+
+    LibraryEntry u = new LibraryEntry("file:src/fields/U.png",
+            new LibraryEntry.Component[]{
+                    LibraryEntry.Component.FIELD,
+                    LibraryEntry.Component.FIELD,
+                    LibraryEntry.Component.ROAD,
+                    LibraryEntry.Component.FIELD
+            }){};
+
+
+    LibraryEntry v = new LibraryEntry("file:src/fields/V.png",
+            new LibraryEntry.Component[]{
+                    LibraryEntry.Component.ROAD,
+                    LibraryEntry.Component.FIELD,
+                    LibraryEntry.Component.ROAD,
+                    LibraryEntry.Component.FIELD
+            }){};
+
+
+    LibraryEntry w =new LibraryEntry("file:src/fields/W.png",
+            new LibraryEntry.Component[]{
+                    LibraryEntry.Component.FIELD,
+                    LibraryEntry.Component.FIELD,
+                    LibraryEntry.Component.ROAD,
+                    LibraryEntry.Component.ROAD
+            }){};
+
+
+    LibraryEntry x =new LibraryEntry("file:src/fields/X.png",
+            new LibraryEntry.Component[]{
+                    LibraryEntry.Component.ROAD,
+                    LibraryEntry.Component.ROAD,
+                    LibraryEntry.Component.ROAD,
+                    LibraryEntry.Component.FIELD
+            }){};
+
+
+    LibraryEntry empty= new LibraryEntry("file:src/fields/Empty.png",
+            new LibraryEntry.Component[]{
+                    LibraryEntry.Component.UNIVERSAL,
+                    LibraryEntry.Component.UNIVERSAL,
+                    LibraryEntry.Component.UNIVERSAL,
+                    LibraryEntry.Component.UNIVERSAL
+            }){};
+
+    public String getNameOfEntry(LibraryEntry libraryEntry){
+        for(String entry : map.keySet()){
+            if(map.get(entry).equals(libraryEntry)){
+                return entry;
+            }
+        }
+        return null;
     }
     public Image getImage(String entry){
-         return map.get(entry).img;
+         return map.get(entry).image;
     }
-    public ImageView getImageView(String entry){
-        ImageView imageView = new ImageView(map.get(entry).img);
-        return imageView;
-    }
+
+
 
 }
