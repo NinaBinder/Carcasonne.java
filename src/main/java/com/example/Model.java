@@ -12,6 +12,7 @@ public class Model {
     // (c) Informationen zu den Spielern;
     // (d) Methoden zum Lesen und Setzen der Daten und zum Ausführen (bzw. Prüfen) von Spielaktionen
 
+    //test
     private Board board;
     private Tile next;
     private List<Player> players;
