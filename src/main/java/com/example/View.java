@@ -24,12 +24,12 @@ public class View {
     Image newButtonImage;
     Button rotateRight = new Button("rotate to right");
     Button rotateLeft = new Button("rotate to left");
+    Button coputerTurn = new Button("computerTurn");
     Label points = new Label("POINTS");
 
 
     public View() {
         anchor.getChildren().add(root);
-        //Tile originalTile= new Tile(0,0,0,"OG",false);
         border.setCenter(scrollPane);
 
         scrollPane.setPrefSize(SCROLLPANESIZE, SCROLLPANESIZE);
@@ -44,6 +44,7 @@ public class View {
         hBox.getChildren().add(rotateLeft);
         hBox.getChildren().add(points);
         hBox.getChildren().add(drawCardButton);
+        hBox.getChildren().add(coputerTurn);
 
         drawCardButton.setGraphic(cardBack);
         drawCardButton.setContentDisplay(ContentDisplay.BOTTOM);
@@ -55,6 +56,10 @@ public class View {
 
     public Image getNewButtonImage() {
         return newButtonImage;
+    }
+
+    public Button getCoputerTurn() {
+        return coputerTurn;
     }
 
     /** getter and setter **/
@@ -76,7 +81,6 @@ public class View {
     public void rotateRight(){
         buttonImageView.setRotate(buttonImageView.getRotate()+90);
         }
-
     public void rotateLeft(){
         buttonImageView.setRotate(buttonImageView.getRotate()-90);
     }

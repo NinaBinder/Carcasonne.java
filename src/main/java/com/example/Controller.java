@@ -15,6 +15,8 @@ public class Controller {
     Model model;
     TileLibrary library = new TileLibrary();
     HashMap<Position, ImageView> everyTile = new HashMap<Position, ImageView>();
+    double rotation;
+
 
     /** deck: An Array List filled with all possible Entries
      in order to get the images of that entry: deck(index).img
@@ -30,26 +32,29 @@ public class Controller {
         changeDrawButtonImage();
         rotateLeft();
         rotateRight();
+        computer();
         DragandDrop();
     }
 
 
-    public void updateView(Image tileImage, int absX, int absY){
+    public void updateView(Tile currentTile, int absX, int absY){
 
         // new Hashmap which safes image view of all tiles added to board with key: relx rely
         Position tilePosition= new Position(model.getBoard().convertToRelativeX(absX), model.getBoard().convertToRelativeY(absY));
 
         if(everyTile.containsKey(tilePosition)){
-            everyTile.get(tilePosition).setImage(tileImage);
+            everyTile.get(tilePosition).setImage(currentTile.getImage());
 
         }else {
 
-            ImageView startimageView = new ImageView(tileImage);
-            //startimageView.setId();
+            ImageView startimageView = new ImageView(currentTile.getImage());
+
+            startimageView.setRotate(currentTile.getRotation());
             everyTile.put(tilePosition, startimageView);
 
             startimageView.setFitWidth(view.getIMAGESIZE());
             startimageView.setFitHeight(view.getIMAGESIZE());
+
         }
         everyTile.get(tilePosition).setX((absX * view.getIMAGESIZE()));
         everyTile.get(tilePosition).setY(absY * view.getIMAGESIZE());
@@ -70,27 +75,19 @@ public class Controller {
                 if(currentTile== null){
                     continue;
                 }
-                /*ImageView currentIV = new ImageView(currentTile.getImage());
-                currentIV.setFitWidth(view.getIMAGESIZE());
-                currentIV.setFitHeight(view.getIMAGESIZE());
 
-                currentIV.setX(currentTile.getRelX()*view.getIMAGESIZE() + view.getSCROLLPANESIZE()/2);
-                currentIV.setY(currentTile.getRelY()*view.getIMAGESIZE() + view.getSCROLLPANESIZE()/2);
-
-                view.getRoot().getChildren().add(currentIV);*/
-                updateView(currentTile.getImage(), absX, absY);
-/*
-                //get every Tiles Entry and set it to possibly new entry
-                //image view für tile x,y
-                Image tileImage = board.getTile(absX, absY).getImage();
-
-                everyTile.put(new Position(absX,absY),new ImageView(tileImage));
-
-
-                //model.isPatternClosed(model.getBoard().getTile(1,1));*/
-
+                updateView(currentTile, absX, absY);
             }
         }
+    }
+    public LibraryEntry pickACardAnyCard(){
+
+        int index = (int)(Math.random() * deck.size());
+        LibraryEntry nextEntry = deck.get(index);
+        //removing the card from deck
+        deck.remove(index);
+
+        return nextEntry;
     }
     public void changeDrawButtonImage(){
         //TODO: nochmal ziehen, falls tile nicht passt
@@ -99,13 +96,10 @@ public class Controller {
             view.buttonImageView.setFitWidth(100);
             view.buttonImageView.setFitHeight(100);
 
-            int index = (int)(Math.random() * deck.size());
-            LibraryEntry nextEntry = deck.get(index);
-            //removing the card from deck
-            deck.remove(index);
 
-            view.newButtonImage = nextEntry.image;
-            model.setNextEntry(nextEntry);
+
+            view.newButtonImage =  pickACardAnyCard().image;
+            model.setNextEntry( pickACardAnyCard());
             view.getButtonImageView().setImage(view.newButtonImage);
             view.getDrawCardButton().setGraphic(view.getButtonImageView());
         });
@@ -119,8 +113,6 @@ public class Controller {
         source.setOnDragDetected(event -> {
             Dragboard db = source.startDragAndDrop(TransferMode.ANY);
             ClipboardContent content = new ClipboardContent();
-            //System.out.println(view.getNewButtonImage());
-
             content.putImage(view.getNewButtonImage());
             db.setContent(content);
             event.consume();
@@ -159,19 +151,32 @@ public class Controller {
         });
     }
 
+    public void computer(){
+
+        view.coputerTurn.setOnAction( actionEvent -> {
+             model.computerTurn();
+                }
+        );
+    }
+
     //set the event handler on the rotateRight button
     public void rotateRight(){
         view.rotateRight.setOnAction(event-> {
             //rotate the sockets of the ButtonTile
             //ButtonTile.rotateRight();
             //rotate the image
-
+            //view.getButtonImageView().setRotate(getRotation()+90);
             view.rotateRight();
+            this.rotation= view.getButtonImageView().getRotate();
         });
+    }
+    public Double getRotation(){
+        return rotation;
     }
 
     //set the event handler on the rotateLeft button
     public void rotateLeft(){
+        //TODO: fix getRotation
         view.rotateLeft.setOnAction(event-> {
             //rotate the sockets of the ButtonTile
             //ButtonTile.rotateLeft();
@@ -180,7 +185,6 @@ public class Controller {
 
         });
     }
-
     public void fillDeck(){
         //Filling the deck with all possible cards (right amount of each card included)
         deck.add(library.map.get("C"));

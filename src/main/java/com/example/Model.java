@@ -12,27 +12,251 @@ public class Model {
     // (c) Informationen zu den Spielern;
     // (d) Methoden zum Lesen und Setzen der Daten und zum Ausführen (bzw. Prüfen) von Spielaktionen
 
-    //test
     private Board board;
-    TileLibrary library;
     private LibraryEntry nextEntry;
     private List<Player> players;
     private int currentPlayerIndex;
     private Controller controller= new Controller(new View(),this);
-    View view = new View();
+    Tile nextTile;
 
     //für Road und City Array Lists, visitedroad, visitedCity, einfügen wo ich schon war
     ArrayList<Tile> visitedRoad;
     ArrayList<Tile> visitedCity;
 
-
-
     public Model (){
         board = new Board(this);
-        System.out.println(controller.getRotation());
-
     }
 
+    public void computerTurn(){
+
+        board = getBoard();
+        Tile emptyTile = null;
+
+        //did player do turn?
+
+        //pick a card from deck
+        LibraryEntry entry = controller.pickACardAnyCard();
+        String nextEntry = controller.getLibrary().getNameOfEntry(entry);
+
+        System.out.println("card picked: " + nextEntry);
+
+        //iterate through board, where can computer place new Card?
+        for( int x = 0; x< board.getWidth(); x++ ){
+            for(int y = 0; y < board.getHeight(); y++){
+
+                //if I use board.getRelativeTile(x, y);
+                //it will start with the OG tile
+                //Tile currentTile = board.getRelativeTile(board.convertToRelativeX(x), board.convertToRelativeY(y));
+
+                Tile currentTile = board.getRelativeTile(board.convertToRelativeX(x), board.convertToRelativeY(y));
+
+                //is Tile null? if null skip
+                if(currentTile != null){
+                    System.out.println(currentTile.getEntry());
+
+                    if(currentTile.getEntry().equals("EMPTY")){
+
+                        int currentX= currentTile.getRelX();
+                        int currentY= currentTile.getRelY();
+
+                        Tile nextTile = new Tile(currentX,currentY,0,nextEntry,false);
+                        System.out.println("current tile created");
+
+                        board.setRelativeTile(currentX, currentY,nextTile.getEntry());
+                        addEmptyTiles(nextTile);
+                        System.out.println("place tile");
+
+                        //tryPlaceTile(currentTile.getRelX(),currentTile.getRelY());
+                        if(tileMatch(nextTile, getNorthTile(currentX,currentY),getSouthTile(currentX,currentY),getEastTile(currentX,currentY),getWestTile(currentX,currentY))){
+                            System.out.println("tiles match");
+
+                        }
+
+
+                    }
+
+                }
+            }
+        }
+    }
+
+
+    public void addEmptyTiles(Tile tile){
+
+        if(isEmpty(getNorthTile(tile.getRelX(),tile.getRelY()))){
+            board.setRelativeTile(tile.getRelX(),tile.getRelY()-1,"EMPTY");
+        }
+        if(isEmpty(getSouthTile(tile.getRelX(),tile.getRelY()))){
+            board.setRelativeTile(tile.getRelX(),tile.getRelY()+1,"EMPTY");
+
+        }
+        if(isEmpty(getEastTile(tile.getRelX(),tile.getRelY()))){
+            board.setRelativeTile(tile.getRelX()+1,tile.getRelY(),"EMPTY");
+        }
+
+        if(isEmpty(getWestTile(tile.getRelX(),tile.getRelY()))){
+            board.setRelativeTile(tile.getRelX()-1,tile.getRelY(),"EMPTY");
+        }
+    }
+
+    public boolean isEmpty(Tile tile){
+        // what if tile is empty or null
+        if(tile == null || tile.getEntry().equals("EMPTY")){
+            return  true;
+        }
+        return false;
+    }
+
+
+    public boolean matches(Tile a, Tile b, String direction) {
+        boolean match = false;
+        if(b != null)
+        switch (direction){
+            case "north" :
+                match = isEmpty(b) || (a.getNorthEdge() == b.getSouthEdge());
+                System.out.println("oben: " + b.getSouthEdge());
+                break;
+            case "east" :
+                match = isEmpty(b) || (a.getEastEdge() == b.getWestEdge());
+                System.out.println("rechts: " + b.getWestEdge());
+                break;
+            case "south" :
+                match = isEmpty(b) || (a.getSouthEdge() == b.getNorthEdge());
+                System.out.println("unten: " + b.getNorthEdge());
+                break;
+            case "west" :
+                match = isEmpty(b) || (a.getWestEdge() == b.getEastEdge());
+                System.out.println("links: " + b.getEastEdge());
+                break;
+        }
+        return match;
+    }
+
+    public boolean tryPlaceTile(int relX, int relY){
+
+        Tile targetTile = getBoard().getRelativeTile(relX, relY);
+
+        Tile northTile= getNorthTile(targetTile.getRelX(), targetTile.getRelY());
+        Tile southTile= getSouthTile(targetTile.getRelX(), targetTile.getRelY());
+        Tile eastTile= getEastTile(targetTile.getRelX(), targetTile.getRelY());
+        Tile westTile= getWestTile(targetTile.getRelX(), targetTile.getRelY());
+
+        String nextEntry = controller.getLibrary().getNameOfEntry(this.nextEntry);
+        //System.out.println("rotatation" + controller.getRotation());
+
+        Tile nextTile= new Tile(relX, relY, controller.getRotation(), nextEntry, targetTile.gamePiece);
+
+        //can setTile? is empty & is matching with neighbors?
+        if(tileMatch(nextTile,northTile,southTile,eastTile,westTile)){
+            board.setRelativeTile(relX, relY,nextTile.getEntry());
+            addEmptyTiles(nextTile);
+            System.out.println("place tile");
+            return true;
+        }
+        else {
+            System.out.println("tile not placeable");
+        }
+        return false;
+    }
+    /** check if the field fits on the side of another neighbours*/
+    public boolean tileMatch (Tile nextTile, Tile northTile, Tile southTile, Tile eastTile, Tile westTile) {
+
+        LibraryEntry.Component nextOben = nextTile.getNorthEdge();
+        LibraryEntry.Component nextRechts = nextTile.getEastEdge();
+        LibraryEntry.Component nextUnten = nextTile.getSouthEdge();
+        LibraryEntry.Component nextLinks= nextTile.getWestEdge();
+
+        if (isEmpty(northTile)&& isEmpty(eastTile)  && isEmpty(southTile) && isEmpty(westTile)){
+            return false;
+        }
+        //System.out.println(nextOben);
+        //System.out.println(nextRechts);
+       // System.out.println(nextUnten);
+       // System.out.println(nextLinks);
+
+        //if(northTile != null){System.out.println("north" + northTile.getSouthEdge());}
+        //if(eastTile != null){System.out.println("east" + eastTile.getWestEdge());}
+       // if(southTile != null){System.out.println("south" + southTile.getNorthEdge());}
+        //if(westTile != null){System.out.println("west" + westTile.getEastEdge());}
+
+        return (matches(nextTile, northTile, "north") &&
+                matches(nextTile, eastTile, "east") &&
+                matches(nextTile, southTile,"south") &&
+                matches(nextTile, westTile, "west"));
+        }
+
+    public Tile getNorthTile(int relX, int relY){
+        Tile north = getBoard().getRelativeTile(relX,relY-1);
+        return north;
+    }
+    public Tile getEastTile(int relX, int relY){
+        Tile east = getBoard().getRelativeTile(relX+1,relY);
+        return east;
+    }
+    public Tile getSouthTile(int relX, int relY){
+        Tile south = getBoard().getRelativeTile(relX,relY+1);
+        return south;
+    }
+    public Tile getWestTile(int relX, int relY){
+        Tile west = getBoard().getRelativeTile(relX-1,relY);
+        return west;
+    }
+    public void initBoard(){
+        board.initBoard();
+    }
+    public void setController(Controller controller){
+        this.controller = controller;
+    }
+
+    public Board getBoard(){
+        return this.board;
+    }
+
+    public void setNextEntry(LibraryEntry next){
+        this.nextEntry = next;
+    }
+
+    //Getter und Setter für die Spieler
+    public List<Player> getPlayers() {
+        return players;
+    }
+
+    public void setPlayers(List<Player> players) {
+        this.players = players;
+    }
+
+
+    //Aktuellen Spieler bekommen
+    public Player getCurrentPlayer() {
+        return players.get(currentPlayerIndex);
+    }
+
+    //Zum nächsten Spieler wechseln
+    public void nextPlayer() {
+        currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
+    }
+
+    //Spielfigur auf dem Brett platzieren
+    public boolean placeFigure(int x, int y) {
+        // Überprüfen, ob die Position für den aktuellen Spieler gültig ist
+        if (!getCurrentPlayer().canPlaceFigure(x, y)) {
+            return false;
+        }
+        // Stellt die Figur auf das Brett
+        board.placeFigure(x, y, getCurrentPlayer());
+        // Aktualisiere die Punktzahl des Spielers
+        board.evaluatePoints();
+        return true;
+    }
+
+    //Spielbrett initialisieren, Spieler erstellen
+    public void startNewGame(int numPlayers) {
+        board = new Board(this);
+        players = FXCollections.observableArrayList(Player.createPlayers(numPlayers));
+        //aktuellen Spieler als ersten Spieler in der Reihe festlegen
+        currentPlayerIndex = 0;
+        //drawTile();
+    }
     public boolean isRoadClosed(Tile lastPlacedTile, int relX, int relY) {
 
         boolean isClosed = true;
@@ -43,7 +267,7 @@ public class Model {
         //gibt es an dem Tile überhaupt ein Socket mit Component Road?
         for (int i=0; i<4; i++){
 
-            if (lastPlacedTile.library.map.get(entryKey).getComponent()[i] == road){
+            if (Tile.library.map.get(entryKey).getComponent()[i] == road){
                 //wenn ja an welchen Sockets ist Road?
                 // TODO: zwei Prüfrichtungen! müssen beide erfüllt sein
 
@@ -90,7 +314,6 @@ public class Model {
         }
         return isClosed;
     }
-
 
     //Abbruchbedingung nach jedem Case?
     private void recurse(Tile currentTile){visitedCity.add(currentTile);}
@@ -170,7 +393,7 @@ public class Model {
                     !isEmpty(getNorthTile (east.getRelX(), east.getRelY())) &&
                     !isEmpty(getSouthTile (east.getRelX(), east.getRelY()))
             ){
-               //sind alle umliegenden 8 Felder empty?
+                //sind alle umliegenden 8 Felder empty?
                 return isClosed;
             }
         }
@@ -190,337 +413,8 @@ public class Model {
         }
     }
 
-    public void addEmptyTiles(Tile tile){
 
-        if(isEmpty(getNorthTile(tile.getRelX(),tile.getRelY()))){
-            board.setRelativeTile(tile.getRelX(),tile.getRelY()-1,"EMPTY");
-        }
-        if(isEmpty(getSouthTile(tile.getRelX(),tile.getRelY()))){
-            board.setRelativeTile(tile.getRelX(),tile.getRelY()+1,"EMPTY");
-
-        }
-        if(isEmpty(getEastTile(tile.getRelX(),tile.getRelY()))){
-            board.setRelativeTile(tile.getRelX()+1,tile.getRelY(),"EMPTY");
-        }
-
-        if(isEmpty(getWestTile(tile.getRelX(),tile.getRelY()))){
-            board.setRelativeTile(tile.getRelX()-1,tile.getRelY(),"EMPTY");
-        }
-
-    }
-    public boolean isEmpty(Tile tile){
-        // what if tile is empty or null
-        if(tile == null || tile.getEntry().equals("EMPTY")){
-            return  true;
-        }
-        return false;
-    }
-
-    public boolean tryPlaceTile(int relX, int relY){
-
-        //System.out.println("Rel Position of next Tile: " + relX + "," +relY);
-        Tile targetTile = getBoard().getRelativeTile(relX, relY);
-        //System.out.println("target Tile Entry: " + targetTile.getEntry());
-
-        Tile northTile= getNorthTile(targetTile.getRelX(), targetTile.getRelY());
-        Tile southTile= getSouthTile(targetTile.getRelX(), targetTile.getRelY());
-        Tile eastTile= getEastTile(targetTile.getRelX(), targetTile.getRelY());
-        Tile westTile= getWestTile(targetTile.getRelX(), targetTile.getRelY());
-
-        //System.out.println(westTile);
-
-        String nextEntry = controller.getLibrary().getNameOfEntry(this.nextEntry);
-        System.out.println("next Tile Entry: " + nextEntry);
-        //System.out.println("rotatation" + controller.getRotation());
-
-        Tile nextTile= new Tile(relX, relY, targetTile==null ? 0 : 0, nextEntry, targetTile==null ? false : targetTile.gamePiece);
-
-
-        //can setTile? is empty & is matching with neighbors?
-        if(tileMatch(nextTile,northTile,southTile,eastTile,westTile)){
-
-            board.setRelativeTile(relX, relY,nextTile.getEntry());
-            addEmptyTiles(nextTile);
-            System.out.println("place tile");
-            return true;
-        }
-        else {
-            System.out.println("tile not placeable");
-        }
-        return false;
-    }
-    /** check if the field fits on the side of another neighbours*/
-    public boolean tileMatch (Tile nextTile, Tile northTile, Tile southTile, Tile eastTile, Tile westTile) {
-
-        LibraryEntry.Component nextOben = nextTile.getNorthEdge();
-        LibraryEntry.Component nextRechts = nextTile.getEastEdge();
-        LibraryEntry.Component nextUnten = nextTile.getSouthEdge();
-        LibraryEntry.Component nextLinks= nextTile.getWestEdge();
-
-        if (northTile == null && eastTile == null && southTile == null && westTile == null) {
-            return false;
-
-        } else if (!isEmpty(northTile)) {
-            LibraryEntry.Component oben = northTile.getSouthEdge();
-            System.out.println("oben " + oben);
-
-            if (oben == nextOben) {
-                System.out.println("next oben " + nextOben);
-                return true;
-            }
-
-        } else if (!isEmpty(eastTile)) {
-            LibraryEntry.Component rechts = eastTile.getWestEdge();
-            System.out.println("rechts " + rechts);
-
-            if (rechts == nextRechts) {
-                System.out.println("next rechts " + nextRechts);
-                return true;
-            }
-
-        }else if (!isEmpty(southTile)) {
-            LibraryEntry.Component unten = southTile.getNorthEdge();
-            System.out.println("unten " + unten);
-
-            if (unten == nextUnten) {
-                System.out.println("next unten " + nextUnten);
-                return true;
-            }
-
-        }else if (!isEmpty(westTile)) {
-            LibraryEntry.Component links= westTile.getEastEdge();
-            System.out.println("links " + links);
-
-            if (links == nextLinks) {
-                System.out.println("next links " + nextLinks);
-                return true;
-            }
-        }
-
-
-        /*
-
-
-        if(!isEmpty(northTile)){
-
-            if(isEmpty(westTile)){
-                return true;
-            } else if (westTile.getEastEdge() == nextTile.getEastEdge() || westTile.getEastEdge() == LibraryEntry.Component.UNIVERSAL) {
-                return true;
-            }
-            if(isEmpty(eastTile)){
-                return true;
-            } else if (eastTile.getWestEdge() == nextTile.getWestEdge() || eastTile.getWestEdge() == LibraryEntry.Component.UNIVERSAL) {
-                return true;
-            }
-            if(isEmpty(southTile)){
-                return true;
-            } else if (southTile.getNorthEdge()== nextTile.getSouthEdge() || southTile.getNorthEdge() == LibraryEntry.Component.UNIVERSAL) {
-                return true;
-            }
-        }
-        if(!isEmpty(eastTile)){
-            System.out.println(eastTile.getWestEdge());
-
-            if(isEmpty(westTile)){
-                return true;
-            } else if (westTile.getEastEdge() == nextTile.getEastEdge() || westTile.getEastEdge() == LibraryEntry.Component.UNIVERSAL) {
-                return true;
-            }
-            if(isEmpty(northTile)){
-                return true;
-            } else if (northTile.getSouthEdge() == nextTile.getNorthEdge() || northTile.getSouthEdge() == LibraryEntry.Component.UNIVERSAL) {
-                return true;
-            }
-            if(isEmpty(southTile)){
-                return true;
-            } else if (southTile.getNorthEdge()== nextTile.getSouthEdge() || southTile.getNorthEdge() == LibraryEntry.Component.UNIVERSAL) {
-                return true;
-            }
-        }
-        if(!isEmpty(southTile)){
-            System.out.println(southTile.getNorthEdge());
-
-            if(isEmpty(westTile)){
-                return true;
-            } else if (westTile.getEastEdge() == nextTile.getEastEdge() || westTile.getEastEdge() == LibraryEntry.Component.UNIVERSAL) {
-                return true;
-            }
-            if(isEmpty(eastTile)){
-                return true;
-            } else if (eastTile.getWestEdge() == nextTile.getWestEdge() || eastTile.getWestEdge() == LibraryEntry.Component.UNIVERSAL) {
-                return true;
-            }
-            if(isEmpty(northTile)){
-                return true;
-            } else if (northTile.getSouthEdge()== nextTile.getNorthEdge() || northTile.getSouthEdge() == LibraryEntry.Component.UNIVERSAL) {
-                return true;
-            }
-        }
-        if(!isEmpty(westTile)){
-            System.out.println(westTile.getEastEdge());
-
-            if(!isEmpty(northTile)){
-                return true;
-            } else if (northTile.getSouthEdge() == nextTile.getNorthEdge() || northTile.getSouthEdge() == LibraryEntry.Component.UNIVERSAL) {
-                return true;
-            }
-            if(isEmpty(eastTile)){
-                return true;
-            } else if (eastTile.getWestEdge() == nextTile.getWestEdge() || eastTile.getWestEdge() == LibraryEntry.Component.UNIVERSAL) {
-                return true;
-            }
-            if(isEmpty(southTile)){
-                return true;
-            } else if (southTile.getNorthEdge()== nextTile.getSouthEdge() || southTile.getNorthEdge() == LibraryEntry.Component.UNIVERSAL) {
-                return true;
-            }
-        }*/
-        /*
-
-        //is there a tile north?
-        if (northTile != null) {
-            System.out.println("new Tile north:" + tile.getNorthEdge() + "=?" + northTile.getSouthEdge());
-
-            //is northtile at connecting part mathcing or universal?
-            if (northTile.getSouthEdge() == LibraryEntry.Component.UNIVERSAL || tile.getNorthEdge() == northTile.getSouthEdge()) {
-                return true;
-            }
-        }
-
-        if (eastTile != null) {
-            System.out.println("new Tile eastEdge:" + tile.getEastEdge() + "=?" + eastTile.getWestEdge());
-
-            if (eastTile.getWestEdge() == LibraryEntry.Component.UNIVERSAL || tile.getEastEdge() == eastTile.getWestEdge()) {
-                return true;
-            }
-        }
-
-
-        if (westTile != null) {
-            System.out.println("new Tile westEdge:" + tile.getWestEdge() + "=?" + westTile.getEastEdge());
-
-            if (westTile.getEastEdge() == LibraryEntry.Component.UNIVERSAL || tile.getWestEdge() == westTile.getEastEdge()) {
-                return true;
-            }
-        }
-
-
-        if (southTile != null) {
-            System.out.println("new Tile southEdge:" + tile.getSouthEdge() + "=?" + southTile.getNorthEdge());
-
-            if ( southTile.getNorthEdge() == LibraryEntry.Component.UNIVERSAL || tile.getSouthEdge() == southTile.getNorthEdge()) {
-                 return true;
-                }
-            }*/
-
-            return false;
-        }
-
-
-    public Tile getNorthTile(int relX, int relY){
-        Tile north = getBoard().getRelativeTile(relX,relY-1);
-        return north;
-    }
-    public Tile getEastTile(int relX, int relY){
-        Tile east = getBoard().getRelativeTile(relX+1,relY);
-        return east;
-    }
-    public Tile getSouthTile(int relX, int relY){
-        Tile south = getBoard().getRelativeTile(relX,relY+1);
-        return south;
-    }
-    public Tile getWestTile(int relX, int relY){
-        Tile west = getBoard().getRelativeTile(relX-1,relY);
-        return west;
-    }
-    public void initView(Image tileimage, int absX, int absY){
-        controller.updateView(tileimage,absX,absY);
-
-    }
-    public void initBoard(){
-        board.initBoard();
-    }
-    public void setController(Controller controller){
-        this.controller = controller;
-    }
-
-    public boolean isPatternClosed(Tile lastPlacedTile) {
-
-        boolean isClosed = false;
-        int x;
-        int y;
-        for (int i=0; i<12; i++){
-           // Component c = lastPlacedTile.getSockets()[i].getComponent();
-
-            //gibt es an dem Tile überhaupt ein Socket mit Component Road?
-
-        }
-       return isClosed;
-    }
-
-    public Board getBoard(){
-        return this.board;
-    }
-
-    public LibraryEntry getNextEntry(){
-        return this.nextEntry;
-    }
-
-    public void setNextEntry(LibraryEntry next){
-        this.nextEntry = next;
-    }
-
-
-
-    //Getter und Setter für die Spieler
-    public List<Player> getPlayers() {
-        return players;
-    }
-
-    public void setPlayers(List<Player> players) {
-        this.players = players;
-    }
-
-
-    //Aktuellen Spieler bekommen
-    public Player getCurrentPlayer() {
-        return players.get(currentPlayerIndex);
-    }
-
-    //Zum nächsten Spieler wechseln
-    public void nextPlayer() {
-        currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
-    }
-
-    //Spielfigur auf dem Brett platzieren
-    public boolean placeFigure(int x, int y) {
-        // Überprüfen, ob die Position für den aktuellen Spieler gültig ist
-        if (!getCurrentPlayer().canPlaceFigure(x, y)) {
-            return false;
-        }
-        // Stellt die Figur auf das Brett
-        board.placeFigure(x, y, getCurrentPlayer());
-        // Aktualisiere die Punktzahl des Spielers
-        board.evaluatePoints();
-        return true;
-    }
-
-    public void drawTile(){
-
-    }
-
-    //Spielbrett initialisieren, Spieler erstellen
-    public void startNewGame(int numPlayers) {
-        board = new Board(this);
-        players = FXCollections.observableArrayList(Player.createPlayers(numPlayers));
-        //aktuellen Spieler als ersten Spieler in der Reihe festlegen
-        currentPlayerIndex = 0;
-        drawTile();
-    }
 }
-
-
 
 class Player {
     private int score;
@@ -553,5 +447,6 @@ class Player {
     public void updateScore(int points) {
         // implementation
     }
-}
 
+
+}
