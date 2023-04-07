@@ -96,10 +96,10 @@ public class Controller {
             view.buttonImageView.setFitWidth(100);
             view.buttonImageView.setFitHeight(100);
 
+            LibraryEntry pickedCard = pickACardAnyCard();
+            view.newButtonImage =  pickedCard.image;
+            model.setNextEntry(pickedCard);
 
-
-            view.newButtonImage =  pickACardAnyCard().image;
-            model.setNextEntry( pickACardAnyCard());
             view.getButtonImageView().setImage(view.newButtonImage);
             view.getDrawCardButton().setGraphic(view.getButtonImageView());
         });

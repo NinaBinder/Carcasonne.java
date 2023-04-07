@@ -48,6 +48,7 @@ public class Model {
                 //it will start with the OG tile
                 //Tile currentTile = board.getRelativeTile(board.convertToRelativeX(x), board.convertToRelativeY(y));
 
+                System.out.println(x + ", "+ y);
                 Tile currentTile = board.getRelativeTile(board.convertToRelativeX(x), board.convertToRelativeY(y));
 
                 //is Tile null? if null skip
@@ -62,14 +63,19 @@ public class Model {
                         Tile nextTile = new Tile(currentX,currentY,0,nextEntry,false);
                         System.out.println("current tile created");
 
-                        board.setRelativeTile(currentX, currentY,nextTile.getEntry());
-                        addEmptyTiles(nextTile);
-                        System.out.println("place tile");
 
                         //tryPlaceTile(currentTile.getRelX(),currentTile.getRelY());
                         if(tileMatch(nextTile, getNorthTile(currentX,currentY),getSouthTile(currentX,currentY),getEastTile(currentX,currentY),getWestTile(currentX,currentY))){
                             System.out.println("tiles match");
 
+                            board.setRelativeTile(currentX, currentY,nextTile.getEntry());
+                            addEmptyTiles(nextTile);
+                            System.out.println("place tile");
+                            controller.updateBoard(board);
+                            //return ends method / break ends for loop
+                            return;
+                        }else{
+                            System.out.println("not placable");
                         }
 
 
@@ -79,8 +85,6 @@ public class Model {
             }
         }
     }
-
-
     public void addEmptyTiles(Tile tile){
 
         if(isEmpty(getNorthTile(tile.getRelX(),tile.getRelY()))){
@@ -108,27 +112,33 @@ public class Model {
     }
 
 
-    public boolean matches(Tile a, Tile b, String direction) {
+    public boolean matches(Tile toPlace, Tile target, String direction) {
         boolean match = false;
-        if(b != null)
-        switch (direction){
-            case "north" :
-                match = isEmpty(b) || (a.getNorthEdge() == b.getSouthEdge());
-                System.out.println("oben: " + b.getSouthEdge());
-                break;
-            case "east" :
-                match = isEmpty(b) || (a.getEastEdge() == b.getWestEdge());
-                System.out.println("rechts: " + b.getWestEdge());
-                break;
-            case "south" :
-                match = isEmpty(b) || (a.getSouthEdge() == b.getNorthEdge());
-                System.out.println("unten: " + b.getNorthEdge());
-                break;
-            case "west" :
-                match = isEmpty(b) || (a.getWestEdge() == b.getEastEdge());
-                System.out.println("links: " + b.getEastEdge());
-                break;
+        if(target != null) {
+            switch (direction.toLowerCase()) {
+                case "north" -> {
+                    match = isEmpty(target) || (toPlace.getNorthEdge().equals(target.getSouthEdge()));
+                    System.out.println("oben next tile " + toPlace.getNorthEdge());
+                    System.out.println("oben: " + target.getSouthEdge());
+                    System.out.println("matches "+ toPlace.getNorthEdge().equals(target.getSouthEdge()));
+                }
+                case "east" -> {
+                    match = isEmpty(target) || (toPlace.getEastEdge() == target.getWestEdge());
+                    System.out.println("rechts: " + target.getWestEdge());
+                }
+                case "south" -> {
+                    match = isEmpty(target) || (toPlace.getSouthEdge() == target.getNorthEdge());
+                    System.out.println("unten: " + target.getNorthEdge());
+                }
+                case "west" -> {
+                    match = isEmpty(target) || (toPlace.getWestEdge() == target.getEastEdge());
+                    System.out.println("links: " + target.getEastEdge());
+                }
+            }
+        }else{
+            return true;
         }
+        System.out.println(match);
         return match;
     }
 
@@ -166,13 +176,15 @@ public class Model {
         LibraryEntry.Component nextUnten = nextTile.getSouthEdge();
         LibraryEntry.Component nextLinks= nextTile.getWestEdge();
 
+        System.out.println(nextTile.getEntry());
+
         if (isEmpty(northTile)&& isEmpty(eastTile)  && isEmpty(southTile) && isEmpty(westTile)){
             return false;
         }
-        //System.out.println(nextOben);
-        //System.out.println(nextRechts);
-       // System.out.println(nextUnten);
-       // System.out.println(nextLinks);
+        System.out.println(nextOben);
+        System.out.println(nextRechts);
+        System.out.println(nextUnten);
+        System.out.println(nextLinks);
 
         //if(northTile != null){System.out.println("north" + northTile.getSouthEdge());}
         //if(eastTile != null){System.out.println("east" + eastTile.getWestEdge());}
