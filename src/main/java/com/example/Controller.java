@@ -1,7 +1,6 @@
 package com.example;
 
 import javafx.scene.control.Button;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
@@ -26,7 +25,7 @@ public class Controller {
     public Controller(View view, Model model){
         this.view = view;
         this.model= model;
-        this.deck= new ArrayList<LibraryEntry>();
+        this.deck= new ArrayList<>();
 
         fillDeck();
         changeDrawButtonImage();
@@ -34,33 +33,6 @@ public class Controller {
         rotateRight();
         computer();
         DragandDrop();
-    }
-
-
-    public void updateView(Tile currentTile, int absX, int absY){
-
-        // new Hashmap which safes image view of all tiles added to board with key: relx rely
-        Position tilePosition= new Position(model.getBoard().convertToRelativeX(absX), model.getBoard().convertToRelativeY(absY));
-
-        if(everyTile.containsKey(tilePosition)){
-            everyTile.get(tilePosition).setImage(currentTile.getImage());
-
-        }else {
-
-            ImageView startimageView = new ImageView(currentTile.getImage());
-
-            startimageView.setRotate(currentTile.getRotation());
-            everyTile.put(tilePosition, startimageView);
-
-            startimageView.setFitWidth(view.getIMAGESIZE());
-            startimageView.setFitHeight(view.getIMAGESIZE());
-
-        }
-        everyTile.get(tilePosition).setX((absX * view.getIMAGESIZE()));
-        everyTile.get(tilePosition).setY(absY * view.getIMAGESIZE());
-        //System.out.println(startimageView);
-        view.getRoot().getChildren().add(everyTile.get(tilePosition));
-        //view.getScrollPane().setContent(startimageView);
     }
     public void updateBoard(Board board) {
 
@@ -76,7 +48,28 @@ public class Controller {
                     continue;
                 }
 
-                updateView(currentTile, absX, absY);
+                // new Hashmap which safes image view of all tiles added to board with key: relx rely
+                Position tilePosition= new Position(model.getBoard().convertToRelativeX(absX), model.getBoard().convertToRelativeY(absY));
+
+                if(everyTile.containsKey(tilePosition)){
+                    everyTile.get(tilePosition).setImage(currentTile.getImage());
+
+                }else {
+
+                    ImageView startimageView = new ImageView(currentTile.getImage());
+
+                    startimageView.setRotate(currentTile.getRotation());
+                    everyTile.put(tilePosition, startimageView);
+
+                    startimageView.setFitWidth(view.getIMAGESIZE());
+                    startimageView.setFitHeight(view.getIMAGESIZE());
+
+                }
+                everyTile.get(tilePosition).setX((absX * view.getIMAGESIZE()));
+                everyTile.get(tilePosition).setY(absY * view.getIMAGESIZE());
+                //System.out.println(startimageView);
+                view.getRoot().getChildren().add(everyTile.get(tilePosition));
+                //view.getScrollPane().setContent(startimageView);
             }
         }
     }
@@ -86,11 +79,12 @@ public class Controller {
         LibraryEntry nextEntry = deck.get(index);
         //removing the card from deck
         deck.remove(index);
-
         return nextEntry;
     }
     public void changeDrawButtonImage(){
+
         //TODO: nochmal ziehen, falls tile nicht passt
+
         view.getDrawCardButton().setOnAction(event->{
 
             view.buttonImageView.setFitWidth(100);
@@ -152,7 +146,6 @@ public class Controller {
     }
 
     public void computer(){
-
         view.coputerTurn.setOnAction( actionEvent -> {
              model.computerTurn();
                 }
@@ -166,8 +159,9 @@ public class Controller {
             //ButtonTile.rotateRight();
             //rotate the image
             //view.getButtonImageView().setRotate(getRotation()+90);
+
             view.rotateRight();
-            this.rotation= view.getButtonImageView().getRotate();
+            this.rotation = view.getButtonImageView().getRotate();
         });
     }
     public Double getRotation(){
@@ -182,7 +176,7 @@ public class Controller {
             //ButtonTile.rotateLeft();
             //rotate the image
             view.rotateLeft();
-
+            this.rotation = view.getButtonImageView().getRotate();
         });
     }
     public void fillDeck(){
