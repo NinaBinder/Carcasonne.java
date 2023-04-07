@@ -125,8 +125,8 @@ public class TileLibrary {
             new LibraryEntry.Component[]{
                     LibraryEntry.Component.FIELD,
                     LibraryEntry.Component.CITY,
-                    LibraryEntry.Component.FIELD,
-                    LibraryEntry.Component.CITY
+                    LibraryEntry.Component.CITY,
+                    LibraryEntry.Component.FIELD
             }){};
 
 
@@ -230,7 +230,7 @@ public class TileLibrary {
 
     LibraryEntry u = new LibraryEntry("file:src/fields/U.png",
             new LibraryEntry.Component[]{
-                    LibraryEntry.Component.FIELD,
+                    LibraryEntry.Component.ROAD,
                     LibraryEntry.Component.FIELD,
                     LibraryEntry.Component.ROAD,
                     LibraryEntry.Component.FIELD
@@ -239,17 +239,17 @@ public class TileLibrary {
 
     LibraryEntry v = new LibraryEntry("file:src/fields/V.png",
             new LibraryEntry.Component[]{
-                    LibraryEntry.Component.ROAD,
+                    LibraryEntry.Component.FIELD,
                     LibraryEntry.Component.FIELD,
                     LibraryEntry.Component.ROAD,
-                    LibraryEntry.Component.FIELD
+                    LibraryEntry.Component.ROAD
             }){};
 
 
     LibraryEntry w =new LibraryEntry("file:src/fields/W.png",
             new LibraryEntry.Component[]{
                     LibraryEntry.Component.FIELD,
-                    LibraryEntry.Component.FIELD,
+                    LibraryEntry.Component.ROAD,
                     LibraryEntry.Component.ROAD,
                     LibraryEntry.Component.ROAD
             }){};
@@ -260,7 +260,7 @@ public class TileLibrary {
                     LibraryEntry.Component.ROAD,
                     LibraryEntry.Component.ROAD,
                     LibraryEntry.Component.ROAD,
-                    LibraryEntry.Component.FIELD
+                    LibraryEntry.Component.ROAD
             }){};
 
 
@@ -283,7 +283,6 @@ public class TileLibrary {
     public Image getImage(String entry){
          return map.get(entry).image;
     }
-
 
 
 }
