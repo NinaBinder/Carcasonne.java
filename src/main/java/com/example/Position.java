@@ -1,19 +1,19 @@
 package com.example;
 
 public class Position {
-    private final int x;
-    private final int y;
+    private final int relX;
+    private final int relY;
 
-    public Position(int x, int y){
-        this.x=x;
-        this.y=y;
+    public Position(int relX, int y){
+        this.relX = relX;
+        this.relY =y;
     }
 
-    public int getX() {
-        return x;
+    public int getRelX() {
+        return relX;
     }
 
-    public int getY() {
-        return y;
+    public int getRelY() {
+        return relY;
     }
 }

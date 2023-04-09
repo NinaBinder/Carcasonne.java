@@ -13,8 +13,10 @@ public class Controller {
     View view;
     Model model;
     TileLibrary library = new TileLibrary();
-    HashMap<Position, ImageView> everyTile = new HashMap<Position, ImageView>();
+    HashMap<Position, ImageView> everyImageView = new HashMap<>();
     double rotation;
+    Tile currentTile;
+    String nextEntry;
 
 
     /** deck: An Array List filled with all possible Entries
@@ -24,86 +26,128 @@ public class Controller {
 
     public Controller(View view, Model model){
         this.view = view;
-        this.model= model;
-        this.deck= new ArrayList<>();
+        this.model = model;
+        this.deck = new ArrayList<>();
+        this.rotation = 0.0;
+        rotation = view.buttonImageView.getRotate();
+        this.currentTile = new Tile(0,0,rotation, "EMPTY",false);
 
         fillDeck();
         changeDrawButtonImage();
-        rotateLeft();
         rotateRight();
+        rotateLeft();
         computer();
-        DragandDrop();
+        DragAndDrop();
+
     }
     public void updateBoard(Board board) {
-
         System.out.println("updateBoard");
-        view.getRoot().getChildren().clear();
-        //go through board matrix for every tile do this:
+       view.getRoot().getChildren().clear();
+
+        //go through board matrix
         for (int absX = 0; absX < board.getWidth(); absX++) {
             for (int absY = 0; absY < board.getHeight(); absY++) {
 
-                //current Tile we are working with rn
+                //current Tile at the current position in beard we are at
                 Tile currentTile = board.getAbsoluteTile(absX,absY);
-                if(currentTile== null){
+
+                //ignore Tiles that are null
+                if(currentTile == null){
                     continue;
                 }
 
-                // new Hashmap which safes image view of all tiles added to board with key: relx rely
-                Position tilePosition= new Position(model.getBoard().convertToRelativeX(absX), model.getBoard().convertToRelativeY(absY));
+                //current Position ( a position safes a relative X and relative Y value
+                //which is why we first have to convert the absolute values to relative
+                int relX = model.getBoard().convertToRelativeX(absX);
+                int relY = model.getBoard().convertToRelativeY(absY);
 
-                if(everyTile.containsKey(tilePosition)){
-                    everyTile.get(tilePosition).setImage(currentTile.getImage());
+                Position currentPosition = new Position(relX, relY);
+
+                //everTile is a hashmap which saves all ImageView(value) of all tiles at positions(key)
+                if(everyImageView.containsKey(currentPosition)){
+                    //if there is an Imageview at the current position already, set the Imageview at the current Position to the Image of the current Tile
+                    everyImageView.get(currentPosition).setImage(currentTile.getImage());
+                    //add rotation of the tile to the imageview
+                    everyImageView.get(currentPosition).setRotate(currentTile.getRotation());
 
                 }else {
+                    //if there is no Imageview saved in everTile hashmap at the current Position,
+                    //then create a new Imageview, set it to the current Tiles Image and put the new hashmap entry (new Imageview, current Position) in everyTile
+                    ImageView newImageView = new ImageView(currentTile.getImage());
 
-                    ImageView startimageView = new ImageView(currentTile.getImage());
-
-                    startimageView.setRotate(currentTile.getRotation());
-                    everyTile.put(tilePosition, startimageView);
-
-                    startimageView.setFitWidth(view.getIMAGESIZE());
-                    startimageView.setFitHeight(view.getIMAGESIZE());
-
+                    newImageView.setRotate(currentTile.getRotation());
+                    everyImageView.put(currentPosition, newImageView);
+                    newImageView.setFitWidth(view.getIMAGESIZE());
+                    newImageView.setFitHeight(view.getIMAGESIZE());
                 }
-                everyTile.get(tilePosition).setX((absX * view.getIMAGESIZE()));
-                everyTile.get(tilePosition).setY(absY * view.getIMAGESIZE());
-                //System.out.println(startimageView);
-                view.getRoot().getChildren().add(everyTile.get(tilePosition));
-                //view.getScrollPane().setContent(startimageView);
+                //every ImageView displayed on the board has the same size IMAGE SIZE = 200
+                everyImageView.get(currentPosition).setX((absX * view.getIMAGESIZE()));
+                everyImageView.get(currentPosition).setY(absY * view.getIMAGESIZE());
+
+                //finally display all the ImageView of everyTile on the board at the right Position in the root Pane in View
+                view.getRoot().getChildren().add(everyImageView.get(currentPosition));
             }
         }
     }
-    public LibraryEntry pickACardAnyCard(){
 
+    /**
+     * represents the act of picking a random card from a deck of cards
+     * in our case the deck of cards is an array of LibraryEntries, which are used to display a new Tile on the board
+     * @return a random "card" from the possible 71 cards in carcassone
+     */
+    public LibraryEntry pickACardAnyCard(){
+        //index is a random value between 0 and 72 (size of array deck)
         int index = (int)(Math.random() * deck.size());
+        //nextEntry is picked from deck at random position(index)
         LibraryEntry nextEntry = deck.get(index);
-        //removing the card from deck
+        String stringNewEntry = library.getNameOfEntry(nextEntry);
+
+        //default mode
+        view.getButtonImageView().setRotate(0);
+        currentTile = new Tile(0,0, 0 ,stringNewEntry,false);
+        rotation = 0;
+        System.out.println(currentTile.getEntry());
+
+        //removing the entry from deck
         deck.remove(index);
         return nextEntry;
     }
-    public void changeDrawButtonImage(){
 
+    /**
+     * when pressing the changeDrawButton, the pickACardAnyCard() method activates, providing a random LibraryEntry
+     * the image saved in this entry, is now displayed on the button,
+     * this is necessary as the image displayed on the button is needed for the drag and drop
+     */
+    public void changeDrawButtonImage(){
         //TODO: nochmal ziehen, falls tile nicht passt
 
         view.getDrawCardButton().setOnAction(event->{
 
             view.buttonImageView.setFitWidth(100);
             view.buttonImageView.setFitHeight(100);
-
+            //a random entry
             LibraryEntry pickedCard = pickACardAnyCard();
+            //replace the image displayed on the button
             view.newButtonImage =  pickedCard.image;
-            model.setNextEntry(pickedCard);
-
             view.getButtonImageView().setImage(view.newButtonImage);
             view.getDrawCardButton().setGraphic(view.getButtonImageView());
+            model.setNextEntry(pickedCard);
         });
     }
 
+    /**
+     * the drag and drop happens in 3 steps <br>
+     * step 1: Drag Detected, where we set the source for the drag and drop,
+     * in our case that is the Button "drawCardButton" (more specifically the image displayed on that button) <br>
+     * at the end of Drag Detected we also set the target (where can the image of the button be dragged to) of the drag and drop,
+     * which is the root Pane in our case
+     */
     // drag the tile which is shown on the button to the board
-    public void DragandDrop(){
-        //Source of the drag gesture is the Button
+    public void DragAndDrop(){
+        //Source of the drag gesture is this Button
         Button source = view.drawCardButton;
         //react of drag
+
         source.setOnDragDetected(event -> {
             Dragboard db = source.startDragAndDrop(TransferMode.ANY);
             ClipboardContent content = new ClipboardContent();
@@ -111,6 +155,7 @@ public class Controller {
             db.setContent(content);
             event.consume();
         });
+
         // target of drag gesture = drop
         final Pane target = view.getRoot();
 
@@ -118,8 +163,10 @@ public class Controller {
         target.setOnDragOver(event -> {
             event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
                     if(event.getGestureSource() != target && event.getDragboard().hasImage()){
+
                         event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
                     }
+
             event.consume();
         }
         );
@@ -129,58 +176,57 @@ public class Controller {
             Position targetPos = null;
             if(event.getTarget() instanceof ImageView){
 
-                for(Position pos : everyTile.keySet()){
-                    if(everyTile.get(pos).equals(event.getTarget())){
-                        targetPos = pos;
+                for(Position pos : everyImageView.keySet()){
 
+                    if(everyImageView.get(pos).equals(event.getTarget())){
+                        targetPos = pos;
                     }
                 }
-                if(targetPos!=null && model.tryPlaceTile(targetPos.getX(), targetPos.getY())){
-                    updateBoard(model.getBoard());
+
+                if(targetPos!=null ){
+                    currentTile.setRelX(targetPos.getRelX());
+                    currentTile.setRelY(targetPos.getRelY());
+
+                    if(model.tryPlaceTile(targetPos.getRelX(), targetPos.getRelY(), currentTile)){
+                        updateBoard(model.getBoard());
+                        //TODO: addpointsplayer
+                    }
+
                 }
             }
             event.setDropCompleted(true);
             event.consume();
-            updateBoard(model.getBoard());
         });
     }
 
     public void computer(){
-        view.coputerTurn.setOnAction( actionEvent -> {
-             model.computerTurn();
-                }
-        );
+        view.computerTurn.setOnAction(actionEvent -> model.computerTurn());
     }
+    public void rotateLeft(){
 
-    //set the event handler on the rotateRight button
-    public void rotateRight(){
-        view.rotateRight.setOnAction(event-> {
-            //rotate the sockets of the ButtonTile
-            //ButtonTile.rotateRight();
-            //rotate the image
-            //view.getButtonImageView().setRotate(getRotation()+90);
-
-            view.rotateRight();
-            this.rotation = view.getButtonImageView().getRotate();
+        view.rotateLeft.setOnAction(event-> {
+           view.rotateLeft();
+           rotation = view.getButtonImageView().getRotate();
+           System.out.println(rotation);
+           currentTile.rotateLeft();
         });
     }
+    public void rotateRight(){
+        view.rotateRight.setOnAction(event-> {
+            view.rotateRight();
+            rotation = view.getButtonImageView().getRotate();
+            System.out.println(rotation);
+            currentTile.rotateRight();
+        });
+    }
+
+
+    //set the event handler on the rotateRight button
     public Double getRotation(){
         return rotation;
     }
-
-    //set the event handler on the rotateLeft button
-    public void rotateLeft(){
-        //TODO: fix getRotation
-        view.rotateLeft.setOnAction(event-> {
-            //rotate the sockets of the ButtonTile
-            //ButtonTile.rotateLeft();
-            //rotate the image
-            view.rotateLeft();
-            this.rotation = view.getButtonImageView().getRotate();
-        });
-    }
     public void fillDeck(){
-        //Filling the deck with all possible cards (right amount of each card included)
+        //Filling the deck with all possible cards (entries) (right amount of each card included)
         deck.add(library.map.get("C"));
         deck.add(library.map.get("G"));
         deck.add(library.map.get("Q"));
@@ -224,5 +270,4 @@ public class Controller {
     public TileLibrary getLibrary() {
         return library;
     }
-
 }

@@ -1,9 +1,9 @@
 package com.example;
 import java.util.ArrayList;
-import java.util.List;
-import javafx.collections.FXCollections;
-import javafx.scene.image.Image;
 
+/**
+ * the model contains the logic  of the game
+ */
 
 public class Model {
     //Das Model enthält die Daten des Spiels:
@@ -14,10 +14,10 @@ public class Model {
 
     private Board board;
     private LibraryEntry nextEntry;
-    private List<Player> players;
+
     private int currentPlayerIndex;
-    private Controller controller= new Controller(new View(),this);
-    Tile nextTile;
+    private Controller controller;
+    Tile currentTile;
 
     //für Road und City Array Lists, visitedroad, visitedCity, einfügen wo ich schon war
     ArrayList<Tile> visitedRoad;
@@ -27,11 +27,40 @@ public class Model {
         board = new Board(this);
     }
 
+    /**
+     * tryPlaceTile checks if it is possible to place a new Tile in the board at position relX/relY
+     * @param relX the relative X cooridnate of new Tile in board
+     * @param relY the relative Y coordinate of new Tile in board
+     * @return true or false wherever it is possible to place the current Tile in board
+     */
+    public boolean tryPlaceTile(int relX, int relY, Tile currentTile){
+
+        //we are trying to replace a new Tile at the position of the target Tile at relX / relY in our board
+        Tile targetTile = getBoard().getRelativeTile(relX, relY);
+
+        setCurrentTile(currentTile);
+
+        Tile northTile= getNorthTile(targetTile.getRelX(), targetTile.getRelY());
+        Tile southTile= getSouthTile(targetTile.getRelX(), targetTile.getRelY());
+        Tile eastTile= getEastTile(targetTile.getRelX(), targetTile.getRelY());
+        Tile westTile= getWestTile(targetTile.getRelX(), targetTile.getRelY());
+
+        //can setTile? is empty & is matching with neighbors?
+        if(tileMatch(currentTile,northTile,southTile,eastTile,westTile)){
+            board.setRelativeTile(relX, relY, currentTile.getEntry(), currentTile.getRotation());
+            addEmptyTiles(currentTile);
+            System.out.println("place tile");
+            return true;
+        }
+        else {
+            System.out.println("tile not placeable");
+        }
+        return false;
+    }
+
     public void computerTurn(){
 
         board = getBoard();
-        Tile emptyTile = null;
-
         //did player do turn?
 
         //pick a card from deck
@@ -44,11 +73,6 @@ public class Model {
         for( int x = 0; x< board.getWidth(); x++ ){
             for(int y = 0; y < board.getHeight(); y++){
 
-                //if I use board.getRelativeTile(x, y);
-                //it will start with the OG tile
-                //Tile currentTile = board.getRelativeTile(board.convertToRelativeX(x), board.convertToRelativeY(y));
-
-                System.out.println(x + ", "+ y);
                 Tile currentTile = board.getRelativeTile(board.convertToRelativeX(x), board.convertToRelativeY(y));
 
                 //is Tile null? if null skip
@@ -60,24 +84,23 @@ public class Model {
                         int currentX= currentTile.getRelX();
                         int currentY= currentTile.getRelY();
 
-                        Tile nextTile = new Tile(currentX,currentY,0,nextEntry,false);
-                        System.out.println("current tile created");
+                        Tile nextTile = new Tile(currentX,currentY, currentTile.getRotation(), nextEntry,false);
+                        //System.out.println("current tile created");
 
-
-                        //tryPlaceTile(currentTile.getRelX(),currentTile.getRelY());
                         if(tileMatch(nextTile, getNorthTile(currentX,currentY),getSouthTile(currentX,currentY),getEastTile(currentX,currentY),getWestTile(currentX,currentY))){
-                            System.out.println("tiles match");
+                            //System.out.println("tiles match");
 
-                            board.setRelativeTile(currentX, currentY,nextTile.getEntry());
+                            board.setRelativeTile(currentX, currentY,nextTile.getEntry(),0.0);
                             addEmptyTiles(nextTile);
-                            System.out.println("place tile");
+                            //System.out.println("place tile");
                             controller.updateBoard(board);
+
                             //return ends method / break ends for loop
                             return;
+
                         }else{
                             System.out.println("not placable");
                         }
-
 
                     }
 
@@ -88,18 +111,22 @@ public class Model {
     public void addEmptyTiles(Tile tile){
 
         if(isEmpty(getNorthTile(tile.getRelX(),tile.getRelY()))){
-            board.setRelativeTile(tile.getRelX(),tile.getRelY()-1,"EMPTY");
+            board.setRelativeTile(tile.getRelX(),tile.getRelY()-1,"EMPTY",0.0);
+            System.out.println("empty placed " + tile.getRelX()+ "," + (tile.getRelY()-1));
         }
         if(isEmpty(getSouthTile(tile.getRelX(),tile.getRelY()))){
-            board.setRelativeTile(tile.getRelX(),tile.getRelY()+1,"EMPTY");
-
+            board.setRelativeTile(tile.getRelX(),tile.getRelY()+1,"EMPTY",0.0);
+            System.out.println("empty placed " + tile.getRelX()+ "," + (tile.getRelY()+1));
         }
         if(isEmpty(getEastTile(tile.getRelX(),tile.getRelY()))){
-            board.setRelativeTile(tile.getRelX()+1,tile.getRelY(),"EMPTY");
+            board.setRelativeTile(tile.getRelX()+1,tile.getRelY(),"EMPTY",0.0);
+            System.out.println("empty placed " + (tile.getRelX()+1)+ "," + tile.getRelY());
         }
 
         if(isEmpty(getWestTile(tile.getRelX(),tile.getRelY()))){
-            board.setRelativeTile(tile.getRelX()-1,tile.getRelY(),"EMPTY");
+            board.setRelativeTile(tile.getRelX()-1,tile.getRelY(),"EMPTY",0.0);
+            System.out.println("empty placed " + (tile.getRelX()-1)+ "," + tile.getRelY());
+
         }
     }
 
@@ -111,7 +138,6 @@ public class Model {
         return false;
     }
 
-
     public boolean matches(Tile toPlace, Tile target, String direction) {
         boolean match = false;
         if(target != null) {
@@ -119,55 +145,32 @@ public class Model {
                 case "north" -> {
                     match = isEmpty(target) || (toPlace.getNorthEdge().equals(target.getSouthEdge()));
                     System.out.println("oben next tile " + toPlace.getNorthEdge());
-                    System.out.println("oben: " + target.getSouthEdge());
-                    System.out.println("matches "+ toPlace.getNorthEdge().equals(target.getSouthEdge()));
+                    //System.out.println("oben: " + target.getSouthEdge());
+                    //System.out.println("matches "+ toPlace.getNorthEdge().equals(target.getSouthEdge()));
                 }
                 case "east" -> {
                     match = isEmpty(target) || (toPlace.getEastEdge() == target.getWestEdge());
-                    System.out.println("rechts: " + target.getWestEdge());
+                    //System.out.println("rechts: " + target.getWestEdge());
+                    System.out.println("recht next tile " + toPlace.getEastEdge());
                 }
                 case "south" -> {
                     match = isEmpty(target) || (toPlace.getSouthEdge() == target.getNorthEdge());
-                    System.out.println("unten: " + target.getNorthEdge());
+                    //System.out.println("unten: " + target.getNorthEdge());
+                    System.out.println("unten next tile " + toPlace.getSouthEdge());
                 }
                 case "west" -> {
                     match = isEmpty(target) || (toPlace.getWestEdge() == target.getEastEdge());
-                    System.out.println("links: " + target.getEastEdge());
+                    //System.out.println("links: " + target.getEastEdge());
+                    System.out.println("links next tile " + toPlace.getWestEdge());
                 }
             }
         }else{
             return true;
         }
-        System.out.println(match);
+        //System.out.println(match);
         return match;
     }
 
-    public boolean tryPlaceTile(int relX, int relY){
-
-        Tile targetTile = getBoard().getRelativeTile(relX, relY);
-
-        Tile northTile= getNorthTile(targetTile.getRelX(), targetTile.getRelY());
-        Tile southTile= getSouthTile(targetTile.getRelX(), targetTile.getRelY());
-        Tile eastTile= getEastTile(targetTile.getRelX(), targetTile.getRelY());
-        Tile westTile= getWestTile(targetTile.getRelX(), targetTile.getRelY());
-
-        String nextEntry = controller.getLibrary().getNameOfEntry(this.nextEntry);
-        //System.out.println("rotatation" + controller.getRotation());
-
-        Tile nextTile= new Tile(relX, relY, controller.getRotation(), nextEntry, targetTile.gamePiece);
-
-        //can setTile? is empty & is matching with neighbors?
-        if(tileMatch(nextTile,northTile,southTile,eastTile,westTile)){
-            board.setRelativeTile(relX, relY,nextTile.getEntry());
-            addEmptyTiles(nextTile);
-            System.out.println("place tile");
-            return true;
-        }
-        else {
-            System.out.println("tile not placeable");
-        }
-        return false;
-    }
     /** check if the field fits on the side of another neighbours*/
     public boolean tileMatch (Tile nextTile, Tile northTile, Tile southTile, Tile eastTile, Tile westTile) {
 
@@ -176,7 +179,7 @@ public class Model {
         LibraryEntry.Component nextUnten = nextTile.getSouthEdge();
         LibraryEntry.Component nextLinks= nextTile.getWestEdge();
 
-        System.out.println(nextTile.getEntry());
+        //System.out.println(nextTile.getEntry());
 
         if (isEmpty(northTile)&& isEmpty(eastTile)  && isEmpty(southTile) && isEmpty(westTile)){
             return false;
@@ -188,7 +191,7 @@ public class Model {
 
         //if(northTile != null){System.out.println("north" + northTile.getSouthEdge());}
         //if(eastTile != null){System.out.println("east" + eastTile.getWestEdge());}
-       // if(southTile != null){System.out.println("south" + southTile.getNorthEdge());}
+        //if(southTile != null){System.out.println("south" + southTile.getNorthEdge());}
         //if(westTile != null){System.out.println("west" + westTile.getEastEdge());}
 
         return (matches(nextTile, northTile, "north") &&
@@ -198,20 +201,16 @@ public class Model {
         }
 
     public Tile getNorthTile(int relX, int relY){
-        Tile north = getBoard().getRelativeTile(relX,relY-1);
-        return north;
+        return getBoard().getRelativeTile(relX,relY-1);
     }
     public Tile getEastTile(int relX, int relY){
-        Tile east = getBoard().getRelativeTile(relX+1,relY);
-        return east;
+        return getBoard().getRelativeTile(relX+1,relY);
     }
     public Tile getSouthTile(int relX, int relY){
-        Tile south = getBoard().getRelativeTile(relX,relY+1);
-        return south;
+        return getBoard().getRelativeTile(relX,relY+1);
     }
     public Tile getWestTile(int relX, int relY){
-        Tile west = getBoard().getRelativeTile(relX-1,relY);
-        return west;
+        return getBoard().getRelativeTile(relX-1,relY);
     }
     public void initBoard(){
         board.initBoard();
@@ -227,47 +226,10 @@ public class Model {
     public void setNextEntry(LibraryEntry next){
         this.nextEntry = next;
     }
+    public void setCurrentTile (Tile currentTile) {
+        String nextEntry = currentTile.getEntry();
+        this.currentTile = new Tile(currentTile.getRelX(), currentTile.getRelY(), currentTile.getRotation(), nextEntry, false);
 
-    //Getter und Setter für die Spieler
-    public List<Player> getPlayers() {
-        return players;
-    }
-
-    public void setPlayers(List<Player> players) {
-        this.players = players;
-    }
-
-
-    //Aktuellen Spieler bekommen
-    public Player getCurrentPlayer() {
-        return players.get(currentPlayerIndex);
-    }
-
-    //Zum nächsten Spieler wechseln
-    public void nextPlayer() {
-        currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
-    }
-
-    //Spielfigur auf dem Brett platzieren
-    public boolean placeFigure(int x, int y) {
-        // Überprüfen, ob die Position für den aktuellen Spieler gültig ist
-        if (!getCurrentPlayer().canPlaceFigure(x, y)) {
-            return false;
-        }
-        // Stellt die Figur auf das Brett
-        board.placeFigure(x, y, getCurrentPlayer());
-        // Aktualisiere die Punktzahl des Spielers
-        board.evaluatePoints();
-        return true;
-    }
-
-    //Spielbrett initialisieren, Spieler erstellen
-    public void startNewGame(int numPlayers) {
-        board = new Board(this);
-        players = FXCollections.observableArrayList(Player.createPlayers(numPlayers));
-        //aktuellen Spieler als ersten Spieler in der Reihe festlegen
-        currentPlayerIndex = 0;
-        //drawTile();
     }
     public boolean isRoadClosed(Tile lastPlacedTile, int relX, int relY) {
 
@@ -283,7 +245,7 @@ public class Model {
                 //wenn ja an welchen Sockets ist Road?
                 // TODO: zwei Prüfrichtungen! müssen beide erfüllt sein
 
-                switch ((int) (lastPlacedTile.getRotation()%360)){
+                switch ((int) (lastPlacedTile.getRotation()% 360)){
                     case 0: //break;
                         switch (i) {
                             case 0 -> getNorthTile(relX, relY);
@@ -341,7 +303,7 @@ public class Model {
 
         for (int i=0; i<12; i++){
 
-            if (lastPlacedTile.library.map.get(entryKey).getComponent()[i] == city){
+            if (Tile.library.map.get(entryKey).getComponent()[i] == city){
                 switch ((int) (lastPlacedTile.getRotation()%360)){
                     case 0:
                         switch (i) {
@@ -424,41 +386,4 @@ public class Model {
             }
         }
     }
-
-
-}
-
-class Player {
-    private int score;
-
-    //Liste von Spielern erstellen
-    public static List<Player> createPlayers(int numPlayers) {
-        List<Player> players = new ArrayList<>();
-        for (int i = 0; i < numPlayers; i++) {
-            players.add(new Player());
-        }
-        return players;
-    }
-
-    //Getter und Setter für den Punktestand
-    public void setScore(int score) {
-        this.score = score;
-    }
-
-    public int getScore() {
-        return this.score;
-    }
-
-    //prüft, ob eine Figur an Koordinate x und y platziert werden kann
-    public boolean canPlaceFigure(int x, int y) {
-        //implementation
-        return false;
-    }
-
-    //Punktestand aktualisieren
-    public void updateScore(int points) {
-        // implementation
-    }
-
-
 }

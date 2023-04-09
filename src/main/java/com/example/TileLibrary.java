@@ -8,8 +8,6 @@ import java.util.HashMap;
  * This Class has one attribute HashMap, where all objects of LibraryEntry are stored. */
 public class TileLibrary {
 
-    Socket[] Sockets;
-
     /** map containg all possible type of tiles */
     HashMap <String, LibraryEntry> map;
 

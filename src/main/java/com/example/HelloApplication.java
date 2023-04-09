@@ -16,6 +16,7 @@ public class HelloApplication extends Application {
         Controller controller = new Controller(view, model);
         model.setController(controller);
         model.initBoard();
+
         controller.updateBoard(model.getBoard());
         Scene scene = new Scene(view.border);
         stage.setScene(scene);
