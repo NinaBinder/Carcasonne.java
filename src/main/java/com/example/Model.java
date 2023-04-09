@@ -39,7 +39,7 @@ public class Model {
         Tile targetTile = getBoard().getRelativeTile(relX, relY);
 
         setCurrentTile(currentTile);
-
+//test
         Tile northTile= getNorthTile(targetTile.getRelX(), targetTile.getRelY());
         Tile southTile= getSouthTile(targetTile.getRelX(), targetTile.getRelY());
         Tile eastTile= getEastTile(targetTile.getRelX(), targetTile.getRelY());
