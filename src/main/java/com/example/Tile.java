@@ -16,35 +16,10 @@ public class Tile {
     private LibraryEntry.Component eastEdge;
     private LibraryEntry.Component southEdge;
     private LibraryEntry.Component westEdge;
-    private String entry;
+    private final String entry;
 
 
-    /** getter */
-    // get the associated image of the tile
-    public Image getImage(){
-        return library.getImage(entry);
-    }
 
-    //get the current rotation of the tile
-    public Double getRotation() {
-        return rotation;
-    }
-
-    public int getRelX() {
-        return relX;
-    }
-
-    public int getRelY() {
-        return relY;
-    }
-
-    public String getEntry() {
-        return entry;
-    }
-
-    public void setEntry(String newEntry){
-        entry = newEntry;
-    }
 
     public Tile(int relX, int relY, double rotation, String entry, boolean gamePiece){
         this.relX = relX;
@@ -90,14 +65,6 @@ public class Tile {
         System.out.println("new South:" + southEdge);
         System.out.println("new West:" + westEdge);
     }
-   public void updateEdges(Tile currentTile){
-        this.northEdge = library.map.get(currentTile.getEntry()).getComponent()[0];
-        this.eastEdge = library.map.get(currentTile.getEntry()).getComponent()[1];
-        this.southEdge = library.map.get(currentTile.getEntry()).getComponent()[2];
-        this.westEdge = library.map.get(currentTile.getEntry()).getComponent()[3];
-   }
-
-
 
     public LibraryEntry.Component getNorthEdge() {
         return northEdge;
@@ -120,4 +87,27 @@ public class Tile {
     public LibraryEntry.Component getWestEdge() {
         return westEdge;
     }
+    /** getter */
+    // get the associated image of the tile
+    public Image getImage(){
+        return library.getImage(entry);
+    }
+
+    //get the current rotation of the tile
+    public Double getRotation() {
+        return rotation;
+    }
+
+    public int getRelX() {
+        return relX;
+    }
+
+    public int getRelY() {
+        return relY;
+    }
+
+    public String getEntry() {
+        return entry;
+    }
+
 }

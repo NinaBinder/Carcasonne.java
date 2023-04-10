@@ -1,5 +1,6 @@
 package com.example;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * the model contains the logic  of the game
@@ -13,18 +14,21 @@ public class Model {
     // (d) Methoden zum Lesen und Setzen der Daten und zum Ausführen (bzw. Prüfen) von Spielaktionen
 
     private Board board;
-    private LibraryEntry nextEntry;
-
+    final private TileLibrary library;
     private int currentPlayerIndex;
     private Controller controller;
     Tile currentTile;
+    int scoreHumanPlayer = 0;
+    int scoreComputerPlayer = 0;
 
     //für Road und City Array Lists, visitedroad, visitedCity, einfügen wo ich schon war
     ArrayList<Tile> visitedRoad;
     ArrayList<Tile> visitedCity;
 
-    public Model (){
+    public Model(TileLibrary library) {
+        this.library = library;
         board = new Board(this);
+        //System.out.println(controller.getRotation());
     }
 
     /**
@@ -39,7 +43,6 @@ public class Model {
         Tile targetTile = getBoard().getRelativeTile(relX, relY);
 
         setCurrentTile(currentTile);
-//test
         Tile northTile= getNorthTile(targetTile.getRelX(), targetTile.getRelY());
         Tile southTile= getSouthTile(targetTile.getRelX(), targetTile.getRelY());
         Tile eastTile= getEastTile(targetTile.getRelX(), targetTile.getRelY());
@@ -60,9 +63,6 @@ public class Model {
 
     public void computerTurn(){
 
-        board = getBoard();
-        //did player do turn?
-
         //pick a card from deck
         LibraryEntry entry = controller.pickACardAnyCard();
         String nextEntry = controller.getLibrary().getNameOfEntry(entry);
@@ -75,25 +75,31 @@ public class Model {
 
                 Tile currentTile = board.getRelativeTile(board.convertToRelativeX(x), board.convertToRelativeY(y));
 
-                //is Tile null? if null skip
+                //if currentTile is null skip it
                 if(currentTile != null){
-                    System.out.println(currentTile.getEntry());
 
+                    //if the computer comes across an EmptyTile
                     if(currentTile.getEntry().equals("EMPTY")){
 
                         int currentX= currentTile.getRelX();
                         int currentY= currentTile.getRelY();
 
+                        //create a new Tile with the Position of the EmptyTile and the random Entry which was picked before
                         Tile nextTile = new Tile(currentX,currentY, currentTile.getRotation(), nextEntry,false);
                         //System.out.println("current tile created");
 
+                        //then it checks if the createdTile can matches the neighbourTiles
                         if(tileMatch(nextTile, getNorthTile(currentX,currentY),getSouthTile(currentX,currentY),getEastTile(currentX,currentY),getWestTile(currentX,currentY))){
                             //System.out.println("tiles match");
 
-                            board.setRelativeTile(currentX, currentY,nextTile.getEntry(),0.0);
+                            //if it does match the new tile can be placed in the board and emptyTiles can be added
+                            getBoard().setRelativeTile(currentX, currentY,nextTile.getEntry(),0.0);
                             addEmptyTiles(nextTile);
                             //System.out.println("place tile");
-                            controller.updateBoard(board);
+
+                            //finally update the View and add possible Points to the Computers Score
+                            controller.updateBoard(getBoard());
+                            addPointsComputer();
 
                             //return ends method / break ends for loop
                             return;
@@ -138,6 +144,19 @@ public class Model {
         return false;
     }
 
+    /** check if the field fits on the side of another neighbours*/
+    public boolean tileMatch (Tile nextTile, Tile northTile, Tile southTile, Tile eastTile, Tile westTile) {
+
+        if (isEmpty(northTile)&& isEmpty(eastTile)  && isEmpty(southTile) && isEmpty(westTile)){
+            return false;
+        }
+
+        return (matches(nextTile, northTile, "north") &&
+                matches(nextTile, eastTile, "east") &&
+                matches(nextTile, southTile,"south") &&
+                matches(nextTile, westTile, "west"));
+    }
+
     public boolean matches(Tile toPlace, Tile target, String direction) {
         boolean match = false;
         if(target != null) {
@@ -171,35 +190,6 @@ public class Model {
         return match;
     }
 
-    /** check if the field fits on the side of another neighbours*/
-    public boolean tileMatch (Tile nextTile, Tile northTile, Tile southTile, Tile eastTile, Tile westTile) {
-
-        LibraryEntry.Component nextOben = nextTile.getNorthEdge();
-        LibraryEntry.Component nextRechts = nextTile.getEastEdge();
-        LibraryEntry.Component nextUnten = nextTile.getSouthEdge();
-        LibraryEntry.Component nextLinks= nextTile.getWestEdge();
-
-        //System.out.println(nextTile.getEntry());
-
-        if (isEmpty(northTile)&& isEmpty(eastTile)  && isEmpty(southTile) && isEmpty(westTile)){
-            return false;
-        }
-        System.out.println(nextOben);
-        System.out.println(nextRechts);
-        System.out.println(nextUnten);
-        System.out.println(nextLinks);
-
-        //if(northTile != null){System.out.println("north" + northTile.getSouthEdge());}
-        //if(eastTile != null){System.out.println("east" + eastTile.getWestEdge());}
-        //if(southTile != null){System.out.println("south" + southTile.getNorthEdge());}
-        //if(westTile != null){System.out.println("west" + westTile.getEastEdge());}
-
-        return (matches(nextTile, northTile, "north") &&
-                matches(nextTile, eastTile, "east") &&
-                matches(nextTile, southTile,"south") &&
-                matches(nextTile, westTile, "west"));
-        }
-
     public Tile getNorthTile(int relX, int relY){
         return getBoard().getRelativeTile(relX,relY-1);
     }
@@ -224,67 +214,141 @@ public class Model {
     }
 
     public void setNextEntry(LibraryEntry next){
-        this.nextEntry = next;
     }
     public void setCurrentTile (Tile currentTile) {
         String nextEntry = currentTile.getEntry();
         this.currentTile = new Tile(currentTile.getRelX(), currentTile.getRelY(), currentTile.getRotation(), nextEntry, false);
 
     }
-    public boolean isRoadClosed(Tile lastPlacedTile, int relX, int relY) {
+    private boolean isRoadClosed(Tile lastPlacedTile) {
+        if (lastPlacedTile.getEntry().equals("X") || lastPlacedTile.getEntry().equals("Y")) {
+            //wenn eines von den Tiles, wo unterschiedliche roads drauf sind
+            visitedRoad.add(lastPlacedTile);
+
+            boolean isClosed = true;
+            LibraryEntry.Component road = LibraryEntry.Component.ROAD;
+            String entryKey = lastPlacedTile.getEntry();
+            ArrayList<Tile> nextTiles = new ArrayList<Tile>();
+            LibraryEntry[] endingTiles = new LibraryEntry[]{library.map.get("X"), library.map.get("Y"), library.map.get("U"),
+                    library.map.get("T"), library.map.get("L"), library.map.get("A")};
+
+            for (int i = 0; i < 4; i++) {
+
+                if (Tile.library.map.get(entryKey).getComponent()[i] == road) {
+                    int relX = lastPlacedTile.getRelX();
+                    int relY = lastPlacedTile.getRelY();
+                    switch ((int) (lastPlacedTile.getRotation() % 360)) {
+                        case 0 -> {
+                            switch (i) {
+                                case 0 -> nextTiles.add(getNorthTile(relX, relY));
+                                case 1 -> nextTiles.add(getEastTile(relX, relY));
+                                case 2 -> nextTiles.add(getSouthTile(relX, relY));
+                                case 3 -> nextTiles.add(getWestTile(relX, relY));
+                            }
+                        }
+                        case 90 -> {
+                            switch (i) {
+                                case 0 -> nextTiles.add(getEastTile(relX, relY));
+                                case 1 -> nextTiles.add(getSouthTile(relX, relY));
+                                case 2 -> nextTiles.add(getWestTile(relX, relY));
+                                case 3 -> nextTiles.add(getNorthTile(relX, relY));
+                            }
+                        }
+                        case 180 -> {
+                            switch (i) {
+                                case 0 -> nextTiles.add(getSouthTile(relX, relY));
+                                case 1 -> nextTiles.add(getWestTile(relX, relY));
+                                case 2 -> nextTiles.add(getNorthTile(relX, relY));
+                                case 3 -> nextTiles.add(getEastTile(relX, relY));
+                            }
+                        }
+                        case 270 -> {
+                            switch (i) {
+                                case 0 -> nextTiles.add(getWestTile(relX, relY));
+                                case 1 -> nextTiles.add(getNorthTile(relX, relY));
+                                case 2 -> nextTiles.add(getEastTile(relX, relY));
+                                case 3 -> nextTiles.add(getSouthTile(relX, relY));
+                            }
+                        }
+                    }
+                }
+            }
+            //visitedRoad.remove(lastPlacedTile); //sonst kann Straße keinen Kreis bilden
+            int counter = 0;
+            for (Tile t : nextTiles) {
+                if (!visitedRoad.contains(t) && Arrays.asList(endingTiles).contains(t))
+                    isClosed |= isRoadClosedRec(t, t.getRelX(), t.getRelY()); //isClosed = isClosed | isRoadClosedRec()
+                if (isEmpty(t))
+                    counter++;
+            }
+            if (counter == nextTiles.size())
+                return false; //weil dann empty Tile da ist
+            else
+                return isClosed;
+
+        } else {
+            return isRoadClosedRec(lastPlacedTile, lastPlacedTile.getRelX(), lastPlacedTile.getRelY());
+        }
+    }
+    public boolean isRoadClosedRec(Tile lastPlacedTile, int relX, int relY) {
+        visitedRoad.add(lastPlacedTile);
+        if (lastPlacedTile.getEntry().equals("X") || lastPlacedTile.getEntry().equals("Y"))
+            //wenn eines von den Tiles, wo unterschiedliche roads drauf sind
+            return true; //denn den Fall haben wir ja schon in isRoadClosed behandelt
 
         boolean isClosed = true;
 
         LibraryEntry.Component road = LibraryEntry.Component.ROAD;
         String entryKey = lastPlacedTile.getEntry();
+        ArrayList<Tile> nextTiles = new ArrayList<Tile>();
+        LibraryEntry[] endingTiles = new LibraryEntry[]{library.map.get("X"), library.map.get("Y"),
+                library.map.get("U"), library.map.get("T"), library.map.get("L"), library.map.get("A")};
 
-        //gibt es an dem Tile überhaupt ein Socket mit Component Road?
-        for (int i=0; i<4; i++){
+        for (int i = 0; i < 4; i++) {
 
-            if (Tile.library.map.get(entryKey).getComponent()[i] == road){
-                //wenn ja an welchen Sockets ist Road?
-                // TODO: zwei Prüfrichtungen! müssen beide erfüllt sein
-
-                switch ((int) (lastPlacedTile.getRotation()% 360)){
-                    case 0: //break;
+            if (library.map.get(entryKey).getComponent()[i] == road) {
+                switch ((int) (lastPlacedTile.getRotation() % 360)) {
+                    case 0:
                         switch (i) {
-                            case 0 -> getNorthTile(relX, relY);
-                            case 1 -> getEastTile(relX, relY);
-                            case 2 -> getSouthTile(relX, relY);
-                            case 3 -> getWestTile(relX, relY);
-
+                            case 0 -> nextTiles.add(getNorthTile(relX, relY));
+                            case 1 -> nextTiles.add(getEastTile(relX, relY));
+                            case 2 -> nextTiles.add(getSouthTile(relX, relY));
+                            case 3 -> nextTiles.add(getWestTile(relX, relY));
                         }
-                    case 90: //break;
+                        break;
+                    case 90:
                         switch (i) {
-                            case 0 -> getEastTile(relX, relY);
-                            case 1 -> getSouthTile(relX, relY);
-                            case 2 -> getWestTile(relX, relY);
-                            case 3 -> getNorthTile(relX, relY);
+                            case 0 -> nextTiles.add(getEastTile(relX, relY));
+                            case 1 -> nextTiles.add(getSouthTile(relX, relY));
+                            case 2 -> nextTiles.add(getWestTile(relX, relY));
+                            case 3 -> nextTiles.add(getNorthTile(relX, relY));
                         }
+                        break;
                     case 180:
                         switch (i) {
-                            case 0 -> getSouthTile(relX, relY);
-                            case 1 -> getWestTile(relX, relY);
-                            case 2 -> getNorthTile(relX, relY);
-                            case 3 -> getEastTile(relX, relY);
-
+                            case 0 -> nextTiles.add(getSouthTile(relX, relY));
+                            case 1 -> nextTiles.add(getWestTile(relX, relY));
+                            case 2 -> nextTiles.add(getNorthTile(relX, relY));
+                            case 3 -> nextTiles.add(getEastTile(relX, relY));
                         }
-                    case 270: //break;
+                        break;
+                    case 270:
                         switch (i) {
-                            case 0 -> getWestTile(relX, relY);
-                            case 1 -> getNorthTile(relX, relY);
-                            case 2 -> getEastTile(relX, relY);
-                            case 3 -> getSouthTile(relX, relY);
+                            case 0 -> nextTiles.add(getWestTile(relX, relY));
+                            case 1 -> nextTiles.add(getNorthTile(relX, relY));
+                            case 2 -> nextTiles.add(getEastTile(relX, relY));
+                            case 3 -> nextTiles.add(getSouthTile(relX, relY));
                         }
-
-                        //wiederhole den prozess bis an Ending Tile angekommen
-                        if (getNorthTile(relX, relY).getEntry().equals("X") ||
-                                getNorthTile(relX, relY).getEntry().equals("Y") ){
-
-                            return isClosed;
-                        }
+                        break;
                 }
             }
+        }
+        for (Tile t : nextTiles) {
+            if (isEmpty(t))
+                return false;
+            if (!visitedRoad.contains(t) && Arrays.asList(endingTiles).contains(t))
+                isClosed &= isRoadClosedRec(t, t.getRelX(), t.getRelY()); //dieses mal "und" weil nicht unterschiedliche
+            // roads auf einem Tile, müssen in alle Richtungen abschließen
         }
         return isClosed;
     }
@@ -292,57 +356,138 @@ public class Model {
     //Abbruchbedingung nach jedem Case?
     private void recurse(Tile currentTile){visitedCity.add(currentTile);}
 
-    //isCityClosedTop und isCityClosedRec draus machen, lastPlacedTile ist das currentTile?
-    public boolean isCityClosed(Tile lastPlacedTile, int relX, int relY) {
-        boolean isClosed = true;
+    //Es gibt 2 unterschiedl. Fälle:
+    // 1. Wir schauen erst, ob das zuletzt gelegte Tile mögl.weise 2 unterschiedl. citys hat
+    public boolean isCityClosed(Tile lastPlacedTile) {
+        if (lastPlacedTile.getEntry().equals("H") || lastPlacedTile.getEntry().equals("I")) {//wenn eines von den Tiles, wo unterschiedliche Citys drauf sind
+            visitedCity.add(lastPlacedTile);
 
+            boolean isClosed = true;
+            LibraryEntry.Component city = LibraryEntry.Component.CITY;
+            String entryKey = lastPlacedTile.getEntry();
+            ArrayList<Tile> nextTiles = new ArrayList<Tile>();
+
+            for (int i = 0; i < 4; i++) {
+
+                if (Tile.library.map.get(entryKey).getComponent()[i] == city) {
+
+                    final int relX = lastPlacedTile.getRelX();
+                    final int relY = lastPlacedTile.getRelY();
+                    switch ((int) (lastPlacedTile.getRotation() % 360)) {
+                        case 0 -> {
+                            switch (i) {
+                                case 0 -> nextTiles.add(getNorthTile(relX, relY));
+                                case 1 -> nextTiles.add(getEastTile(relX, relY));
+                                case 2 -> nextTiles.add(getSouthTile(relX, relY));
+                                case 3 -> nextTiles.add(getWestTile(relX, relY));
+                            }
+                        }
+                        case 90 -> {
+                            switch (i) {
+                                case 0 -> nextTiles.add(getEastTile(relX, relY));
+                                case 1 -> nextTiles.add(getSouthTile(relX, relY));
+                                case 2 -> nextTiles.add(getWestTile(relX, relY));
+                                case 3 -> nextTiles.add(getNorthTile(relX, relY));
+                            }
+                        }
+                        case 180 -> {
+                            switch (i) {
+                                case 0 -> nextTiles.add(getSouthTile(relX, relY));
+                                case 1 -> nextTiles.add(getWestTile(relX, relY));
+                                case 2 -> nextTiles.add(getNorthTile(relX, relY));
+                                case 3 -> nextTiles.add(getEastTile(relX, relY));
+                            }
+                        }
+                        case 270 -> {
+                            switch (i) {
+                                case 0 -> nextTiles.add(getWestTile(relX, relY));
+                                case 1 -> nextTiles.add(getNorthTile(relX, relY));
+                                case 2 -> nextTiles.add(getEastTile(relX, relY));
+                                case 3 -> nextTiles.add(getSouthTile(relX, relY));
+                            }
+                        }
+                    }
+                }
+            }
+            int counter = 0;
+            for (Tile t : nextTiles) {
+                if (!visitedCity.contains(t))
+                    isClosed |= isCityClosedRec(t, t.getRelX(), t.getRelY()); //isClosed = isClosed | isCityClosedRec()
+                if (isEmpty(t))
+                    counter++;
+            }
+            if (counter == nextTiles.size()) {
+                return false;
+            } //weil dann empty Tile da ist
+            else {
+                return true;
+            }
+        } else {
+            return isCityClosedRec(lastPlacedTile, lastPlacedTile.getRelX(), lastPlacedTile.getRelY());
+        }
+    }
+
+    //isCityClosedTop und isCityClosedRec draus machen, lastPlacedTile ist das lastPlacedTile?
+    private boolean isCityClosedRec(Tile lastPlacedTile, int relX, int relY) {
+        visitedCity.add(lastPlacedTile);
+        if (lastPlacedTile.getEntry().equals("H") || lastPlacedTile.getEntry().equals("I"))
+            //wenn eines von den Tiles, wo unterschiedllaiche Citys drauf sind
+            return true; //denn den Fall haben wir ja schon in isCityClosed behandelt
+
+        boolean isClosed = true;
         LibraryEntry.Component city = LibraryEntry.Component.CITY;
         String entryKey = lastPlacedTile.getEntry();
+        ArrayList<Tile> nextTiles = new ArrayList<Tile>();
 
-        Tile northTile, eastTile, southTile, westTile;
+        for (int i = 0; i < 4; i++) {
 
-        for (int i=0; i<12; i++){
-
-            if (Tile.library.map.get(entryKey).getComponent()[i] == city){
-                switch ((int) (lastPlacedTile.getRotation()%360)){
-                    case 0:
+            if (Tile.library.map.get(entryKey).getComponent()[i] == city) {
+                switch ((int) (lastPlacedTile.getRotation() % 360)) {
+                    case 0 -> {
                         switch (i) {
-                            case 0 -> northTile = getNorthTile(relX, relY);
-                            case 1 -> eastTile = getEastTile(relX, relY);
-                            case 2 -> southTile = getSouthTile(relX, relY);
-                            case 3 -> westTile = getWestTile(relX, relY);
+                            case 0 -> nextTiles.add(getNorthTile(relX, relY));
+                            case 1 -> nextTiles.add(getEastTile(relX, relY));
+                            case 2 -> nextTiles.add(getSouthTile(relX, relY));
+                            case 3 -> nextTiles.add(getWestTile(relX, relY));
                         }
-                        break;
-                    case 90:
+                    }
+                    case 90 -> {
                         switch (i) {
-                            case 0 -> eastTile = getEastTile(relX, relY);
-                            case 1 -> southTile = getSouthTile(relX, relY);
-                            case 2 -> westTile = getWestTile(relX, relY);
-                            case 3 -> northTile = getNorthTile(relX, relY);
+                            case 0 -> nextTiles.add(getEastTile(relX, relY));
+                            case 1 -> nextTiles.add(getSouthTile(relX, relY));
+                            case 2 -> nextTiles.add(getWestTile(relX, relY));
+                            case 3 -> nextTiles.add(getNorthTile(relX, relY));
                         }
-                    case 180:
+                    }
+                    case 180 -> {
                         switch (i) {
-                            case 0 -> southTile = getSouthTile(relX, relY);
-                            case 1 -> westTile = getWestTile(relX, relY);
-                            case 2 -> northTile = getNorthTile(relX, relY);
-                            case 3 -> eastTile = getEastTile(relX, relY);
+                            case 0 -> nextTiles.add(getSouthTile(relX, relY));
+                            case 1 -> nextTiles.add(getWestTile(relX, relY));
+                            case 2 -> nextTiles.add(getNorthTile(relX, relY));
+                            case 3 -> nextTiles.add(getEastTile(relX, relY));
                         }
-                    case 270:
+                    }
+                    case 270 -> {
                         switch (i) {
-                            case 0 -> westTile = getWestTile(relX, relY);
-                            case 1 -> northTile = getNorthTile(relX, relY);
-                            case 2 -> eastTile = getEastTile(relX, relY);
-                            case 3 -> southTile = getSouthTile(relX, relY);
+                            case 0 -> nextTiles.add(getWestTile(relX, relY));
+                            case 1 -> nextTiles.add(getNorthTile(relX, relY));
+                            case 2 -> nextTiles.add(getEastTile(relX, relY));
+                            case 3 -> nextTiles.add(getSouthTile(relX, relY));
                         }
+                    }
                 }
-                recurse(lastPlacedTile);
-                {return isClosed;}
             }
+        }
+        for (Tile t : nextTiles) {
+            if (isEmpty(t))
+                return false;
+            if (!visitedCity.contains(t))
+                isClosed &= isCityClosedRec(t, t.getRelX(), t.getRelY()); //dieses mal "und" weil nicht unterschiedliche
+            // citys auf einem Tile, müssen in alle Richtungen abschließen
         }
         return isClosed;
     }
-
-    boolean KlosterFertig (Tile lastPlacedTile){
+    boolean isMonasteryClosed(Tile lastPlacedTile) {
         boolean isClosed = true;
 
         int relX = lastPlacedTile.getRelX();
@@ -351,39 +496,65 @@ public class Model {
         Tile north = getNorthTile(relX, relY);
         Tile east = getEastTile(relX, relY);
         Tile south = getSouthTile(relX, relY);
-        Tile west = getWestTile(relX,relY);
-
+        Tile west = getWestTile(relX, relY);
 
         //is last placed tile ein kloster
-        if (lastPlacedTile.getEntry().equals("A") || lastPlacedTile.getEntry().equals("B")){
+        if (lastPlacedTile.getEntry().equals("A") || lastPlacedTile.getEntry().equals("B")) {
 
             //prüfe, ob 8 umliegende Karten != empty
-            if(!isEmpty(north) &&
+            if (!isEmpty(north) &&
                     !isEmpty(east) &&
                     !isEmpty(south) &&
                     !isEmpty(west) &&
-                    !isEmpty(getWestTile(south.getRelX(),south.getRelY())) &&
-                    !isEmpty(getWestTile(north.getRelX(),north.getRelY())) &&
-                    !isEmpty(getNorthTile (east.getRelX(), east.getRelY())) &&
-                    !isEmpty(getSouthTile (east.getRelX(), east.getRelY()))
-            ){
+                    !isEmpty(getWestTile(south.getRelX(), south.getRelY())) &&
+                    !isEmpty(getWestTile(north.getRelX(), north.getRelY())) &&
+                    !isEmpty(getNorthTile(east.getRelX(), east.getRelY())) &&
+                    !isEmpty(getSouthTile(east.getRelX(), east.getRelY()))
+            ) {
                 //sind alle umliegenden 8 Felder empty?
                 return isClosed;
             }
         }
         return isClosed;
     }
-    public void addPoints (int score, Tile lastPlacedTile, int relX, int relY){
-        for (int i=0; i<board.matrix.length; i++){
-            if (isRoadClosed(lastPlacedTile, relX, relY)){
-                score ++;
-            }
-            if (isCityClosed(lastPlacedTile, relX, relY)){
-                score++;
-            }
-            if (KlosterFertig(lastPlacedTile)){
-                score++;
-            }
+    public void addPointsPlayer() { //score übergeben? definieren?
+
+        if (isRoadClosed(currentTile)) { //&& meeple placed
+            scoreHumanPlayer += visitedRoad.size();
         }
+        if (isCityClosed(currentTile)) { //&& meeple placed
+            scoreHumanPlayer += visitedCity.size();
+        }
+        if (isMonasteryClosed(currentTile)) { //&& meeple placed
+            scoreHumanPlayer += 9;
+        }
+
+        controller.updateHumanScore();
+
     }
+
+    public int getScoreComputerPlayer() {
+        return scoreComputerPlayer;
+    }
+
+    public int getScoreHumanPlayer() {
+        return scoreHumanPlayer;
+    }
+
+    public void addPointsComputer() { //score übergeben? definieren?
+        //if computerTurn()
+        if (isRoadClosed(currentTile)) { //&& meeple placed
+            scoreComputerPlayer += visitedRoad.size();
+        }
+        if (isCityClosed(currentTile)) { //&& meeple placed
+            scoreComputerPlayer += visitedCity.size();
+        }
+        if (isMonasteryClosed(currentTile)) { //&& meeple placed
+            scoreComputerPlayer += 9;
+        }
+       controller.updateComputerScore();
+        //}
+    }
+
+
 }

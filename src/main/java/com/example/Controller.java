@@ -16,29 +16,27 @@ public class Controller {
     HashMap<Position, ImageView> everyImageView = new HashMap<>();
     double rotation;
     Tile currentTile;
-    String nextEntry;
-
-
-    /** deck: An Array List filled with all possible Entries
-     in order to get the images of that entry: deck(index).img
-     */
-    ArrayList<LibraryEntry> deck;
 
     public Controller(View view, Model model){
         this.view = view;
         this.model = model;
-        this.deck = new ArrayList<>();
         this.rotation = 0.0;
+
         rotation = view.buttonImageView.getRotate();
         this.currentTile = new Tile(0,0,rotation, "EMPTY",false);
 
-        fillDeck();
         changeDrawButtonImage();
         rotateRight();
         rotateLeft();
-        computer();
+        computerTurn();
         DragAndDrop();
 
+    }
+    public void updateHumanScore(){
+        view.pointsPlayer.setText("SCORE PLAYER: " + model.getScoreHumanPlayer());
+    }
+    public void updateComputerScore(){
+        view.pointsComputer.setText("SCORE COMUTER: " + model.getScoreComputerPlayer());
     }
     public void updateBoard(Board board) {
         System.out.println("updateBoard");
@@ -97,9 +95,9 @@ public class Controller {
      */
     public LibraryEntry pickACardAnyCard(){
         //index is a random value between 0 and 72 (size of array deck)
-        int index = (int)(Math.random() * deck.size());
+        int index = (int)(Math.random() * library.deck.size());
         //nextEntry is picked from deck at random position(index)
-        LibraryEntry nextEntry = deck.get(index);
+        LibraryEntry nextEntry = library.deck.get(index);
         String stringNewEntry = library.getNameOfEntry(nextEntry);
 
         //default mode
@@ -109,7 +107,7 @@ public class Controller {
         System.out.println(currentTile.getEntry());
 
         //removing the entry from deck
-        deck.remove(index);
+        library.deck.remove(index);
         return nextEntry;
     }
 
@@ -131,7 +129,6 @@ public class Controller {
             view.newButtonImage =  pickedCard.image;
             view.getButtonImageView().setImage(view.newButtonImage);
             view.getDrawCardButton().setGraphic(view.getButtonImageView());
-            model.setNextEntry(pickedCard);
         });
     }
 
@@ -163,7 +160,6 @@ public class Controller {
         target.setOnDragOver(event -> {
             event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
                     if(event.getGestureSource() != target && event.getDragboard().hasImage()){
-
                         event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
                     }
 
@@ -189,7 +185,7 @@ public class Controller {
 
                     if(model.tryPlaceTile(targetPos.getRelX(), targetPos.getRelY(), currentTile)){
                         updateBoard(model.getBoard());
-                        //TODO: addpointsplayer
+                        model.addPointsPlayer();
                     }
 
                 }
@@ -199,11 +195,10 @@ public class Controller {
         });
     }
 
-    public void computer(){
+    public void computerTurn(){
         view.computerTurn.setOnAction(actionEvent -> model.computerTurn());
     }
     public void rotateLeft(){
-
         view.rotateLeft.setOnAction(event-> {
            view.rotateLeft();
            rotation = view.getButtonImageView().getRotate();
@@ -218,53 +213,6 @@ public class Controller {
             System.out.println(rotation);
             currentTile.rotateRight();
         });
-    }
-
-
-    //set the event handler on the rotateRight button
-    public Double getRotation(){
-        return rotation;
-    }
-    public void fillDeck(){
-        //Filling the deck with all possible cards (entries) (right amount of each card included)
-        deck.add(library.map.get("C"));
-        deck.add(library.map.get("G"));
-        deck.add(library.map.get("Q"));
-        deck.add(library.map.get("T"));
-        deck.add(library.map.get("X"));
-
-        for (int i = 0; i < 2; i++) {
-            deck.add(library.map.get("A"));
-            deck.add(library.map.get("F"));
-            deck.add(library.map.get("I"));
-            deck.add(library.map.get("M"));
-            deck.add(library.map.get("O"));
-            deck.add(library.map.get("S"));
-        }
-        for (int i = 0; i < 3; i++) {
-            deck.add(library.map.get("H"));
-            deck.add(library.map.get("J"));
-            deck.add(library.map.get("K"));
-            deck.add(library.map.get("L"));
-            deck.add(library.map.get("N"));
-            deck.add(library.map.get("P"));
-            deck.add(library.map.get("R"));
-            deck.add(library.map.get("D"));
-        }
-        for (int i = 0; i < 4; i++) {
-            deck.add(library.map.get("B"));
-            deck.add(library.map.get("W"));
-        }
-        for (int i = 0; i < 5; i++) {
-            deck.add(library.map.get("E"));
-        }
-        for (int i = 0; i < 8; i++) {
-            deck.add(library.map.get("U"));
-        }
-        for (int i = 0; i < 9; i++) {
-            deck.add(library.map.get("V"));
-        }
-
     }
 
     public TileLibrary getLibrary() {

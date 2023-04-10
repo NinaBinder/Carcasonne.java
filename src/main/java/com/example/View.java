@@ -1,13 +1,12 @@
 package com.example;
 
+import javafx.beans.binding.Bindings;
 import javafx.geometry.Insets;
-import javafx.scene.control.Button;
-import javafx.scene.control.ContentDisplay;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 //TODO: meeple display
 
 public class View {
@@ -15,16 +14,21 @@ public class View {
     ScrollPane scrollPane = new ScrollPane();
     Pane root = new Pane();
     HBox hBox = new HBox();
+    HBox hBoxTop = new HBox();
     final double IMAGESIZE = 100;
     final double SCROLLPANESIZE = 500;
     ImageView buttonImageView = new ImageView();
     Button drawCardButton = new Button("draw new card");
     ImageView cardBack = new ImageView("file:src/fields/back.png");
     Image newButtonImage;
-    Button rotateRight = new Button("rotate to right");
-    Button rotateLeft = new Button("rotate to left");
     Button computerTurn = new Button("computerTurn");
     Label points = new Label("POINTS");
+    Label pointsPlayer = new Label("POINTS PLAYER:");
+    Label pointsComputer = new Label("POINTS ENEMY:");
+    ToggleButton rotateRight = new ToggleButton();
+    ToggleButton rotateLeft = new ToggleButton();
+    Image right = new Image("file:src/fields/rotateR.png");
+    Image left = new Image("file:src/fields/rotateL.png");
 
 
 
@@ -35,13 +39,44 @@ public class View {
         scrollPane.setContent(root);
         root.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
 
+        rotateRight.setPrefSize(40,80);
+        rotateRight.setBackground(null);
+        rotateRight.setBorder(null);
+        final ImageView toggleImage = new ImageView();
+        rotateRight.setGraphic(toggleImage);
+        toggleImage.setFitHeight(120);
+        toggleImage.setFitWidth(160);
+        toggleImage.imageProperty().bind(Bindings
+                .when(rotateRight.selectedProperty())
+                .then(right)
+                .otherwise(right)
+        );
+        rotateLeft.setPrefSize(40,80);
+        rotateLeft.setBackground(null);
+        rotateLeft.setBorder(null);
+        final ImageView    toggleImageLeft = new ImageView();
+        rotateLeft.setGraphic(toggleImage);
+        toggleImageLeft.setFitHeight(120);
+        toggleImageLeft.setFitWidth(160);
+        toggleImageLeft.imageProperty().bind(Bindings
+                .when(rotateLeft.selectedProperty())
+                .then(left)
+                .otherwise(left)
+        );
+
+        border.setTop(hBoxTop);
+        hBoxTop.setSpacing(25);
+        hBoxTop.setPadding(new Insets(15, 12, 15, 12));
+        hBoxTop.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY,null,null)));
+        hBoxTop.getChildren().add(pointsPlayer);
+        hBoxTop.getChildren().add(pointsComputer);
         border.setBottom(hBox);
         hBox.setPadding(new Insets(15, 12, 15, 12));
-        hBox.setSpacing(10);
-        hBox.getChildren().add(rotateRight);
+        hBox.setSpacing(35);
+        hBox.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY,null,null)));
         hBox.getChildren().add(rotateLeft);
-        hBox.getChildren().add(points);
         hBox.getChildren().add(drawCardButton);
+        hBox.getChildren().add(rotateRight);
         hBox.getChildren().add(computerTurn);
 
         drawCardButton.setGraphic(cardBack);
@@ -49,7 +84,6 @@ public class View {
         cardBack.setFitWidth(100);
         cardBack.setFitHeight(100);
 
-        countPoints();
     }
 
     public void rotateRight(){
@@ -69,16 +103,6 @@ public class View {
         buttonImageView.setRotate(buttonImageView.getRotate()-90);
 
         System.out.println(buttonImageView.getRotate());
-    }
-
-
-    //TODO: update of Point Label
-    public void countPoints() {
-
-        int score = 0;
-        points.setText("Score: " + score);
-        //if ...
-        score++;
     }
 
 

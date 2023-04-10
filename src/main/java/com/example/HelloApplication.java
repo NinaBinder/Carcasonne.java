@@ -11,7 +11,8 @@ public class HelloApplication extends Application {
     public void start(Stage stage) throws IOException {
 
         View view= new View();
-        Model model= new Model();
+        TileLibrary library= new TileLibrary();
+        Model model= new Model(library);
 
         Controller controller = new Controller(view, model);
         model.setController(controller);

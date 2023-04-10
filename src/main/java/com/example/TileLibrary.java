@@ -1,6 +1,7 @@
 package com.example;
 import javafx.scene.image.Image;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 
@@ -11,9 +12,14 @@ public class TileLibrary {
     /** map containg all possible type of tiles */
     HashMap <String, LibraryEntry> map;
 
+    /** deck: An Array List filled with all possible Entries
+     in order to get the images of that entry: deck(index).img
+     */
+    ArrayList<LibraryEntry> deck;
+
     //put  all the tile entries into the map
-    public TileLibrary( ){
-        this.map= new HashMap<String, LibraryEntry>();
+    public TileLibrary(){
+        this.map = new HashMap<>();
         map.put("A",a);
         map.put("B",b);
         map.put("C",c);
@@ -40,12 +46,19 @@ public class TileLibrary {
         map.put("X",x);
         map.put("EMPTY",empty);
         map.put("OG",originalTile);
+
+        this.deck = new ArrayList<>();
+        fillDeck();
     }
 
     /** creating entries for all possible tiles */
     LibraryEntry a = new LibraryEntry("file:src/fields/A.png",
-            new LibraryEntry.Component[]{LibraryEntry.Component.FIELD, LibraryEntry.Component.FIELD, LibraryEntry.Component.ROAD, LibraryEntry.Component.FIELD} ){
-    };
+            new LibraryEntry.Component[]{
+                    LibraryEntry.Component.FIELD,
+                    LibraryEntry.Component.FIELD,
+                    LibraryEntry.Component.ROAD,
+                    LibraryEntry.Component.FIELD}
+    ){};
 
     LibraryEntry b = new LibraryEntry("file:src/fields/B.png",
             new LibraryEntry.Component[]{
@@ -270,6 +283,47 @@ public class TileLibrary {
                     LibraryEntry.Component.UNIVERSAL
             }){};
 
+
+    public void fillDeck(){
+        //Filling the deck with all possible cards (entries) (right amount of each card included)
+        deck.add(map.get("C"));
+        deck.add(map.get("G"));
+        deck.add(map.get("Q"));
+        deck.add(map.get("T"));
+        deck.add(map.get("X"));
+
+        for (int i = 0; i < 2; i++) {
+            deck.add(map.get("A"));
+            deck.add(map.get("F"));
+            deck.add(map.get("I"));
+            deck.add(map.get("M"));
+            deck.add(map.get("O"));
+            deck.add(map.get("S"));
+        }
+        for (int i = 0; i < 3; i++) {
+            deck.add(map.get("H"));
+            deck.add(map.get("J"));
+            deck.add(map.get("K"));
+            deck.add(map.get("L"));
+            deck.add(map.get("N"));
+            deck.add(map.get("P"));
+            deck.add(map.get("R"));
+            deck.add(map.get("D"));
+        }
+        for (int i = 0; i < 4; i++) {
+            deck.add(map.get("B"));
+            deck.add(map.get("W"));
+        }
+        for (int i = 0; i < 5; i++) {
+            deck.add(map.get("E"));
+        }
+        for (int i = 0; i < 8; i++) {
+            deck.add(map.get("U"));
+        }
+        for (int i = 0; i < 9; i++) {
+            deck.add(map.get("V"));
+        }
+    }
     public String getNameOfEntry(LibraryEntry libraryEntry){
         for(String entry : map.keySet()){
             if(map.get(entry).equals(libraryEntry)){

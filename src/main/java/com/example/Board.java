@@ -4,7 +4,6 @@ package com.example;
  This grows with the creation of new fields.*/
 public class Board {
     Model model;
-    Controller controller;
     //The 2D array matrix saves all tiles currently saved on the board
     Tile[][] matrix;
 
