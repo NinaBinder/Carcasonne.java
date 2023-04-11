@@ -39,14 +39,14 @@ public class Controller {
         view.pointsComputer.setText("SCORE COMUTER: " + model.getScoreComputerPlayer());
     }
     public void updateBoard(Board board) {
-        System.out.println("updateBoard");
-       view.getRoot().getChildren().clear();
+        //System.out.println("updateBoard");
+        view.getRoot().getChildren().clear();
 
         //go through board matrix
         for (int absX = 0; absX < board.getWidth(); absX++) {
             for (int absY = 0; absY < board.getHeight(); absY++) {
 
-                //current Tile at the current position in beard we are at
+                //current Tile at the current position in board we are at
                 Tile currentTile = board.getAbsoluteTile(absX,absY);
 
                 //ignore Tiles that are null
@@ -136,15 +136,13 @@ public class Controller {
      * the drag and drop happens in 3 steps <br>
      * step 1: Drag Detected, where we set the source for the drag and drop,
      * in our case that is the Button "drawCardButton" (more specifically the image displayed on that button) <br>
-     * at the end of Drag Detected we also set the target (where can the image of the button be dragged to) of the drag and drop,
-     * which is the root Pane in our case
+     * the target (where can the image of the button be dragged to) of the drag and drop,is the root Pane
      */
-    // drag the tile which is shown on the button to the board
     public void DragAndDrop(){
         //Source of the drag gesture is this Button
         Button source = view.drawCardButton;
-        //react of drag
 
+        //react of drag
         source.setOnDragDetected(event -> {
             Dragboard db = source.startDragAndDrop(TransferMode.ANY);
             ClipboardContent content = new ClipboardContent();
@@ -152,11 +150,8 @@ public class Controller {
             db.setContent(content);
             event.consume();
         });
-
-        // target of drag gesture = drop
         final Pane target = view.getRoot();
 
-        // accept possible drop
         target.setOnDragOver(event -> {
             event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
                     if(event.getGestureSource() != target && event.getDragboard().hasImage()){
@@ -167,23 +162,30 @@ public class Controller {
         }
         );
 
+
         target.setOnDragDropped( event -> {
 
+            //the dragged image can only be dropped on an ImageView within the rootPane
             Position targetPos = null;
             if(event.getTarget() instanceof ImageView){
 
+                //iterate through the HashMap everImageView, containing all displayed IV saved with its relative Position on the board
                 for(Position pos : everyImageView.keySet()){
-
+                    //if the image is dropped to an imageview saved in the hashmap
                     if(everyImageView.get(pos).equals(event.getTarget())){
                         targetPos = pos;
                     }
                 }
-
+                //we give the current tile, of controller the relative X and Y of the position of said imageview
                 if(targetPos!=null ){
                     currentTile.setRelX(targetPos.getRelX());
                     currentTile.setRelY(targetPos.getRelY());
 
+                    //next we run the currentTile through the tryplaceTile method in model,
+                    //which tests if teh tile can be placed at the targetPosition
                     if(model.tryPlaceTile(targetPos.getRelX(), targetPos.getRelY(), currentTile)){
+
+                        //if tryPlaceTile() returns true, the board gets updated and the playey score gets recalculated
                         updateBoard(model.getBoard());
                         model.addPointsPlayer();
                     }

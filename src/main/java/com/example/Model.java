@@ -13,7 +13,7 @@ public class Model {
     // (c) Informationen zu den Spielern;
     // (d) Methoden zum Lesen und Setzen der Daten und zum Ausführen (bzw. Prüfen) von Spielaktionen
 
-    private Board board;
+    private final Board board;
     final private TileLibrary library;
     private int currentPlayerIndex;
     private Controller controller;
@@ -114,6 +114,11 @@ public class Model {
             }
         }
     }
+
+    /**
+     * adds EmptyTiles around the tile given to the method, if the nneighbour Tiles (north, east, south, west) either have the entry "EMPTY" or are null
+     * @param tile
+     */
     public void addEmptyTiles(Tile tile){
 
         if(isEmpty(getNorthTile(tile.getRelX(),tile.getRelY()))){
@@ -136,6 +141,10 @@ public class Model {
         }
     }
 
+    /**
+     * @param tile
+     * @return true if the parameter Tile is either an emptyTile or null
+     */
     public boolean isEmpty(Tile tile){
         // what if tile is empty or null
         if(tile == null || tile.getEntry().equals("EMPTY")){
@@ -144,9 +153,18 @@ public class Model {
         return false;
     }
 
-    /** check if the field fits on the side of another neighbours*/
+    /**
+     * checks if nextTile matches the surrounding Tiles, using the match() function
+     * @param nextTile the Tile we want to place and is compared to the neighbour tiles
+     * @param northTile lays above nextTile
+     * @param southTile lays underneath nextTile
+     * @param eastTile lays right of nextTile
+     * @param westTile lays left nextTile
+     * @return true is all Edges match
+     */
     public boolean tileMatch (Tile nextTile, Tile northTile, Tile southTile, Tile eastTile, Tile westTile) {
 
+        //first checks the case if all neighbout Tiles are empty, in that case it is not possible to put the next Place here
         if (isEmpty(northTile)&& isEmpty(eastTile)  && isEmpty(southTile) && isEmpty(westTile)){
             return false;
         }
@@ -157,30 +175,32 @@ public class Model {
                 matches(nextTile, westTile, "west"));
     }
 
+    /**
+     * using switch case, checks if a newTile can be placed next to another tile
+     * @param toPlace a new Tile we want to place in the board
+     * @param target a Tile that lays next to the toPlace Tile
+     * @param direction states the direction in which the target lays relative to the toPlace Tile
+     * @return
+     */
     public boolean matches(Tile toPlace, Tile target, String direction) {
         boolean match = false;
         if(target != null) {
             switch (direction.toLowerCase()) {
                 case "north" -> {
                     match = isEmpty(target) || (toPlace.getNorthEdge().equals(target.getSouthEdge()));
-                    System.out.println("oben next tile " + toPlace.getNorthEdge());
                     //System.out.println("oben: " + target.getSouthEdge());
-                    //System.out.println("matches "+ toPlace.getNorthEdge().equals(target.getSouthEdge()));
                 }
                 case "east" -> {
                     match = isEmpty(target) || (toPlace.getEastEdge() == target.getWestEdge());
                     //System.out.println("rechts: " + target.getWestEdge());
-                    System.out.println("recht next tile " + toPlace.getEastEdge());
                 }
                 case "south" -> {
                     match = isEmpty(target) || (toPlace.getSouthEdge() == target.getNorthEdge());
                     //System.out.println("unten: " + target.getNorthEdge());
-                    System.out.println("unten next tile " + toPlace.getSouthEdge());
                 }
                 case "west" -> {
                     match = isEmpty(target) || (toPlace.getWestEdge() == target.getEastEdge());
                     //System.out.println("links: " + target.getEastEdge());
-                    System.out.println("links next tile " + toPlace.getWestEdge());
                 }
             }
         }else{
@@ -208,17 +228,12 @@ public class Model {
     public void setController(Controller controller){
         this.controller = controller;
     }
-
     public Board getBoard(){
         return this.board;
-    }
-
-    public void setNextEntry(LibraryEntry next){
     }
     public void setCurrentTile (Tile currentTile) {
         String nextEntry = currentTile.getEntry();
         this.currentTile = new Tile(currentTile.getRelX(), currentTile.getRelY(), currentTile.getRotation(), nextEntry, false);
-
     }
     private boolean isRoadClosed(Tile lastPlacedTile) {
         if (lastPlacedTile.getEntry().equals("X") || lastPlacedTile.getEntry().equals("Y")) {
@@ -553,7 +568,7 @@ public class Model {
             scoreComputerPlayer += 9;
         }
        controller.updateComputerScore();
-        //}
+
     }
 
 
